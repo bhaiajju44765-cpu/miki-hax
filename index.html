@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-  :root { --main: #00ff88; --bg: #0d0d0d; --card: #1a1a1a; }
+  :root { --main: #00ff88; --bg: #0d0d0d; --card: #1a1a1a; --red: #ff4444; }
   body { background: var(--bg); color: #fff; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
   .status-bar { font-size: 10px; color: var(--main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
   .dot { width: 8px; height: 8px; background: var(--main); border-radius: 50%; box-shadow: 0 0 10px var(--main); animation: blink 1.5s infinite; }
@@ -17,6 +17,11 @@
   .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; }
   input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; }
   .hidden { display: none; }
+  
+  /* Admin Panel Styling */
+  #adminArea { border: 2px solid var(--red); width: 100%; max-width: 450px; }
+  .txn-list { text-align: left; font-size: 11px; background: #000; padding: 10px; border-radius: 8px; max-height: 250px; overflow-y: auto; border: 1px solid #444; margin: 15px 0; }
+  .txn-item { border-bottom: 1px solid #222; padding: 8px 0; display: flex; justify-content: space-between; }
   .footer { margin-top: auto; padding: 20px; text-align: center; width: 100%; }
   .social-icons a { color: var(--main); font-size: 22px; margin: 0 12px; text-decoration: none; }
 </style>
@@ -24,7 +29,7 @@
 <body>
 
 <div class="status-bar"><div class="dot"></div> SYSTEM: ONLINE | SECURE CONNECTION</div>
-<h1 onclick="adminTrigger()">MIKI MODS</h1>
+<h1 id="titleHead" onclick="adminTrigger()">MIKI MODS</h1>
 
 <div id="userSide" style="width:100%; max-width:400px">
   <div class="panel" id="payPanel">
@@ -33,7 +38,7 @@
     <button class="btn" onclick="showQR()">PROCEED TO PAYMENT</button>
     
     <div id="qrBox" class="hidden"><br>
-      <p style="font-size:12px;">Pay ₹20 to UPI below</p>
+      <p style="font-size:12px;">Pay ₹20 to Get Access</p>
       <img id="upiQR" width="180" style="background:white; padding:10px; border-radius:10px; border: 2px solid var(--main);">
     </div>
     
@@ -55,6 +60,18 @@
 
 <div id="fileArea" class="hidden" style="width:100%; max-width:400px"></div>
 
+<div id="adminArea" class="panel hidden">
+  <h2 style="color:var(--red)">MIKI ADMIN PANEL</h2>
+  <button class="btn" style="background:orange" onclick="refreshPayments()">REFRESH PAYMENT LIST</button>
+  <div id="payList" class="txn-list">Loading payments...</div>
+  <hr style="border:0; border-top:1px solid #444;">
+  <p>ADD NEW MOD LINK:</p>
+  <input type="text" id="modTitle" placeholder="Mod Name (e.g. FF Menu)">
+  <input type="text" id="modUrl" placeholder="Direct Download Link">
+  <button class="btn" style="background:var(--main)" onclick="uploadMod()">UPLOAD MOD DATA</button>
+  <button class="btn" style="background:#333; color:white" onclick="location.reload()">CLOSE ADMIN</button>
+</div>
+
 <div class="footer">
   <div class="social-icons">
     <a href="https://youtube.com/@prime_miku" target="_blank"><i class="fab fa-youtube"></i></a>
@@ -65,7 +82,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyDp4VvkYPWrTZifunRTsyf2oEce2KA2L8o",
@@ -81,52 +98,83 @@ const db = getFirestore(app);
 const upiId = "mrbituyr-1@okicici";
 let generatedCode = "";
 let userEnteredName = "";
+let adminClicks = 0;
 
+// Admin Trigger Logic
 window.adminTrigger = function() {
-  if(prompt("Key 1:") === "Anjali" && prompt("Key 2:") === "priyanshu") {
-    const n = prompt("Mod Name:");
-    const l = prompt("Link:");
-    if(n && l) addDoc(collection(db, "games"), { name: n, link: l }).then(() => alert("Added!"));
+  adminClicks++;
+  if(adminClicks >= 5) {
+    if(prompt("Admin Pwd 1:") === "Anjali" && prompt("Admin Pwd 2:") === "priyanshu") {
+      document.getElementById("userSide").classList.add("hidden");
+      document.getElementById("adminArea").classList.remove("hidden");
+      refreshPayments();
+    } else { window.location.href = "https://google.com"; }
+    adminClicks = 0;
   }
 }
 
+// Admin: Refresh Payment List
+window.refreshPayments = async function() {
+  const pList = document.getElementById("payList");
+  pList.innerHTML = "Fetching...";
+  try {
+    const q = query(collection(db, "payments"), orderBy("time", "desc"));
+    const snap = await getDocs(q);
+    let html = "";
+    snap.forEach(doc => {
+      const data = doc.data();
+      html += `<div class="txn-item">
+                <span><strong>${data.name || 'Unknown'}</strong></span>
+                <span style="color:cyan">${data.txnId}</span>
+               </div>`;
+    });
+    pList.innerHTML = html || "No payments found.";
+  } catch(e) { pList.innerHTML = "Error loading list."; }
+}
+
+// Admin: Upload Mod
+window.uploadMod = async function() {
+  const n = document.getElementById("modTitle").value;
+  const l = document.getElementById("modUrl").value;
+  if(!n || !l) return alert("Fill both fields!");
+  await addDoc(collection(db, "games"), { name: n, link: l });
+  alert("Mod Added!");
+  document.getElementById("modTitle").value = "";
+  document.getElementById("modUrl").value = "";
+}
+
+// User: Show QR
 window.showQR = function() {
   userEnteredName = document.getElementById("userName").value.trim();
-  if(!userEnteredName) return alert("Please enter your name first!");
-  
+  if(!userEnteredName) return alert("Enter your name first!");
   const url = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR`;
   document.getElementById("upiQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
   document.getElementById("qrBox").classList.remove("hidden");
   document.getElementById("verifyBox").classList.remove("hidden");
 }
 
+// User: Submit Txn
 window.submitTxn = async function() {
   const id = document.getElementById("txnId").value.trim();
   if(id.length < 5) return alert("Invalid ID");
-  
   try {
     const q = query(collection(db, "payments"), where("txnId", "==", id));
     const snap = await getDocs(q);
     if (!snap.empty) return alert("❌ Already Used!");
-
-    await addDoc(collection(db, "payments"), { 
-      txnId: id, 
-      name: userEnteredName, 
-      time: serverTimestamp() 
-    });
-    
+    await addDoc(collection(db, "payments"), { txnId: id, name: userEnteredName, time: serverTimestamp() });
     generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
     document.getElementById("welcomeMsg").innerText = `WELCOME, ${userEnteredName.toUpperCase()}!`;
     document.getElementById("payPanel").classList.add("hidden");
     document.getElementById("unlockPanel").classList.remove("hidden");
     document.getElementById("finalCode").innerText = generatedCode;
-  } catch(e) { alert("Error! Verify Rules."); }
+  } catch(e) { alert("Server Error! Check Rules."); }
 }
 
+// User: Unlock
 window.showFiles = async function() {
   if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Code!");
   const snap = await getDocs(collection(db, "games"));
-  let h = `<h2 style='color:var(--main); text-align:center;'>HELLO ${userEnteredName.toUpperCase()}, ENJOY YOUR MODS!</h2>`;
+  let h = `<h2 style='color:var(--main);'>HELLO ${userEnteredName.toUpperCase()}, ENJOY!</h2>`;
   snap.forEach(doc => { h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD</button></a></div>`; });
   document.getElementById("userSide").classList.add("hidden");
   document.getElementById("fileArea").innerHTML = h;
