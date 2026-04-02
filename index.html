@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIKI MODS H4X | OFFICIAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root { --neon: #00ffcc; --bg: #000; }
+  body { background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono', monospace; text-align: center; margin: 0; overflow-x: hidden; }
+  canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+  .container { padding: 20px; position: relative; z-index: 1; max-width: 500px; margin: auto; }
+  .btn { padding: 12px 25px; border: 1px solid var(--neon); background: transparent; color: var(--neon); border-radius: 4px; cursor: pointer; transition: 0.3s; font-family: inherit; margin: 10px; width: 80%; }
+  .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+  input { padding: 12px; margin: 10px; border: 1px solid var(--neon); background: rgba(0,0,0,0.8); color: var(--neon); outline: none; text-align: center; width: 70%; }
+  .glow { text-shadow: 0 0 10px var(--neon); }
+  #downloadSection { margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
+  .footer { position: fixed; bottom: 5px; width: 100%; opacity: 0.3; font-size: 10px; }
+  img#upiQR { border: 4px solid white; border-radius: 10px; margin-top: 15px; display: none; background: white; }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+  <h1 class="glow">💀 MIKI MODS H4X 💀</h1>
+  <p style="font-size: 12px; color: #888;">[ SYSTEM STATUS: ACTIVE ]</p>
+
+  <div id="paymentArea">
+    <h3>STEP 1: GET ACCESS CODE</h3>
+    <p>Pay ₹20 to generate your unique ID</p>
+    <button class="btn" onclick="generateUPI()">GENERATE QR CODE</button>
+    <center><img id="upiQR" width="200" height="200"></center>
+    <h2 id="codeDisplay" style="color: yellow;"></h2>
+  </div>
+
+  <div id="unlockArea" style="margin-top: 40px;">
+    <h3>STEP 2: UNLOCK MODS</h3>
+    <input type="text" id="userCode" placeholder="ENTER 4-DIGIT CODE">
+    <button class="btn" onclick="unlockLink()">INJECT & UNLOCK</button>
+  </div>
+
+  <div id="downloadSection"></div>
+</div>
+
+<div class="footer">ROOT@MIKI_SYSTEM:~$ v2.5_SECURE</div>
+
+<audio id="alarm" src="https://www.soundjay.com/buttons/beep-07.wav"></audio>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+// --- TERA FIREBASE CONFIG ---
+const firebaseConfig = {
+ apiKey:"AIzaSyDp4VvkYPWrTZifunRTsyf2oEce2KA2L8o",
+ authDomain:"game-65d26.firebaseapp.com",
+ projectId:"game-65d26",
+ storageBucket:"game-65d26.firebasestorage.app",
+ messagingSenderId:"1078240145943",
+ appId:"1:1078240145943:web:259e64e15644153317e252"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// --- SETTINGS ---
+const upiId = "mrbituyr-1@okicici"; // Tera UPI ID
+let sessionCode = "";
+
+// --- FUNCTION: QR GENERATE ---
+window.generateUPI = function() {
+  const code = Math.floor(1000 + Math.random() * 9000);
+  sessionCode = code.toString();
+  
+  document.getElementById("codeDisplay").innerText = "YOUR CODE: " + code;
+  
+  // UPI link with Transaction Note (TN) for verification
+  const upiURL = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR&tn=Miki_${code}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiURL)}`;
+  
+  const img = document.getElementById("upiQR");
+  img.src = qrUrl;
+  img.style.display = "block";
+}
+
+// --- FUNCTION: UNLOCK ---
+window.unlockLink = async function() {
+  const entered = document.getElementById("userCode").value;
+
+  if(!sessionCode) {
+    alert("PEHLE QR GENERATE KARO!");
+    return;
+  }
+
+  if(entered === sessionCode) {
+    alert("✅ ACCESS GRANTED! FETCHING MODS...");
+    
+    try {
+      const querySnapshot = await getDocs(collection(db, "games"));
+      let html = "<h3 class='glow'>--- LINK ACTIVATED ---</h3>";
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        html += `<a href="${data.link}" target="_blank"><button class="btn" style="border-color:white; color:white;">DOWNLOAD: ${data.name}</button></a><br>`;
+      });
+      document.getElementById("downloadSection").innerHTML = html;
+    } catch(e) {
+      alert("DATABASE ERROR! Rules check karo.");
+    }
+    
+  } else {
+    document.getElementById("alarm").play();
+    alert("❌ INVALID CODE! PAYMENT NOT VERIFIED.");
+  }
+}
+</script>
+
+<script>
+// --- MATRIX BACKGROUND ANIMATION ---
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "0101MIKIMODS";
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for(let x = 0; x < columns; x++) drops[x] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#00ffcc";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i = 0; i < drops.length; i++) {
+    const text = letters[Math.floor(Math.random() * letters.length)];
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 35);
+
+window.addEventListener('resize', () => {
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+});
+</script>
+
+</body>
+</html>
