@@ -3,63 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIKI MODS | DASHBOARD</title>
+<title>MIKI MODS | SECURE</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
   :root { --main: #00ff88; --bg: #0d0d0d; --card: #1a1a1a; }
-  body { background: var(--bg); color: #fff; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-  
-  .panel { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
-  
-  h1 { color: var(--main); font-size: 24px; margin-top: 0; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid var(--main); display: inline-block; padding-bottom: 5px; }
-  
-  .step-label { color: var(--main); font-weight: bold; display: block; margin-bottom: 15px; font-size: 14px; text-align: left; }
-  
-  .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 16px; transition: 0.2s; }
-  .btn:active { transform: scale(0.98); }
-  
-  input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 15px; font-family: inherit; text-align: center; font-size: 16px; }
-  input:focus { border-color: var(--main); outline: none; }
-
-  #qrBox { display: none; margin: 20px 0; padding: 10px; background: #fff; border-radius: 10px; }
+  body { background: var(--bg); color: #fff; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+  .panel { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+  h1 { color: var(--main); cursor: pointer; user-select: none; border-bottom: 2px solid var(--main); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+  .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; }
+  input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; }
   .hidden { display: none; }
-  .status { font-size: 12px; color: #777; margin-top: 20px; }
+  
+  /* Social Icons Styling */
+  .footer { margin-top: auto; padding: 20px; text-align: center; }
+  .social-icons a { color: var(--main); font-size: 24px; margin: 0 15px; text-decoration: none; transition: 0.3s; }
+  .social-icons a:hover { color: #fff; transform: scale(1.2); }
+  .copyright { font-size: 10px; color: #555; margin-top: 10px; }
+  
+  .txn-list { text-align: left; font-size: 12px; background: #000; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #444; }
 </style>
 </head>
 <body>
 
-<h1>MIKI MODS</h1>
+<h1 onclick="adminTrigger()">MIKI MODS</h1>
 
-<div class="panel" id="payPanel">
-  <span class="step-label">STEP 01: SCAN & PAY ₹20</span>
-  <button class="btn" onclick="showQR()">GET PAYMENT QR</button>
-  
-  <div id="qrBox">
-    <img id="upiQR" width="180">
-    <p style="color: #000; font-size: 12px; margin-top: 5px;">Scan with GPay/PhonePe/Paytm</p>
+<div id="userSide" style="width:100%; max-width:400px">
+  <div class="panel" id="payPanel">
+    <p style="color:var(--main); font-weight:bold;">[ STEP 01: PAYMENT ]</p>
+    <p style="font-size:14px;">Scan QR and Pay ₹20 to Get Access Code</p>
+    <button class="btn" onclick="showQR()">SHOW PAYMENT QR</button>
+    <div id="qrBox" class="hidden"><br><img id="upiQR" width="180" style="background:white; padding:10px; border-radius:10px;"></div>
+    
+    <div id="verifyBox" class="hidden" style="margin-top:20px">
+      <p style="color:var(--main); font-weight:bold;">[ STEP 02: VERIFICATION ]</p>
+      <input type="text" id="txnId" placeholder="Enter Transaction ID / Ref No.">
+      <button class="btn" onclick="submitTxn()">GET MY CODE</button>
+    </div>
   </div>
-  
-  <div id="verifyBox" class="hidden" style="margin-top: 20px;">
-    <span class="step-label">STEP 02: VERIFY TRANSACTION</span>
-    <input type="text" id="txnId" placeholder="Enter Ref No. / Txn ID">
-    <button class="btn" style="background: #fff;" onclick="generateCode()">GET ACCESS CODE</button>
+
+  <div class="panel hidden" id="unlockPanel">
+    <p>YOUR UNIQUE ACCESS CODE:</p>
+    <h2 id="finalCode" style="color:yellow; font-size:35px; margin:10px 0;"></h2>
+    <p style="font-size:12px; color:#aaa;">Copy this code and paste below</p>
+    <input type="text" id="inputCode" placeholder="Paste Code Here">
+    <button class="btn" onclick="showFiles()">INJECT & UNLOCK MODS</button>
   </div>
 </div>
 
-<div class="panel hidden" id="accessPanel">
-  <span class="step-label">STEP 03: UNLOCK CONTENT</span>
-  <div id="finalCodeDisplay" style="font-size: 32px; color: yellow; margin-bottom: 20px; font-weight: bold;"></div>
-  <input type="text" id="unlockCode" placeholder="Paste Your Code Here">
-  <button class="btn" onclick="unlockContent()">INJECT MODS</button>
+<div id="fileArea" class="hidden" style="width:100%; max-width:400px"></div>
+
+<p id="thanksMsg" class="hidden" style="color:var(--main); margin-top:20px; font-weight:bold; font-size:18px; letter-spacing:1px;">THANKS FOR VISIT</p>
+
+<div id="adminPanel" class="panel hidden" style="border-color: red; position:relative;">
+  <h2 style="color:red">ADMIN PANEL</h2>
+  <button class="btn" style="background:orange" onclick="viewPayments()">CHECK RECENT PAYMENTS</button>
+  <div id="payList" class="txn-list hidden"></div>
+  <hr style="border:0; border-top:1px solid #444; margin:20px 0;">
+  <p>Add New Mod Link:</p>
+  <input type="text" id="gName" placeholder="Game/Mod Name">
+  <input type="text" id="gLink" placeholder="Direct Download Link">
+  <button class="btn" onclick="addGame()">ADD DATA</button>
+  <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">EXIT ADMIN</button>
 </div>
 
-<div id="downloadArea" style="width: 100%; max-width: 400px;"></div>
-
-<p class="status">SERVER: ONLINE | ENCRYPTION: AES-256</p>
+<div class="footer">
+  <div class="social-icons">
+    <a href="https://youtube.com/@prime_miku?si=lPLiSvwBAjsbWTRA" target="_blank"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.instagram.com/_prime_miku_?igsh=MmdjNjM4Zmx1MW9r" target="_blank"><i class="fab fa-instagram"></i></a>
+  </div>
+  <p class="copyright">© 2026 MIKI MODS OFFICIAL. ALL RIGHTS RESERVED.</p>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyDp4VvkYPWrTZifunRTsyf2oEce2KA2L8o",
@@ -74,43 +92,74 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const upiId = "mrbituyr-1@okicici";
-let secretKey = "";
+let generatedCode = "";
+let clickCount = 0;
+
+window.adminTrigger = function() {
+  clickCount++;
+  if(clickCount >= 5) {
+    let p1 = prompt("Enter First Password:");
+    if(p1 === "Anjali") {
+      let p2 = prompt("Enter Second Password:");
+      if(p2 === "priyanshu") {
+        document.getElementById("userSide").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+      } else { window.location.href = "https://google.com"; }
+    } else { window.location.href = "https://google.com"; }
+    clickCount = 0;
+  }
+}
 
 window.showQR = function() {
-  const upiURL = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR`;
-  document.getElementById("upiQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiURL)}`;
-  document.getElementById("qrBox").style.display = "block";
+  const url = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR`;
+  document.getElementById("upiQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+  document.getElementById("qrBox").classList.remove("hidden");
   document.getElementById("verifyBox").classList.remove("hidden");
 }
 
-window.generateCode = function() {
-  const txn = document.getElementById("txnId").value;
-  if(txn.length < 6) {
-    alert("Please enter a valid Transaction ID!");
-    return;
-  }
-  // Code tab dikhayenge payment verify "dikhaane" ke liye
-  secretKey = Math.floor(1000 + Math.random() * 9000).toString();
-  document.getElementById("payPanel").classList.add("hidden");
-  document.getElementById("accessPanel").classList.remove("hidden");
-  document.getElementById("finalCodeDisplay").innerText = secretKey;
-  alert("Code Generated! Copy it and unlock.");
+window.submitTxn = async function() {
+  const id = document.getElementById("txnId").value;
+  if(id.length < 5) return alert("Please enter valid Transaction ID");
+  
+  try {
+    await addDoc(collection(db, "payments"), { txnId: id, time: serverTimestamp() });
+    generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+    document.getElementById("payPanel").classList.add("hidden");
+    document.getElementById("unlockPanel").classList.remove("hidden");
+    document.getElementById("finalCode").innerText = generatedCode;
+  } catch(e) { alert("Server Error! Try again."); }
 }
 
-window.unlockContent = async function() {
-  const code = document.getElementById("unlockCode").value;
-  if(code === secretKey) {
-    const querySnapshot = await getDocs(collection(db, "games"));
-    let html = "";
-    querySnapshot.forEach(doc => {
-      const data = doc.data();
-      html += `<div class="panel"><h3 style="margin:0">${data.name}</h3><br><a href="${data.link}"><button class="btn">DOWNLOAD NOW</button></a></div>`;
-    });
-    document.getElementById("accessPanel").classList.add("hidden");
-    document.getElementById("downloadArea").innerHTML = html;
-  } else {
-    alert("Incorrect Code!");
-  }
+window.showFiles = async function() {
+  if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Access Code!");
+  
+  const snap = await getDocs(collection(db, "games"));
+  let h = "";
+  snap.forEach(doc => {
+    h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD MOD</button></a></div>`;
+  });
+  document.getElementById("userSide").classList.add("hidden");
+  document.getElementById("fileArea").innerHTML = h;
+  document.getElementById("fileArea").classList.remove("hidden");
+  document.getElementById("thanksMsg").classList.remove("hidden");
+}
+
+window.addGame = async function() {
+  const n = document.getElementById("gName").value;
+  const l = document.getElementById("gLink").value;
+  if(!n || !l) return alert("Fill both fields");
+  await addDoc(collection(db, "games"), { name: n, link: l });
+  alert("New Mod Link Added Successfully!");
+  document.getElementById("gName").value = "";
+  document.getElementById("gLink").value = "";
+}
+
+window.viewPayments = async function() {
+  const snap = await getDocs(collection(db, "payments"));
+  let h = "<strong>User Submitted IDs:</strong><br>";
+  snap.forEach(doc => h += `- ${doc.data().txnId}<br>`);
+  document.getElementById("payList").innerHTML = h;
+  document.getElementById("payList").classList.toggle("hidden");
 }
 </script>
 </body>
