@@ -14,13 +14,8 @@
   .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; }
   input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; }
   .hidden { display: none; }
-  
-  /* Social Icons Styling */
   .footer { margin-top: auto; padding: 20px; text-align: center; }
   .social-icons a { color: var(--main); font-size: 24px; margin: 0 15px; text-decoration: none; transition: 0.3s; }
-  .social-icons a:hover { color: #fff; transform: scale(1.2); }
-  .copyright { font-size: 10px; color: #555; margin-top: 10px; }
-  
   .txn-list { text-align: left; font-size: 12px; background: #000; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #444; }
 </style>
 </head>
@@ -31,7 +26,6 @@
 <div id="userSide" style="width:100%; max-width:400px">
   <div class="panel" id="payPanel">
     <p style="color:var(--main); font-weight:bold;">[ STEP 01: PAYMENT ]</p>
-    <p style="font-size:14px;">Scan QR and Pay ₹20 to Get Access Code</p>
     <button class="btn" onclick="showQR()">SHOW PAYMENT QR</button>
     <div id="qrBox" class="hidden"><br><img id="upiQR" width="180" style="background:white; padding:10px; border-radius:10px;"></div>
     
@@ -45,39 +39,36 @@
   <div class="panel hidden" id="unlockPanel">
     <p>YOUR UNIQUE ACCESS CODE:</p>
     <h2 id="finalCode" style="color:yellow; font-size:35px; margin:10px 0;"></h2>
-    <p style="font-size:12px; color:#aaa;">Copy this code and paste below</p>
     <input type="text" id="inputCode" placeholder="Paste Code Here">
     <button class="btn" onclick="showFiles()">INJECT & UNLOCK MODS</button>
   </div>
 </div>
 
 <div id="fileArea" class="hidden" style="width:100%; max-width:400px"></div>
+<p id="thanksMsg" class="hidden" style="color:var(--main); margin-top:20px; font-weight:bold; font-size:18px;">THANKS FOR VISIT</p>
 
-<p id="thanksMsg" class="hidden" style="color:var(--main); margin-top:20px; font-weight:bold; font-size:18px; letter-spacing:1px;">THANKS FOR VISIT</p>
-
-<div id="adminPanel" class="panel hidden" style="border-color: red; position:relative;">
+<div id="adminPanel" class="panel hidden" style="border-color: red;">
   <h2 style="color:red">ADMIN PANEL</h2>
   <button class="btn" style="background:orange" onclick="viewPayments()">CHECK RECENT PAYMENTS</button>
   <div id="payList" class="txn-list hidden"></div>
   <hr style="border:0; border-top:1px solid #444; margin:20px 0;">
-  <p>Add New Mod Link:</p>
-  <input type="text" id="gName" placeholder="Game/Mod Name">
-  <input type="text" id="gLink" placeholder="Direct Download Link">
+  <input type="text" id="gName" placeholder="Mod Name">
+  <input type="text" id="gLink" placeholder="Download Link">
   <button class="btn" onclick="addGame()">ADD DATA</button>
   <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">EXIT ADMIN</button>
 </div>
 
 <div class="footer">
   <div class="social-icons">
-    <a href="https://youtube.com/@prime_miku?si=lPLiSvwBAjsbWTRA" target="_blank"><i class="fab fa-youtube"></i></a>
-    <a href="https://www.instagram.com/_prime_miku_?igsh=MmdjNjM4Zmx1MW9r" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://youtube.com/@prime_miku" target="_blank"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.instagram.com/_prime_miku_" target="_blank"><i class="fab fa-instagram"></i></a>
   </div>
-  <p class="copyright">© 2026 MIKI MODS OFFICIAL. ALL RIGHTS RESERVED.</p>
+  <p style="font-size:10px; color:#555; margin-top:10px;">© 2026 MIKI MODS OFFICIAL.</p>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyDp4VvkYPWrTZifunRTsyf2oEce2KA2L8o",
@@ -90,7 +81,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const upiId = "mrbituyr-1@okicici";
 let generatedCode = "";
 let clickCount = 0;
@@ -98,13 +88,9 @@ let clickCount = 0;
 window.adminTrigger = function() {
   clickCount++;
   if(clickCount >= 5) {
-    let p1 = prompt("Enter First Password:");
-    if(p1 === "Anjali") {
-      let p2 = prompt("Enter Second Password:");
-      if(p2 === "priyanshu") {
-        document.getElementById("userSide").classList.add("hidden");
-        document.getElementById("adminPanel").classList.remove("hidden");
-      } else { window.location.href = "https://google.com"; }
+    if(prompt("Password 1:") === "Anjali" && prompt("Password 2:") === "priyanshu") {
+      document.getElementById("userSide").classList.add("hidden");
+      document.getElementById("adminPanel").classList.remove("hidden");
     } else { window.location.href = "https://google.com"; }
     clickCount = 0;
   }
@@ -118,26 +104,27 @@ window.showQR = function() {
 }
 
 window.submitTxn = async function() {
-  const id = document.getElementById("txnId").value;
-  if(id.length < 5) return alert("Please enter valid Transaction ID");
+  const id = document.getElementById("txnId").value.trim();
+  if(id.length < 5) return alert("Invalid ID");
   
   try {
+    const q = query(collection(db, "payments"), where("txnId", "==", id));
+    const snap = await getDocs(q);
+    if (!snap.empty) return alert("❌ Already Used!");
+
     await addDoc(collection(db, "payments"), { txnId: id, time: serverTimestamp() });
     generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
     document.getElementById("payPanel").classList.add("hidden");
     document.getElementById("unlockPanel").classList.remove("hidden");
     document.getElementById("finalCode").innerText = generatedCode;
-  } catch(e) { alert("Server Error! Try again."); }
+  } catch(e) { alert("Error! Verify Firebase Rules."); }
 }
 
 window.showFiles = async function() {
-  if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Access Code!");
-  
+  if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Code!");
   const snap = await getDocs(collection(db, "games"));
   let h = "";
-  snap.forEach(doc => {
-    h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD MOD</button></a></div>`;
-  });
+  snap.forEach(doc => { h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD</button></a></div>`; });
   document.getElementById("userSide").classList.add("hidden");
   document.getElementById("fileArea").innerHTML = h;
   document.getElementById("fileArea").classList.remove("hidden");
@@ -147,16 +134,13 @@ window.showFiles = async function() {
 window.addGame = async function() {
   const n = document.getElementById("gName").value;
   const l = document.getElementById("gLink").value;
-  if(!n || !l) return alert("Fill both fields");
   await addDoc(collection(db, "games"), { name: n, link: l });
-  alert("New Mod Link Added Successfully!");
-  document.getElementById("gName").value = "";
-  document.getElementById("gLink").value = "";
+  alert("Added!");
 }
 
 window.viewPayments = async function() {
   const snap = await getDocs(collection(db, "payments"));
-  let h = "<strong>User Submitted IDs:</strong><br>";
+  let h = "<strong>Used IDs:</strong><br>";
   snap.forEach(doc => h += `- ${doc.data().txnId}<br>`);
   document.getElementById("payList").innerHTML = h;
   document.getElementById("payList").classList.toggle("hidden");
