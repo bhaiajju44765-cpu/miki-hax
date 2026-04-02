@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIKI MODS | PREMIUM ACCESS</title>
+<title>MIKI MODS | VIP ACCESS</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -13,9 +13,9 @@
   .dot { width: 8px; height: 8px; background: var(--main); border-radius: 50%; box-shadow: 0 0 10px var(--main); animation: blink 1.5s infinite; }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   .panel { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-  h1 { color: var(--main); cursor: pointer; user-select: none; border-bottom: 2px solid var(--main); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; font-size: 24px; }
+  h1 { color: var(--main); cursor: pointer; user-select: none; border-bottom: 2px solid var(--main); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; font-size: 24px; transition: 0.2s; }
+  h1:active { transform: scale(0.95); opacity: 0.7; }
   .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; transition: 0.3s; }
-  .btn:hover { transform: scale(1.02); }
   input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; outline: none; }
   .hidden { display: none; }
   .footer { margin-top: auto; padding: 20px; text-align: center; width: 100%; }
@@ -25,7 +25,8 @@
 <body>
 
 <div class="status-bar"><div class="dot"></div> SYSTEM: ONLINE | SECURE CONNECTION</div>
-<h1 onclick="adminTrigger()">MIKI MODS</h1>
+
+<h1 id="title" onclick="adminTrigger()">MIKI MODS</h1>
 
 <div id="userSide" style="width:100%; max-width:400px">
   <div class="panel" id="payPanel">
@@ -82,13 +83,21 @@ let generatedCode = "";
 let userEnteredName = "";
 let clickCount = 0;
 
+// FIX ADMIN TRIGGER
 window.adminTrigger = function() {
   clickCount++;
   if(clickCount >= 5) {
-    if(prompt("Key 1:") === "Anjali" && prompt("Key 2:") === "priyanshu") {
-      const n = prompt("Mod Name:");
-      const l = prompt("Link:");
-      if(n && l) addDoc(collection(db, "games"), { name: n, link: l, time: serverTimestamp() }).then(() => alert("Added!"));
+    let p1 = prompt("Admin Key 1:");
+    let p2 = prompt("Admin Key 2:");
+    if(p1 === "Anjali" && p2 === "priyanshu") {
+      const n = prompt("New Mod Name:");
+      const l = prompt("New Download Link:");
+      if(n && l) {
+        addDoc(collection(db, "games"), { name: n, link: l, time: serverTimestamp() })
+        .then(() => alert("✅ Mod Added Successfully!"));
+      }
+    } else {
+      alert("❌ Wrong Access!");
     }
     clickCount = 0;
   }
@@ -96,7 +105,7 @@ window.adminTrigger = function() {
 
 window.showQR = function() {
   userEnteredName = document.getElementById("userName").value.trim();
-  if(!userEnteredName) return alert("Enter Name First!");
+  if(!userEnteredName) return alert("Please enter your name!");
   const url = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR`;
   document.getElementById("upiQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
   document.getElementById("qrBox").classList.remove("hidden");
@@ -105,7 +114,7 @@ window.showQR = function() {
 
 window.submitTxn = async function() {
   const id = document.getElementById("txnId").value.trim();
-  if(id.length !== 12) return alert("❌ Enter 12-digit Transaction ID!");
+  if(id.length !== 12) return alert("❌ Transaction ID must be 12 digits!");
   try {
     const q = query(collection(db, "payments"), where("txnId", "==", id));
     const snap = await getDocs(q);
@@ -116,21 +125,17 @@ window.submitTxn = async function() {
     document.getElementById("payPanel").classList.add("hidden");
     document.getElementById("unlockPanel").classList.remove("hidden");
     document.getElementById("finalCode").innerText = generatedCode;
-  } catch(e) { alert("Server Error!"); }
+  } catch(e) { alert("Server Busy!"); }
 }
 
 window.showFiles = async function() {
   if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Code!");
-  
-  // SIRF EK RECENT MOD DIKHANE KE LIYE QUERY
   const q = query(collection(db, "games"), orderBy("time", "desc"), limit(1));
   const snap = await getDocs(q);
-  
-  let h = `<h2 style='color:var(--main);'>HELLO ${userEnteredName.toUpperCase()}, ENJOY!</h2>`;
-  snap.forEach(doc => { 
-    h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD</button></a></div>`; 
+  let h = `<h2 style='color:var(--main); text-align:center;'>HELLO ${userEnteredName.toUpperCase()}, ENJOY!</h2>`;
+  snap.forEach(doc => {
+    h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD NOW</button></a></div>`;
   });
-  
   document.getElementById("userSide").classList.add("hidden");
   document.getElementById("fileArea").innerHTML = h;
   document.getElementById("fileArea").classList.remove("hidden");
