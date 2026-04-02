@@ -3,33 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIKI MODS | PREMIUM</title>
+<title>MIKI MODS | PREMIUM ACCESS</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-  :root { --main: #00ff88; --bg: #0d0d0d; --card: #1a1a1a; --red: #ff4444; }
+  :root { --main: #00ff88; --bg: #0d0d0d; --card: #1a1a1a; }
   body { background: var(--bg); color: #fff; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-  .status-bar { font-size: 10px; color: var(--main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+  .status-bar { font-size: 10px; color: var(--main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; letter-spacing: 1px; }
   .dot { width: 8px; height: 8px; background: var(--main); border-radius: 50%; box-shadow: 0 0 10px var(--main); animation: blink 1.5s infinite; }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .panel { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; margin-bottom: 20px; text-align: center; }
-  h1 { color: var(--main); cursor: pointer; border-bottom: 2px solid var(--main); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; }
-  .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; }
-  input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; }
+  .panel { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+  h1 { color: var(--main); cursor: pointer; user-select: none; border-bottom: 2px solid var(--main); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; font-size: 24px; }
+  .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; transition: 0.3s; }
+  .btn:hover { transform: scale(1.02); }
+  input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; outline: none; }
+  input:focus { border-color: var(--main); }
   .hidden { display: none; }
-  
-  /* Admin Panel Styling */
-  #adminArea { border: 2px solid var(--red); width: 100%; max-width: 450px; }
-  .txn-list { text-align: left; font-size: 11px; background: #000; padding: 10px; border-radius: 8px; max-height: 250px; overflow-y: auto; border: 1px solid #444; margin: 15px 0; }
-  .txn-item { border-bottom: 1px solid #222; padding: 8px 0; display: flex; justify-content: space-between; }
   .footer { margin-top: auto; padding: 20px; text-align: center; width: 100%; }
-  .social-icons a { color: var(--main); font-size: 22px; margin: 0 12px; text-decoration: none; }
+  .social-icons a { color: var(--main); font-size: 24px; margin: 0 15px; text-decoration: none; transition: 0.3s; }
+  .social-icons a:hover { color: #fff; }
 </style>
 </head>
 <body>
 
 <div class="status-bar"><div class="dot"></div> SYSTEM: ONLINE | SECURE CONNECTION</div>
-<h1 id="titleHead" onclick="adminTrigger()">MIKI MODS</h1>
+
+<h1 id="mainTitle" onclick="adminTrigger()">MIKI MODS</h1>
 
 <div id="userSide" style="width:100%; max-width:400px">
   <div class="panel" id="payPanel">
@@ -38,21 +37,21 @@
     <button class="btn" onclick="showQR()">PROCEED TO PAYMENT</button>
     
     <div id="qrBox" class="hidden"><br>
-      <p style="font-size:12px;">Pay ₹20 to Get Access</p>
-      <img id="upiQR" width="180" style="background:white; padding:10px; border-radius:10px; border: 2px solid var(--main);">
+      <p style="font-size:12px; color:#888;">Pay ₹20 for VIP Access</p>
+      <img id="upiQR" width="180" style="background:white; padding:10px; border-radius:10px; border: 2.px solid var(--main);">
     </div>
     
     <div id="verifyBox" class="hidden" style="margin-top:20px">
-      <p style="color:var(--main); font-weight:bold;">[ STEP 02: VERIFY ]</p>
+      <p style="color:var(--main); font-weight:bold;">[ STEP 02: VERIFICATION ]</p>
       <input type="text" id="txnId" placeholder="ENTER TRANSACTION ID">
-      <button class="btn" onclick="submitTxn()">GET ACCESS CODE</button>
+      <button class="btn" onclick="submitTxn()">GET MY CODE</button>
     </div>
   </div>
 
   <div class="panel hidden" id="unlockPanel">
     <p id="welcomeMsg" style="color:var(--main); font-weight:bold;"></p>
-    <p>YOUR UNIQUE CODE:</p>
-    <h2 id="finalCode" style="color:yellow; font-size:40px; margin:10px 0;"></h2>
+    <p>YOUR UNIQUE ACCESS CODE:</p>
+    <h2 id="finalCode" style="color:yellow; font-size:40px; margin:10px 0; text-shadow: 0 0 10px rgba(255,255,0,0.5);"></h2>
     <input type="text" id="inputCode" placeholder="PASTE CODE HERE">
     <button class="btn" onclick="showFiles()">UNLOCK MODS</button>
   </div>
@@ -60,29 +59,17 @@
 
 <div id="fileArea" class="hidden" style="width:100%; max-width:400px"></div>
 
-<div id="adminArea" class="panel hidden">
-  <h2 style="color:var(--red)">MIKI ADMIN PANEL</h2>
-  <button class="btn" style="background:orange" onclick="refreshPayments()">REFRESH PAYMENT LIST</button>
-  <div id="payList" class="txn-list">Loading payments...</div>
-  <hr style="border:0; border-top:1px solid #444;">
-  <p>ADD NEW MOD LINK:</p>
-  <input type="text" id="modTitle" placeholder="Mod Name (e.g. FF Menu)">
-  <input type="text" id="modUrl" placeholder="Direct Download Link">
-  <button class="btn" style="background:var(--main)" onclick="uploadMod()">UPLOAD MOD DATA</button>
-  <button class="btn" style="background:#333; color:white" onclick="location.reload()">CLOSE ADMIN</button>
-</div>
-
 <div class="footer">
   <div class="social-icons">
     <a href="https://youtube.com/@prime_miku" target="_blank"><i class="fab fa-youtube"></i></a>
     <a href="https://www.instagram.com/_prime_miku_" target="_blank"><i class="fab fa-instagram"></i></a>
   </div>
-  <p style="font-size:10px; color:#444; margin-top:10px;">MIKI MODS © 2026</p>
+  <p style="font-size:10px; color:#555; margin-top:10px;">© 2026 MIKI MODS OFFICIAL</p>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyDp4VvkYPWrTZifunRTsyf2oEce2KA2L8o",
@@ -98,84 +85,64 @@ const db = getFirestore(app);
 const upiId = "mrbituyr-1@okicici";
 let generatedCode = "";
 let userEnteredName = "";
-let adminClicks = 0;
+let clickCount = 0;
 
-// Admin Trigger Logic
+// ADMIN TRIGGER (Title par 5 baar click karein)
 window.adminTrigger = function() {
-  adminClicks++;
-  if(adminClicks >= 5) {
-    if(prompt("Admin Pwd 1:") === "Anjali" && prompt("Admin Pwd 2:") === "priyanshu") {
-      document.getElementById("userSide").classList.add("hidden");
-      document.getElementById("adminArea").classList.remove("hidden");
-      refreshPayments();
+  clickCount++;
+  if(clickCount >= 5) {
+    if(prompt("Key 1:") === "Anjali" && prompt("Key 2:") === "priyanshu") {
+      addGamePrompt();
     } else { window.location.href = "https://google.com"; }
-    adminClicks = 0;
+    clickCount = 0;
   }
 }
 
-// Admin: Refresh Payment List
-window.refreshPayments = async function() {
-  const pList = document.getElementById("payList");
-  pList.innerHTML = "Fetching...";
-  try {
-    const q = query(collection(db, "payments"), orderBy("time", "desc"));
-    const snap = await getDocs(q);
-    let html = "";
-    snap.forEach(doc => {
-      const data = doc.data();
-      html += `<div class="txn-item">
-                <span><strong>${data.name || 'Unknown'}</strong></span>
-                <span style="color:cyan">${data.txnId}</span>
-               </div>`;
-    });
-    pList.innerHTML = html || "No payments found.";
-  } catch(e) { pList.innerHTML = "Error loading list."; }
+async function addGamePrompt() {
+  const n = prompt("Mod Name:");
+  const l = prompt("Mod Link:");
+  if(n && l) {
+    await addDoc(collection(db, "games"), { name: n, link: l });
+    alert("Mod Added Successfully!");
+  }
 }
 
-// Admin: Upload Mod
-window.uploadMod = async function() {
-  const n = document.getElementById("modTitle").value;
-  const l = document.getElementById("modUrl").value;
-  if(!n || !l) return alert("Fill both fields!");
-  await addDoc(collection(db, "games"), { name: n, link: l });
-  alert("Mod Added!");
-  document.getElementById("modTitle").value = "";
-  document.getElementById("modUrl").value = "";
-}
-
-// User: Show QR
+// USER: SHOW QR
 window.showQR = function() {
   userEnteredName = document.getElementById("userName").value.trim();
-  if(!userEnteredName) return alert("Enter your name first!");
+  if(!userEnteredName) return alert("Please enter your name first!");
   const url = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR`;
   document.getElementById("upiQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
   document.getElementById("qrBox").classList.remove("hidden");
   document.getElementById("verifyBox").classList.remove("hidden");
 }
 
-// User: Submit Txn
+// USER: SUBMIT TRANSACTION
 window.submitTxn = async function() {
   const id = document.getElementById("txnId").value.trim();
-  if(id.length < 5) return alert("Invalid ID");
+  if(id.length < 5) return alert("Invalid Transaction ID!");
   try {
     const q = query(collection(db, "payments"), where("txnId", "==", id));
     const snap = await getDocs(q);
-    if (!snap.empty) return alert("❌ Already Used!");
+    if (!snap.empty) return alert("❌ Error: Already Used!");
+
     await addDoc(collection(db, "payments"), { txnId: id, name: userEnteredName, time: serverTimestamp() });
     generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
     document.getElementById("welcomeMsg").innerText = `WELCOME, ${userEnteredName.toUpperCase()}!`;
     document.getElementById("payPanel").classList.add("hidden");
     document.getElementById("unlockPanel").classList.remove("hidden");
     document.getElementById("finalCode").innerText = generatedCode;
-  } catch(e) { alert("Server Error! Check Rules."); }
+  } catch(e) { alert("Server Error! Check Firebase Rules."); }
 }
 
-// User: Unlock
+// USER: SHOW FILES
 window.showFiles = async function() {
-  if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Code!");
+  if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Access Code!");
   const snap = await getDocs(collection(db, "games"));
-  let h = `<h2 style='color:var(--main);'>HELLO ${userEnteredName.toUpperCase()}, ENJOY!</h2>`;
-  snap.forEach(doc => { h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD</button></a></div>`; });
+  let h = `<h2 style='color:var(--main); text-align:center;'>HELLO ${userEnteredName.toUpperCase()}, ENJOY!</h2>`;
+  snap.forEach(doc => {
+    h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD NOW</button></a></div>`;
+  });
   document.getElementById("userSide").classList.add("hidden");
   document.getElementById("fileArea").innerHTML = h;
   document.getElementById("fileArea").classList.remove("hidden");
