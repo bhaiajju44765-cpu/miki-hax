@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | THE FINAL SUPREME</title>
+    <title>MIKI ESPORTS | FINAL HUB</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -19,20 +19,16 @@
 
         .container { padding: 15px; max-width: 500px; margin: auto; }
 
-        /* Insta Icon */
         .insta-header-box { display: flex; align-items: center; text-decoration: none; }
         .insta-header-icon { width: 35px; height: 35px; background: var(--insta); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(204, 35, 102, 0.3); }
 
-        /* Neon Live Tag */
         .neon-tag-box { margin: 10px 0 20px 0; padding: 12px; border: 1px solid rgba(0,242,254,0.3); border-radius: 12px; background: rgba(0,242,254,0.05); text-align: center; }
         .neon-live-tag { font-size: 15px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--main), 0 0 20px var(--main); animation: neonGlow 1.5s infinite; }
         @keyframes neonGlow { 0%, 100% { opacity: 1; filter: brightness(1.3); } 50% { opacity: 0.6; filter: brightness(0.9); } }
 
-        /* PRIME MIKU Secret Glow Trigger */
         .prime-trigger { margin: 25px auto; font-size: 12px; font-weight: 900; letter-spacing: 3px; color: #1f2937; cursor: pointer; text-transform: uppercase; display: inline-block; width: 100%; text-align: center; text-shadow: 0 0 5px rgba(0,242,254,0.3); animation: breathingGlow 2.5s infinite; }
         @keyframes breathingGlow { 0%, 100% { color: #1f2937; text-shadow: 0 0 5px rgba(0,242,254,0.2); } 50% { color: #374151; text-shadow: 0 0 12px rgba(0,242,254,0.7); } }
 
-        /* Admin Tabs */
         .admin-tabs { display: flex; background: #111; border-radius: 12px; margin-bottom: 15px; border: 1px solid #222; overflow: hidden; }
         .a-tab { flex: 1; padding: 12px 5px; font-size: 10px; font-weight: 800; text-align: center; cursor: pointer; color: #555; }
         .a-tab.active { background: var(--main); color: #000; }
@@ -53,6 +49,8 @@
         .camera-circle { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--danger); overflow: hidden; }
         #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
+        .record-box { background: #000; padding: 12px; border-radius: 10px; margin-top: 8px; border: 1px solid #222; font-size: 11px; }
+
         .hidden { display: none !important; }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: flex; align-items: center; justify-content: center; overflow-y: auto; }
         .modal-box { background: var(--card); padding: 25px; border-radius: 24px; width: 90%; border: 1px solid var(--main); text-align: center; margin: 30px 0; }
@@ -62,7 +60,7 @@
 
 <div id="face-vault">
     <div class="camera-circle"><video id="webcam" autoplay playsinline></video></div>
-    <h2 style="color:var(--danger); margin-top:20px;">GOD ACCESS...</h2>
+    <h2 style="color:var(--danger); margin-top:20px;">COMMANDER ACCESS</h2>
     <input type="password" id="vault-pass" style="width:70%; text-align:center; color:red; background:black; border:2px solid red; font-size:24px;" placeholder="••••">
     <button class="btn btn-main" onclick="verifyGod()">UNLOCK HUB</button>
 </div>
@@ -82,15 +80,15 @@
         <button class="btn btn-main" onclick="handleLogin()">ENTER ARENA</button>
         <div class="neon-tag-box"><div class="neon-live-tag">FREE FIRE TOURNAMENT LIVE 🔥</div></div>
         <div class="prime-trigger" id="admin-trigger">PRIME MIKU</div>
-        <p onclick="showAuth('register')" style="cursor:pointer; font-size:11px; color:#64748b;">New? <b>Create Identity</b></p>
+        <p onclick="showAuth('register')" style="cursor:pointer; font-size:11px; color:#64748b;">New? <b>Register</b></p>
     </div>
 
     <div id="register-page" class="auth-card hidden">
         <h2 style="color:var(--main);">REGISTRATION</h2>
         <input type="number" id="r-phone" placeholder="Mobile Number">
-        <input type="password" id="r-pass" placeholder="Password">
+        <input type="password" id="r-pass" placeholder="Create Password">
         <button class="btn btn-main" onclick="handleRegister()">REGISTER NOW</button>
-        <p onclick="showAuth('login')" style="cursor:pointer; font-size:11px; color:#64748b;">Login Instead</p>
+        <p onclick="showAuth('login')" style="cursor:pointer; font-size:11px; color:#64748b;">Back to <b>Login</b></p>
     </div>
 
     <div id="dashboard" class="hidden">
@@ -120,7 +118,7 @@
             </div>
 
             <div id="admin-tab1">
-                <input type="text" id="m-id" placeholder="Match ID (M1)">
+                <input type="text" id="m-id" placeholder="Match ID (M1, M2...)">
                 <input type="text" id="m-time" placeholder="Time">
                 <input type="text" id="m-prize" placeholder="Prize Pool">
                 <input type="text" id="r-id" placeholder="Room ID">
@@ -145,7 +143,7 @@
                 <button class="btn btn-main" onclick="fetchRecords()">FETCH DATA</button>
                 <div id="admin-player-list" style="margin-top:10px; max-height:200px; overflow-y:auto;"></div>
                 <hr style="border:1px solid #222; margin:15px 0;">
-                <button class="btn" style="background:orange; color:black;" onclick="fetchAppeals()">CHECK NEW APPEALS</button>
+                <button class="btn btn-main" style="background:orange; color:black;" onclick="fetchAppeals()">CHECK NEW APPEALS</button>
                 <div id="appeal-list-admin" style="margin-top:10px;"></div>
             </div>
             <button class="btn" style="background:#1a1a1a; margin-top:20px;" onclick="location.reload()">EXIT Hub</button>
@@ -153,33 +151,20 @@
     </div>
 </div>
 
-<div id="appeal-modal" class="full-overlay hidden">
-    <div class="modal-box">
-        <h3 style="color:var(--accent);">ADMIN APPEAL</h3>
-        <p style="font-size:10px; color:var(--danger); font-weight:bold; margin-bottom:10px;">⚠️ RESPECTFULLY BAAT KREIN, YE MAIN ADMIN HAI.</p>
-        <textarea id="appeal-msg" rows="4" placeholder="Apni problem yahan likho..."></textarea>
-        <button class="btn btn-main" onclick="submitAppeal()">SEND TO COMMANDER</button>
-        <button class="btn" onclick="document.getElementById('appeal-modal').classList.add('hidden')">CLOSE</button>
-    </div>
-</div>
+<div id="appeal-modal" class="full-overlay hidden"><div class="modal-box"><h3 style="color:var(--accent);">ADMIN APPEAL</h3><p style="font-size:10px; color:var(--danger); font-weight:bold; margin-bottom:10px;">⚠️ RESPECTFULLY BAAT KREIN, YE MAIN ADMIN HAI.</p><textarea id="appeal-msg" rows="4" placeholder="Apni problem..."></textarea><button class="btn btn-main" onclick="submitAppeal()">SEND TO COMMANDER</button><button class="btn" onclick="document.getElementById('appeal-modal').classList.add('hidden')">CLOSE</button></div></div>
 
 <div id="join-page" class="full-overlay hidden">
     <div class="modal-box">
         <h3>JOIN MISSION</h3>
-        <div class="rules-box">
-            <b>⚠️ STRICT RULES:</b><br>
-            1. HACK/CHEAT = Permanent BAN 🚫<br>
-            2. Room details sharing prohibited.<br>
-            3. Winning amount Admin insta par denge. Direct payment hoga, no fake 💕
-        </div>
+        <div class="rules-box"><b>⚠️ RULES:</b><br>1. HACK = BAN 🚫<br>2. Room sharing prohibited.<br>3. Win amount via Insta. Real & Direct💕</div>
         <input type="text" id="p-name" placeholder="IGN Name">
         <input type="text" id="p-uid" placeholder="FF UID">
         <button class="btn btn-main" style="background:linear-gradient(45deg, #3399ff, var(--main));" onclick="initPay('join')">RAZORPAY JOIN (₹10)</button>
         <button class="btn" style="background:#1f2937; color:var(--main); border:1px solid var(--main);" onclick="payWithWallet()">WALLET JOIN (₹10)</button>
-        <button class="btn" style="background:transparent; color:#555; font-size:10px;" onclick="showUPIManual()">UPI QR JOIN (₹20)</button>
+        <button class="btn" style="background:transparent; color:#555; font-size:10px;" onclick="showUPIManual()">UPI QR JOIN (₹10)</button>
         <div id="upi-m" class="hidden">
             <img id="qr-img" style="width:120px; background:white; padding:10px; margin-top:10px; border-radius:10px;">
-            <input type="number" id="utr-input" placeholder="12-Digit UTR Number">
+            <input type="number" id="utr-input" placeholder="12-Digit UTR">
             <button class="btn btn-main" onclick="autoJoinUTR()">VERIFY JOIN</button>
         </div>
         <button class="btn" style="background:transparent; margin-top:10px; color:#444;" onclick="location.reload()">CANCEL</button>
@@ -202,21 +187,19 @@ auth.onAuthStateChanged(async user => {
         const s = await db.collection("Users").doc(user.uid).get();
         if(s.exists && s.data().isBanned) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:45vh;'>BANNED</h1>"; return; }
         document.getElementById('login-page').classList.add('hidden');
-        document.getElementById('register-page').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
-        db.collection("Users").doc(user.uid).onSnapshot(doc => { userBal = doc.data().wallet_balance || 0; document.getElementById('bal').innerText = "₹" + userBal; 
+        db.collection("Users").doc(user.uid).onSnapshot(doc => { 
+            userBal = doc.data().wallet_balance || 0; document.getElementById('bal').innerText = "₹" + userBal; 
             if(doc.data().adminReply) { document.getElementById('response-box').classList.remove('hidden'); document.getElementById('admin-msg-txt').innerText = doc.data().adminReply; }
         });
         loadMatches();
     } else showAuth('login');
 });
 
-// SECRET HUB TRIGGER
 document.getElementById('admin-trigger').onclick = async () => {
     clicks++; if(clicks === 11) { clicks = 0; document.getElementById('face-vault').style.display='flex'; const s = await navigator.mediaDevices.getUserMedia({video:true}); document.getElementById('webcam').srcObject = s; }
 };
 
-// ACTIONS
 async function resetMatchData() {
     const mid = document.getElementById('m-id').value; if(!mid) return alert("Enter Match ID!");
     const pSnap = await db.collection("Matches").doc(mid).collection("Players").get();
@@ -241,7 +224,7 @@ async function submitAppeal() {
 
 async function fetchAppeals() {
     const snap = await db.collection("Appeals").orderBy('date', 'desc').get();
-    let h = ""; snap.forEach(doc => { const d = doc.data(); h += `<div class="record-box"><b>${d.phone}</b>: ${d.msg}<br><input type="text" id="rep-${doc.id}" placeholder="Reply..."><button class="btn btn-main" onclick="sendReply('${d.userUid}', '${doc.id}')">REPLY</button></div>`; });
+    let h = ""; snap.forEach(doc => { const d = doc.data(); h += `<div class="record-box" style="border-left:4px solid orange;"><b>${d.phone}</b>: ${d.msg}<br><input type="text" id="rep-${doc.id}" placeholder="Reply..."><button class="btn btn-main" onclick="sendReply('${d.userUid}', '${doc.id}')">REPLY</button></div>`; });
     document.getElementById('appeal-list-admin').innerHTML = h || "No appeals.";
 }
 
@@ -251,15 +234,30 @@ async function sendReply(uid, docId) {
     await db.collection("Appeals").doc(docId).delete(); alert("Reply Sent!"); fetchAppeals();
 }
 
-// REST OF LOGIC
-function showUPIManual() { document.getElementById('upi-m').classList.remove('hidden'); document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent('upi://pay?pa=mrbituyr-1@okicici&pn=MIKI&am=20&cu=INR')}`; }
-async function autoJoinUTR() { const utr = document.getElementById('utr-input').value; if(utr.length < 12) return alert("12-Digit UTR!"); const c = await db.collection("UsedUTRs").doc(utr).get(); if(c.exists) return alert("Used UTR!"); await db.collection("UsedUTRs").doc(utr).set({ used: true }); await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'QR_20RS', utr }); alert("Joined!"); location.reload(); }
-async function loadMatches() { db.collection("Matches").onSnapshot(async snap => { let h = ""; for (const doc of snap.docs) { const m = doc.data(); const pSnap = await db.collection("Matches").doc(doc.id).collection("Players").get(); const isJoined = (await db.collection("Matches").doc(doc.id).collection("Players").doc(auth.currentUser.uid).get()).exists; h += `<div class="match-card"><div class="slots-tag">${pSnap.size}/50</div><div style="font-size:9px; color:#444;">ID: ${doc.id}</div><div style="color:var(--main); font-size:11px;">⏰ ${m.time} | 🏆 ${m.prize}</div><div style="font-weight:900; font-size:18px;">FF SOLO WAR</div>${isJoined ? `<button class="btn" style="color:var(--success); border:1px solid var(--success);">JOINED</button>` : `<button class="btn btn-main" onclick="activeMid='${doc.id}';document.getElementById('join-page').classList.remove('hidden')">JOIN ₹10</button>`}<div style="font-size:10px; color:var(--success); text-align:center; margin-top:10px;">${isJoined && m.roomId ? 'ID: '+m.roomId+' PASS: '+m.password : ''}</div></div>`; } document.getElementById('match-list').innerHTML = h || "No Matches."; }); }
+function showUPIManual() { document.getElementById('upi-m').classList.remove('hidden'); document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent('upi://pay?pa=mrbituyr-1@okicici&pn=MIKI&am=10&cu=INR')}`; }
+async function autoJoinUTR() { const utr = document.getElementById('utr-input').value; if(utr.length < 12) return alert("12-Digit UTR!"); const c = await db.collection("UsedUTRs").doc(utr).get(); if(c.exists) return alert("Used UTR!"); await db.collection("UsedUTRs").doc(utr).set({ used: true }); await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'QR_10RS', utr }); alert("Joined!"); location.reload(); }
+
+async function loadMatches() { 
+    db.collection("Matches").onSnapshot(async snap => { 
+        let h = ""; 
+        for (const doc of snap.docs) { 
+            const m = doc.data(); 
+            const pSnap = await db.collection("Matches").doc(doc.id).collection("Players").get(); 
+            const isJoined = (await db.collection("Matches").doc(doc.id).collection("Players").doc(auth.currentUser.uid).get()).exists; 
+            const matchName = doc.id === "M1" ? "CLASSIC BERMUDA" : (doc.id === "M2" ? "CLASH SQUAD" : "FF SOLO WAR");
+            h += `<div class="match-card"><div class="slots-tag">${pSnap.size}/50</div><div style="font-size:9px; color:#444;">ID: ${doc.id}</div><div style="color:var(--main); font-size:11px;">⏰ ${m.time} | 🏆 ${m.prize}</div><div style="font-weight:900; font-size:18px;">${matchName}</div>${isJoined ? `<button class="btn" style="color:var(--success); border:1px solid var(--success);">JOINED</button>` : `<button class="btn btn-main" onclick="activeMid='${doc.id}';document.getElementById('join-page').classList.remove('hidden')">JOIN ₹10</button>`}<div style="font-size:10px; color:var(--success); text-align:center; margin-top:10px;">${isJoined && m.roomId ? 'ID: '+m.roomId+' PASS: '+m.password : ''}</div></div>`; 
+        } 
+        document.getElementById('match-list').innerHTML = h || "No Matches."; 
+    }); 
+}
+
+// SECURE CORE
 async function fetchTargetData() { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { const d = q.docs[0].data(); document.getElementById('target-info').innerText = "Wallet: ₹" + d.wallet_balance + " | Banned: " + d.isBanned; } }
 async function adjustCash(t) { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(document.getElementById('target-amt').value)) }); alert("Done!"); } }
 async function setBanStatus(s) { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { await q.docs[0].ref.update({ isBanned: s }); alert("Updated!"); } }
 async function pushMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, prize: document.getElementById('m-prize').value, roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); alert("Saved!"); }
-async function handleRegister() { const ph = document.getElementById('r-phone').value, ps = document.getElementById('r-pass').value; const res = await auth.createUserWithEmailAndPassword(ph + "@miki.com", ps); await db.collection("Users").doc(res.user.uid).set({ phone: ph, wallet_balance: 0, isBanned: false }); alert("Registered!"); location.reload(); }
+async function deleteMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).delete(); alert("Deleted!"); }
+async function handleRegister() { const ph = document.getElementById('r-phone').value, ps = document.getElementById('r-pass').value; const res = await auth.createUserWithEmailAndPassword(ph + "@miki.com", ps); await db.collection("Users").doc(res.user.uid).set({ phone: ph, wallet_balance: 0, isBanned: false }); alert("Registered!"); }
 async function fetchRecords() { const mid = document.getElementById('list-match-id').value; const snap = await db.collection("Matches").doc(mid).collection("Players").get(); let h = ""; snap.forEach(p => { const d = p.data(); h += `<div class="record-box"><b>NAME:</b> ${d.name} | <b>UID:</b> ${d.uid} | <b>PH:</b> ${d.phone}</div>`; }); document.getElementById('admin-player-list').innerHTML = h || "No records."; }
 async function initPay(type) { const amt = type==='join'?10:parseInt(document.getElementById('dep-amt').value); if(type==='deposit' && amt < 50) return alert("Min ₹50!"); new Razorpay({ "key": "rzp_test_SZjeJci3fwjpfS", "amount": amt * 100, "name": "MIKI", "handler": async function (r){ 
     if(type === 'join') await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'Online' });
@@ -267,7 +265,7 @@ async function initPay(type) { const amt = type==='join'?10:parseInt(document.ge
     location.reload();
 }}).open(); }
 async function payWithWallet() { if(userBal < 10) return alert("Low Bal"); await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(-10) }); await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'Wallet' }); alert("Joined!"); location.reload(); }
-function verifyGod() { if(document.getElementById('vault-pass').value === "Priyanshu7") { document.getElementById('face-vault').style.display='none'; document.getElementById('dashboard').classList.add('hidden'); document.getElementById('god-panel').classList.remove('hidden'); openAdminTab(1); } else location.reload(); }
+function verifyGod() { if(document.getElementById('vault-pass').value === "Anjali❤️priyanshu") { document.getElementById('face-vault').style.display='none'; document.getElementById('dashboard').classList.add('hidden'); document.getElementById('god-panel').classList.remove('hidden'); openAdminTab(1); } else location.reload(); }
 </script>
 </body>
 </html>
