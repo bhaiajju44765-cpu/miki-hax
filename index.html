@@ -20,17 +20,14 @@
         .btn { width: 100%; padding: 15px; background: linear-gradient(45deg, var(--main), #4facfe); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
         .hidden { display: none !important; }
 
-        /* --- Full Page Overlays (Join Details, Rules, Face Scan) --- */
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .modal-box { background: var(--card); padding: 25px; border-radius: 15px; width: 85%; border: 1px solid var(--main); }
 
-        /* Match Cards */
         .match-card { background: #111; padding: 15px; border-radius: 12px; border: 1px solid #222; margin-bottom: 20px; border-left: 4px solid var(--main); }
         .time-badge { background: rgba(0,242,254,0.1); color: var(--main); padding: 4px 8px; border-radius: 4px; font-size: 11px; margin-bottom: 8px; display: inline-block; }
         .room-info { background: rgba(255,202,40,0.05); border: 1px dashed #ffca28; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; color: #ffca28; font-size: 12px; }
-        .player-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; color: #aaa; border-bottom: 1px solid #222; }
+        .player-row { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; color: #aaa; border-bottom: 1px solid #222; }
 
-        /* Face Scan Animation */
         #camera-view { width: 220px; height: 220px; border-radius: 50%; border: 3px solid var(--main); object-fit: cover; }
         .scan-timer { color: var(--main); font-size: 18px; margin-bottom: 10px; font-family: monospace; }
     </style>
@@ -48,20 +45,11 @@
 <div id="join-page" class="full-overlay hidden">
     <div class="modal-box">
         <h3 style="color:var(--main); margin-top:0;">WARRIOR DETAILS</h3>
-        <p style="font-size:12px; color:#aaa;">Enter your game details to join match.</p>
         <input type="text" id="p-name" placeholder="Free Fire Name">
         <input type="text" id="p-uid" placeholder="Free Fire UID">
         <div id="join-fee-info" style="font-size:12px; margin:10px 0; color:var(--main);"></div>
         <button class="btn" onclick="submitJoinRequest()">CONFIRM & JOIN</button>
         <button class="btn" style="background:#333; color:#fff;" onclick="closeJoinPage()">CANCEL</button>
-    </div>
-</div>
-
-<div id="rules-modal" class="full-overlay hidden">
-    <div class="modal-box" style="text-align:center;">
-        <h3 style="color:var(--main);">🛡️ MISSION RULES</h3>
-        <p style="font-size:11px; color:#ccc; text-align:left;">1. No Hacks (Auto Ban).<br>2. Teaming = DQ.<br>3. Room ID 10 min pehle milega.</p>
-        <button class="btn" onclick="closeRules()">I AGREE</button>
     </div>
 </div>
 
@@ -87,6 +75,7 @@
         </div>
         <h4>LIVE TOURNAMENTS</h4>
         <div id="match-list">Loading missions...</div>
+        <button class="btn" style="background:#444; color:#fff;" onclick="logout()">LOGOUT</button>
     </div>
 
     <div id="admin-panel" class="hidden">
@@ -98,7 +87,6 @@
             <input type="text" id="r-ps" placeholder="Room Pass">
             <button class="btn" onclick="updateRoom()">UPDATE MATCH</button>
             <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
-            <p style="font-size:11px; color:#aaa;">Wallet Recharge:</p>
             <input type="text" id="t-uid" placeholder="Phone Number">
             <input type="number" id="a-amt" placeholder="Amount">
             <button class="btn" onclick="addCash()">ADD CASH TO WALLET</button>
@@ -107,7 +95,6 @@
 </div>
 
 <script>
-// --- FIREBASE CONFIG ---
 const firebaseConfig = {
     apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4",
     authDomain: "miki-turnament-93d48.firebaseapp.com",
@@ -120,7 +107,16 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// --- ADMIN SECURITY ---
+// --- AUTO LOGIN LOGIC (REFRESH FIX) ---
+auth.onAuthStateChanged(user => {
+    if (user) {
+        startApp(user);
+    } else {
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+    }
+});
+
 let clicks = 0;
 document.getElementById('admin-trigger').onclick = () => {
     clicks++; if(clicks === 7) { clicks=0; startScan(); }
@@ -152,7 +148,6 @@ async function startScan() {
     }, 1000);
 }
 
-// --- PLAYER AUTH ---
 let isLogin = true;
 function toggleMode() { isLogin = !isLogin; document.querySelector('h3').innerText = isLogin ? "PLAYER LOGIN" : "REGISTER"; }
 
@@ -160,8 +155,8 @@ function handleAuth() {
     const ph = document.getElementById('u-phone').value;
     const ps = document.getElementById('u-pass').value;
     const email = ph + "@miki.com";
-    if(isLogin) auth.signInWithEmailAndPassword(email, ps).then(r => startApp(r.user)).catch(e => alert("Login Error!"));
-    else auth.createUserWithEmailAndPassword(email, ps).then(r => { alert("Created!"); toggleMode(); });
+    if(isLogin) auth.signInWithEmailAndPassword(email, ps).catch(e => alert("Login Error!"));
+    else auth.createUserWithEmailAndPassword(email, ps).then(() => toggleMode());
 }
 
 async function startApp(user) {
@@ -176,16 +171,18 @@ async function startApp(user) {
     loadMatches();
 }
 
-// --- MATCH SYSTEM ---
+function logout() { auth.signOut(); }
+
 function loadMatches() {
     db.collection("Matches").onSnapshot(snap => {
         let h = "";
         snap.forEach(d => {
             const m = d.data();
             const mid = d.id;
-            const title = m.title || m.Title || "Solo Match";
+            // FIXED UNDEFINED LOGIC
+            const title = m.title || m.Title || "Match Name";
             const fee = m.entryFee || m.EntryFee || 0;
-            const prize = m.prize || m.prize1 || "N/A";
+            const prize = m.prize || m.Prize || "N/A";
             const time = m.time || m.Time || "TBA";
 
             h += `<div class="match-card">
@@ -194,7 +191,7 @@ function loadMatches() {
                 <div style="font-size:12px; margin:5px 0; color:#aaa;">Entry: ₹${fee} | Prize: ${prize}</div>
                 <button class="btn" style="padding:10px;" onclick="openJoinPage('${mid}', ${fee})">JOIN MATCH</button>
                 <div class="room-info">${m.roomId ? `ID: ${m.roomId} | PASS: ${m.password}` : 'Room ID will appear 10m before match'}</div>
-                <div style="margin-top:15px;"><small style="color:var(--main);">JOINED PLAYERS:</small><div id="pl-${mid}">Loading warriors...</div></div>
+                <div style="margin-top:15px;"><small style="color:var(--main);">JOINED PLAYERS:</small><div id="pl-${mid}">Loading...</div></div>
             </div>`;
             fetchPlayers(mid);
         });
@@ -210,11 +207,10 @@ function fetchPlayers(mid) {
             h += `<div class="player-row"><span>👤 ${pd.playerName}</span><span>ID: ${pd.playerUid}</span></div>`;
         });
         const el = document.getElementById('pl-' + mid);
-        if(el) el.innerHTML = h || "Empty Slot.";
+        if(el) el.innerHTML = h || "No one joined yet.";
     });
 }
 
-// --- JOIN LOGIC (NEW PAGE) ---
 let currentMatch = { id: "", fee: 0 };
 function openJoinPage(id, fee) {
     currentMatch = { id: id, fee: fee };
@@ -226,43 +222,28 @@ function closeJoinPage() { document.getElementById('join-page').classList.add('h
 async function submitJoinRequest() {
     const name = document.getElementById('p-name').value;
     const puid = document.getElementById('p-uid').value;
-    if(!name || !puid) return alert("Sari details dalo!");
-
+    if(!name || !puid) return alert("Details bharo!");
     const user = auth.currentUser;
     const uRef = db.collection("Users").doc(user.uid);
     const snap = await uRef.get();
     const bal = snap.data().wallet_balance || 0;
-
-    if(bal < currentMatch.fee) return alert("Paisa kam hai wallet mein!");
-
+    if(bal < currentMatch.fee) return alert("Balance kam hai!");
     await uRef.update({ wallet_balance: bal - currentMatch.fee, uid: puid });
     await db.collection("Matches").doc(currentMatch.id).collection("Players").doc(user.uid).set({
-        players: [{playerName: name, playerUid: puid}],
-        status: "PAID",
-        timestamp: new Date().toLocaleString()
+        players: [{playerName: name, playerUid: puid}]
     });
-
     closeJoinPage();
-    document.getElementById('rules-modal').classList.remove('hidden');
+    alert("✅ Joined Successfully!");
 }
 
-function closeRules() { document.getElementById('rules-modal').classList.add('hidden'); }
-
-// --- ADMIN PAYMENT SYSTEM (FIXED) ---
 async function addCash() {
     const ph = document.getElementById('t-uid').value.trim();
     const amt = parseInt(document.getElementById('a-amt').value);
-    if(!ph || !amt) return alert("Details dalo!");
-
-    // Dono format check karega
     let q = await db.collection("Users").where("phone", "==", ph).get();
     if(q.empty) q = await db.collection("Users").where("phone", "==", Number(ph)).get();
-
-    if(q.empty) return alert("❌ Wallet ID nahi mili!");
-
+    if(q.empty) return alert("❌ User Nahi Mila!");
     await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
     alert("✅ Success! ₹" + amt + " Added.");
-    document.getElementById('t-uid').value = ""; document.getElementById('a-amt').value = "";
 }
 
 async function updateRoom() {
@@ -273,16 +254,6 @@ async function updateRoom() {
         password: document.getElementById('r-ps').value
     });
     alert("✅ Room Updated!");
-}
-
-async function openPaymentGateway() {
-    const amt = prompt("Amount:", "50");
-    const snap = await db.collection("Users").doc(auth.currentUser.uid).get();
-    var options = { "key": "rzp_test_SZjeJci3fwjpfS", "amount": parseInt(amt) * 100, "name": "MIKI ESPORTS", "handler": async function (r){ 
-        await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(amt)) }); 
-        alert("Added!"); 
-    }, "prefill": { "contact": snap.data().phone }, "theme": { "color": "#00f2fe" } };
-    new Razorpay(options).open();
 }
 </script>
 </body>
