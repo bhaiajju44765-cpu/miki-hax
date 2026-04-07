@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | COMMAND CORE</title>
+    <title>MIKI ESPORTS | THE FINAL CORE</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -34,21 +34,27 @@
         
         .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top: 5px; }
         .btn-main { background: var(--main); color: #000; box-shadow: 0 0 15px rgba(0,242,254,0.3); }
+        .btn-razor { background: linear-gradient(45deg, #3399ff, var(--main)); color: #000; }
 
         .match-card { background: #161b22; border-radius: 20px; border-left: 6px solid var(--main); padding: 20px; margin-bottom: 20px; position: relative; }
         .slots-tag { position: absolute; top: 15px; right: 15px; background: rgba(255,0,85,0.1); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; }
 
-        /* Appeal System Styling */
-        .admin-reply-box { background: rgba(0,255,136,0.1); border: 1px solid var(--success); padding: 12px; border-radius: 12px; margin: 15px 0; font-size: 12px; }
-        .appeal-item { background: #000; padding: 10px; border-radius: 10px; margin-top: 8px; border: 1px solid #222; font-size: 11px; }
+        /* QR Scanner */
+        #upi-qr-box { background: #fff; padding: 10px; margin: 15px auto; width: 150px; height: 150px; border-radius: 12px; border: 4px solid var(--main); }
+        #upi-qr-box img { width: 100%; }
+
+        /* Rules UI */
+        .rules-list { text-align: left; background: rgba(255,0,0,0.1); border: 1px solid var(--danger); padding: 10px; border-radius: 10px; font-size: 11px; margin-bottom: 15px; }
 
         #face-vault { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .camera-circle { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--danger); overflow: hidden; position: relative; }
         #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         
+        .record-box { background: #000; padding: 12px; border-radius: 10px; margin-top: 8px; border: 1px solid #222; font-size: 11px; text-align: left; line-height: 1.6; }
+
         .hidden { display: none !important; }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: flex; align-items: center; justify-content: center; overflow-y: auto; }
-        .modal-box { background: var(--card); padding: 25px; border-radius: 24px; width: 90%; border: 1px solid var(--main); text-align: center; }
+        .modal-box { background: var(--card); padding: 25px; border-radius: 24px; width: 90%; border: 1px solid var(--main); text-align: center; margin: 30px 0; }
     </style>
 </head>
 <body>
@@ -57,7 +63,7 @@
     <div class="camera-circle"><video id="webcam" autoplay playsinline></video></div>
     <h2 style="color:var(--danger); margin-top:20px;">COMMANDER SCAN</h2>
     <input type="password" id="vault-pass" style="width:70%; text-align:center; color:red; background:black; border:2px solid red; font-size:24px;" placeholder="••••">
-    <button class="btn btn-main" onclick="verifyGod()">UNLOCK CORE</button>
+    <button class="btn btn-main" onclick="verifyGod()">UNLOCK HUB</button>
 </div>
 
 <div class="header">
@@ -88,26 +94,19 @@
             <div><small style="color:#666;">BALANCE</small><div id="bal" style="font-size:26px; font-weight:900; color:var(--main);">₹0</div></div>
             <button onclick="document.getElementById('deposit-page').classList.remove('hidden')" class="btn btn-main" style="width:auto; padding:8px 15px; font-size: 10px;">ADD CASH</button>
         </div>
-
-        <div id="response-box" class="hidden admin-reply-box">
-            <b style="color:var(--main);">📩 ADMIN RESPONSE:</b>
-            <p id="admin-msg-txt" style="margin: 5px 0 0 0;"></p>
+        
+        <div id="response-box" class="hidden" style="background:rgba(0,255,136,0.1); border:1px solid var(--success); padding:12px; border-radius:12px; margin-bottom:15px; font-size:12px;">
+            <b style="color:var(--main);">📩 ADMIN REPLY:</b> <p id="admin-msg-txt" style="margin:5px 0 0 0;"></p>
         </div>
 
-        <div id="match-list">Scanning...</div>
-
-        <div style="background:#111; border:1px dashed #444; padding:15px; border-radius:15px; margin-top:20px; text-align:center;">
-            <h4 style="color:var(--accent); margin-bottom:5px;">⚠️ HELP & APPEAL</h4>
-            <p style="font-size:10px; color:#666;">Main Admin Board: Respectfully baat karein.</p>
-            <button class="btn" style="background:#222; font-size:12px; padding:10px;" onclick="document.getElementById('appeal-modal').classList.remove('hidden')">CONTACT ADMIN</button>
-        </div>
+        <div id="match-list">Scanning available missions...</div>
 
         <button class="btn" style="background:#111; color:#444; margin-top:30px; font-size:10px;" onclick="auth.signOut().then(()=>location.reload())">TERMINATE SESSION</button>
     </div>
 
     <div id="god-panel" class="hidden">
         <div style="background:#000; padding:20px; border-radius:24px; border:2px solid red;">
-            <h3 style="color:red; text-align:center; margin:0 0 15px 0;">GOD CONSOLE</h3>
+            <h3 style="color:red; text-align:center; margin:0 0 15px 0;">SUPREME CONSOLE</h3>
             <div class="admin-tabs">
                 <div class="a-tab active" id="tab1-btn" onclick="openAdminTab(1)">MISSION</div>
                 <div class="a-tab" id="tab2-btn" onclick="openAdminTab(2)">SECURITY</div>
@@ -125,23 +124,18 @@
 
             <div id="admin-tab2" class="hidden">
                 <input type="text" id="target-ph" placeholder="Player Phone">
-                <button class="btn btn-main" onclick="fetchTargetData()">SCAN PLAYER</button>
+                <button class="btn btn-main" onclick="fetchTargetData()">VIEW PLAYER</button>
                 <div id="target-info" style="color:var(--success); margin:10px 0; font-size:12px;"></div>
                 <input type="number" id="target-amt" placeholder="Amount">
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-main" style="flex:1;" onclick="adjustCash('add')">ADD</button>
-                    <button class="btn" style="background:#333; flex:1;" onclick="adjustCash('sub')">SUB</button>
-                </div>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <button class="btn" style="background:red; flex:1;" onclick="setBanStatus(true)">BAN</button>
-                    <button class="btn" style="background:var(--success); color:black; flex:1;" onclick="setBanStatus(false)">UNBAN</button>
-                </div>
+                <button class="btn btn-main" onclick="adjustCash('add')">ADD CASH</button>
+                <button class="btn" style="background:red;" onclick="setBanStatus(true)">BAN</button>
+                <button class="btn" style="background:var(--success); color:black;" onclick="setBanStatus(false)">UNBAN</button>
             </div>
 
             <div id="admin-tab3" class="hidden">
-                <h4 style="color:var(--main);">PENDING APPEALS</h4>
-                <button class="btn btn-main" style="font-size:10px; padding:8px;" onclick="fetchAppeals()">REFRESH APPEALS</button>
-                <div id="appeal-list-admin" style="margin-top:10px; max-height: 300px; overflow-y: auto;"></div>
+                <input type="text" id="list-match-id" placeholder="Match ID (M1)">
+                <button class="btn btn-main" onclick="fetchRecords()">FETCH PLAYER DATA</button>
+                <div id="admin-player-list" style="margin-top:10px; max-height:400px; overflow-y:auto;"></div>
             </div>
 
             <button class="btn" style="background:#1a1a1a; margin-top:20px;" onclick="location.reload()">EXIT</button>
@@ -149,17 +143,37 @@
     </div>
 </div>
 
-<div id="appeal-modal" class="full-overlay hidden">
+<div id="join-page" class="full-overlay hidden">
     <div class="modal-box">
-        <h3 style="color:var(--accent);">ADMIN APPEAL</h3>
-        <p style="font-size:11px; color:#888;">Warning: Main admin board se connection hai. Respectfully baat karein.</p>
-        <textarea id="appeal-msg" rows="4" placeholder="Apni problem likho..."></textarea>
-        <button class="btn btn-main" onclick="submitAppeal()">SEND MESSAGE</button>
-        <button class="btn" style="background:transparent; color:#555;" onclick="document.getElementById('appeal-modal').classList.add('hidden')">CLOSE</button>
+        <h3 style="color:var(--main);">MISSION ENTRY</h3>
+        
+        <div class="rules-list">
+            <b>⚠️ STRICT RULES:</b><br>
+            1. Kisi bhi type ka <b>HACK/CHEAT</b> use kiya to site se permanent BAN ho jaoge.<br>
+            2. Team-up allowed nahi hai.<br>
+            3. Room ID share mat karein.<br>
+            4. Level 30+ ID hi allow hai.
+        </div>
+
+        <input type="text" id="p-name" placeholder="Free Fire Name">
+        <input type="text" id="p-uid" placeholder="FF UID Number">
+        
+        <button class="btn btn-razor" onclick="initPay('join')">PAY ₹10 & JOIN (Razorpay)</button>
+        <button class="btn" style="background:#1f2937; color:var(--main); border:1px solid var(--main);" onclick="payWithWallet()">WALLET PAY (₹10)</button>
+        
+        <button class="btn" style="background:transparent; color:#555; font-size:10px;" onclick="showUPIManual()">USE QR CODE (₹20)</button>
+        
+        <div id="upi-m" class="hidden">
+            <p style="color:yellow; font-size:11px;">QR Payment is ₹20 (Manual Processing)</p>
+            <div id="upi-qr-box"><img id="qr-img" src=""></div>
+            <input type="number" id="utr-input" placeholder="12-Digit UTR Number">
+            <button class="btn btn-main" onclick="autoJoinUTR()">VERIFY ₹20 JOIN</button>
+        </div>
+
+        <button class="btn" style="background:transparent; margin-top:10px; color:#444;" onclick="location.reload()">CANCEL</button>
     </div>
 </div>
 
-<div id="join-page" class="full-overlay hidden"><div class="modal-box"><h3>JOIN</h3><input type="text" id="p-name" placeholder="Name"><input type="text" id="p-uid" placeholder="UID"><button class="btn btn-main" onclick="initPay('join')">PAY ₹10</button><button class="btn" onclick="payWithWallet()">WALLET PAY</button><button class="btn" onclick="location.reload()">CANCEL</button></div></div>
 <div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>ADD CASH</h3><input type="number" id="dep-amt" placeholder="Min ₹40"><button class="btn btn-main" onclick="initPay('deposit')">PAY ONLINE</button><button class="btn" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
 
 <script>
@@ -174,82 +188,73 @@ function openAdminTab(n) { [1,2,3].forEach(i => { document.getElementById('admin
 auth.onAuthStateChanged(async user => {
     if(user) {
         const s = await db.collection("Users").doc(user.uid).get();
-        if(s.exists && s.data().isBanned) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:40vh;'>BANNED</h1>"; return; }
+        if(s.exists && s.data().isBanned) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:45vh;'>YOU ARE BANNED FOR HACKING</h1>"; return; }
         document.getElementById('login-page').classList.add('hidden');
-        document.getElementById('register-page').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         db.collection("Users").doc(user.uid).onSnapshot(doc => { userBal = doc.data().wallet_balance || 0; document.getElementById('bal').innerText = "₹" + userBal; 
-            // Listen for Admin Reply
-            if(doc.data().adminReply) {
-                document.getElementById('response-box').classList.remove('hidden');
-                document.getElementById('admin-msg-txt').innerText = doc.data().adminReply;
-            }
+            if(doc.data().adminReply) { document.getElementById('response-box').classList.remove('hidden'); document.getElementById('admin-msg-txt').innerText = doc.data().adminReply; }
         });
         loadMatches();
     } else showAuth('login');
 });
 
-// APPEAL SYSTEM
-async function submitAppeal() {
-    const msg = document.getElementById('appeal-msg').value;
-    if(!msg) return alert("Pehle message likho!");
-    await db.collection("Appeals").add({ msg, phone: auth.currentUser.email.split('@')[0], userUid: auth.currentUser.uid, date: new Date() });
-    alert("Sent! Dashboard par reply check karte rahein.");
-    document.getElementById('appeal-modal').classList.add('hidden');
-}
-
-async function fetchAppeals() {
-    const snap = await db.collection("Appeals").orderBy('date', 'desc').get();
-    let h = "";
-    snap.forEach(doc => { 
-        const d = doc.data(); 
-        h += `<div class="appeal-item">
-            <b>${d.phone}</b>: ${d.msg}
-            <input type="text" id="reply-${doc.id}" placeholder="Type reply..." style="padding:8px; font-size:10px;">
-            <button class="btn btn-main" style="padding:5px; font-size:10px;" onclick="sendReply('${d.userUid}', '${doc.id}')">REPLY</button>
-        </div>`; 
-    });
-    document.getElementById('appeal-list-admin').innerHTML = h || "No Appeals.";
-}
-
-async function sendReply(userUid, appealDocId) {
-    const replyTxt = document.getElementById('reply-' + appealDocId).value;
-    if(!replyTxt) return alert("Empty reply?");
-    await db.collection("Users").doc(userUid).update({ adminReply: replyTxt });
-    await db.collection("Appeals").doc(appealDocId).delete(); // Delete after reply
-    alert("Reply Sent!");
-    fetchAppeals();
-}
-
-// REST CORE (Same Stable Logic)
-async function fetchTargetData() { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) { const d = q.docs[0].data(); document.getElementById('target-info').innerText = "Bal: ₹" + d.wallet_balance + " | Ban: " + (d.isBanned || "No"); } }
-async function adjustCash(t) { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) { await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(t==='add'?parseInt(document.getElementById('target-amt').value):-parseInt(document.getElementById('target-amt').value)) }); alert("Done!"); fetchTargetData(); } }
-async function setBanStatus(s) { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) { await q.docs[0].ref.update({ isBanned: s }); alert(s?"Banned":"Unbanned"); fetchTargetData(); } }
-async function pushMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, prize: document.getElementById('m-prize').value, roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); alert("Saved!"); }
-function handleLogin() { auth.signInWithEmailAndPassword(document.getElementById('l-phone').value + "@miki.com", document.getElementById('l-pass').value).catch(e=>alert("Error!")); }
-async function handleRegister() { const res = await auth.createUserWithEmailAndPassword(document.getElementById('r-phone').value + "@miki.com", document.getElementById('r-pass').value); await db.collection("Users").doc(res.user.uid).set({ phone: document.getElementById('r-phone').value, wallet_balance: 0, isBanned: false }); alert("Registered!"); }
 async function loadMatches() {
     db.collection("Matches").onSnapshot(async snap => {
         let h = "";
         for (const doc of snap.docs) {
             const m = doc.data(), mid = doc.id;
             const pSnap = await db.collection("Matches").doc(mid).collection("Players").get();
+            const joinedCount = pSnap.size;
             const isJoined = (await db.collection("Matches").doc(mid).collection("Players").doc(auth.currentUser.uid).get()).exists;
             h += `<div class="match-card">
-                <div class="slots-tag">${pSnap.size}/50</div>
-                <div style="color:var(--main); font-size:11px;">⏰ ${m.time} | 🏆 ${m.prize}</div>
-                <div style="font-weight:900; font-size:18px; margin-top:5px;">FF SOLO</div>
-                ${isJoined ? `<button class="btn" style="color:var(--success); border:1px solid var(--success);">JOINED ✅</button>` : `<button class="btn btn-main" onclick="activeMid='${mid}';document.getElementById('join-page').classList.remove('hidden')">JOIN ₹10</button>`}
-                <div style="font-size:10px; color:var(--success); margin-top:10px; text-align:center;">${isJoined ? 'ID: '+(m.roomId||'WAIT')+' PASS: '+(m.password||'WAIT') : ''}</div>
+                <div class="slots-tag">${joinedCount}/50 JOINED</div>
+                <div style="color:var(--main); font-size:11px;">⏰ TIME: ${m.time} | 🏆 PRIZE: ${m.prize}</div>
+                <div style="font-weight:900; font-size:20px; margin:5px 0;">FF SOLO WAR</div>
+                ${isJoined ? `<button class="btn" style="color:var(--success); border:1px solid var(--success);">JOINED ✅</button>` : (joinedCount >= 50 ? `<button class="btn" disabled>FULL</button>` : `<button class="btn btn-main" onclick="activeMid='${mid}';document.getElementById('join-page').classList.remove('hidden')">JOIN ₹10</button>`)}
+                <div style="font-size:11px; color:var(--success); text-align:center; margin-top:10px;">${isJoined ? (m.roomId ? 'ID: '+m.roomId+' | PASS: '+m.password : 'Room Details coming soon...') : ''}</div>
             </div>`;
         }
-        document.getElementById('match-list').innerHTML = h || "No Match.";
+        document.getElementById('match-list').innerHTML = h || "No Active Missions.";
     });
 }
+
+function showUPIManual() {
+    document.getElementById('upi-m').classList.remove('hidden');
+    const upiLink = `upi://pay?pa=mrbituyr-1@okicici&pn=MIKI&am=20&cu=INR`;
+    document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiLink)}`;
+}
+
+async function autoJoinUTR() {
+    const utr = document.getElementById('utr-input').value; if(utr.length < 12) return alert("12-Digit UTR!");
+    const c = await db.collection("UsedUTRs").doc(utr).get(); if(c.exists) return alert("UTR Already Used!");
+    await db.collection("UsedUTRs").doc(utr).set({ used: true });
+    await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'QR_20RS', utr: utr });
+    alert("₹20 Verified! Joined Successfully."); location.reload();
+}
+
+// ADMIN DATA TOOLS
+async function fetchRecords() {
+    const mid = document.getElementById('list-match-id').value;
+    const snap = await db.collection("Matches").doc(mid).collection("Players").get();
+    let h = "";
+    snap.forEach(p => { 
+        const d = p.data(); h += `<div class="record-box"><b>NAME:</b> ${d.name}<br><b>UID:</b> ${d.uid}<br><b>PHONE:</b> ${d.phone}<br><b>VIA:</b> ${d.paidVia} ${d.utr ? '| UTR: '+d.utr : ''}</div>`; 
+    });
+    document.getElementById('admin-player-list').innerHTML = h || "No records.";
+}
+
+// REST CORE
+async function fetchTargetData() { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { const d = q.docs[0].data(); document.getElementById('target-info').innerText = "Wallet: ₹" + d.wallet_balance + " | Banned: " + (d.isBanned || "No"); } }
+async function adjustCash(t) { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) { await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(t==='add'?parseInt(document.getElementById('target-amt').value):-parseInt(document.getElementById('target-amt').value)) }); alert("Done!"); } }
+async function setBanStatus(s) { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) { await q.docs[0].ref.update({ isBanned: s }); alert(s?"BANNED":"UNBANNED"); } }
+async function pushMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, prize: document.getElementById('m-prize').value, roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); alert("Saved!"); }
+function handleLogin() { auth.signInWithEmailAndPassword(document.getElementById('l-phone').value + "@miki.com", document.getElementById('l-pass').value); }
+async function handleRegister() { const res = await auth.createUserWithEmailAndPassword(document.getElementById('r-phone').value + "@miki.com", document.getElementById('r-pass').value); await db.collection("Users").doc(res.user.uid).set({ phone: document.getElementById('r-phone').value, wallet_balance: 0, isBanned: false }); alert("Registered!"); }
 async function initPay(type) {
-    new Razorpay({ "key": "rzp_test_SZjeJci3fwjpfS", "amount": (type==='join'?10:parseInt(document.getElementById('dep-amt').value))*100, "name": "MIKI", "handler": async function (r){ 
+    const amt = type === 'join' ? 10 : parseInt(document.getElementById('dep-amt').value);
+    new Razorpay({ "key": "rzp_test_SZjeJci3fwjpfS", "amount": amt * 100, "name": "MIKI", "handler": async function (r){ 
         if(type === 'join') await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'Razorpay' });
-        else await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(document.getElementById('dep-amt').value)) });
+        else await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
         location.reload();
     }}).open();
 }
