@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | MASTER TERMINAL</title>
+    <title>MIKI ESPORTS | FF TOURNAMENTS</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -15,15 +15,16 @@
         .header { background: var(--card); padding: 15px; text-align: center; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 1000; }
         .logo { margin: 0; color: var(--main); letter-spacing: 4px; cursor: pointer; text-transform: uppercase; font-size: 22px; text-shadow: 0 0 10px var(--main); }
         .container { padding: 15px; max-width: 450px; margin: auto; min-height: 85vh; }
-        .wallet-card { background: linear-gradient(135deg, #151515, #222); padding: 20px; border-radius: 15px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border: 1px solid rgba(0,255,136,0.2); }
-        .bal-amt { font-size: 28px; color: var(--main); font-weight: bold; }
-        .match-card { background: var(--card); border-radius: 12px; padding: 15px; margin-top: 15px; border: 1px solid #222; border-left: 4px solid var(--main); }
-        .match-details { font-size: 13px; color: #aaa; margin: 10px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        
+        /* Wallet & Match Cards */
+        .wallet-card { background: linear-gradient(135deg, #151515, #222); padding: 20px; border-radius: 15px; border: 1px solid rgba(0,255,136,0.2); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .match-card { background: var(--card); border-radius: 12px; padding: 15px; margin-top: 15px; border-left: 4px solid var(--main); border: 1px solid #222; }
+        
         input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
         .btn { background: var(--main); color: #000; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .hidden { display: none; }
-        #video { border-radius: 50%; border: 3px solid var(--main); object-fit: cover; background: #000; }
-        .room-box { margin-top: 10px; padding: 10px; background: #000; color: yellow; border: 1px dashed var(--main); font-family: monospace; font-size: 13px; text-align: center; }
+        #video { border-radius: 50%; border: 3px solid var(--main); background: #000; display: block; margin: auto; }
+        .room-box { margin-top: 10px; padding: 10px; background: #000; color: yellow; border: 1px dashed var(--main); font-family: monospace; text-align: center; }
     </style>
 </head>
 <body>
@@ -34,32 +35,33 @@
 
 <div class="container">
     <div id="login-page">
-        <h3 style="text-align:center; color:var(--main);">ENTRY AUTHORIZATION</h3>
+        <h3 style="text-align:center; color:var(--main);">PLAYER LOGIN</h3>
+        <input type="number" id="phone" placeholder="Enter 10 Digit Mobile Number">
         <div id="recaptcha-container"></div>
-        <input type="text" id="phone" placeholder="+91 99348XXXXX">
         <button class="btn" onclick="sendOTP()">REQUEST OTP</button>
+        
         <div id="otp-section" class="hidden">
-            <input type="number" id="otp" placeholder="6-Digit OTP">
-            <button class="btn" onclick="verifyOTP()">VERIFY IDENTITY</button>
+            <input type="number" id="otp" placeholder="Enter 6-Digit OTP">
+            <button class="btn" style="background:orange;" onclick="verifyOTP()">VERIFY & START</button>
         </div>
     </div>
 
     <div id="dashboard" class="hidden">
         <div class="wallet-card">
             <div>
-                <div style="font-size:11px; color:#888;">CREDITS</div>
-                <div class="bal-amt" id="wallet-balance">₹0</div>
+                <div style="font-size:11px; color:#888;">BALANCE</div>
+                <div id="wallet-balance" style="font-size:28px; color:var(--main); font-weight:bold;">₹0</div>
             </div>
-            <button class="btn" style="width:auto; padding:5px 15px; font-size:12px;" onclick="window.open('YOUR_RAZORPAY_LINK')">+ DEPOSIT</button>
+            <button class="btn" style="width:auto; padding:5px 15px;" onclick="window.open('YOUR_RAZORPAY_LINK')">+ CASH</button>
         </div>
-        <h3 style="font-size: 15px; color:var(--main); border-left: 3px solid var(--main); padding-left:10px;">MATCHES</h3>
+        <h3 style="font-size:15px; border-left:3px solid var(--main); padding-left:10px;">AVAILABLE MATCHES</h3>
         <div id="match-list"></div>
     </div>
 
     <div id="admin-panel" class="hidden" style="margin-top:20px; border:1px solid var(--red); padding:15px; border-radius:12px; background:#111;">
         <div id="face-auth-ui">
             <h4 style="color:var(--red); text-align:center;">BIOMETRIC SCAN</h4>
-            <video id="video" width="150" height="150" autoplay style="display:block; margin:auto;"></video>
+            <video id="video" width="150" height="150" autoplay></video>
             <button class="btn" style="margin-top:15px;" onclick="simulateVerify()">SCAN FACE</button>
         </div>
         <div id="admin-controls" class="hidden">
@@ -68,7 +70,8 @@
             <input type="text" id="adm-room-id" placeholder="Room ID">
             <input type="text" id="adm-room-pass" placeholder="Room Pass">
             <button class="btn" style="background:var(--red); color:#fff;" onclick="pushRoom()">UPDATE ROOM</button>
-            <input type="text" id="target-uid" placeholder="Player UID" style="margin-top:15px;">
+            <hr>
+            <input type="text" id="target-uid" placeholder="Player UID">
             <input type="number" id="add-amt" placeholder="Amount">
             <button class="btn" onclick="addMoneyAdmin()">ADD MONEY</button>
         </div>
@@ -76,37 +79,39 @@
 </div>
 
 <script>
-// --- FIXED FIREBASE CONFIG ---
 const firebaseConfig = {
     apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4",
-    authDomain: "miki-turnament-93d48.firebaseapp.com", // Fixed: Proper Auth Domain
+    authDomain: "miki-turnament-93d48.firebaseapp.com",
     projectId: "miki-turnament-93d48",
     storageBucket: "miki-turnament-93d48.firebasestorage.app",
     messagingSenderId: "832870643730",
-    appId: "1:832870643730:web:ff17abcb9652a4acd2c0cb",
-    measurementId: "G-32NZPS8D9B"
+    appId: "1:832870643730:web:ff17abcb9652a4acd2c0cb"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
-let verifier;
+let confirmationResult;
 
-// Auth Functions
+// OTP Flow
 function sendOTP() {
-    const num = document.getElementById('phone').value;
-    if(num.length < 10) return alert("Sahi number dalo!");
-    const recap = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
-    auth.signInWithPhoneNumber(num, recap).then(res => {
-        verifier = res;
+    let num = document.getElementById('phone').value;
+    if(num.length !== 10) return alert("10 digit ka number dalo!");
+    
+    let fullNum = "+91" + num; // Auto +91 add
+    
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'normal' });
+
+    auth.signInWithPhoneNumber(fullNum, window.recaptchaVerifier).then(res => {
+        confirmationResult = res;
         document.getElementById('otp-section').classList.remove('hidden');
-        alert("OTP Bhej Diya!");
+        alert("OTP Bhej diya gaya hai!");
     }).catch(err => alert("Error: " + err.message));
 }
 
 function verifyOTP() {
     const code = document.getElementById('otp').value;
-    verifier.confirm(code).then(res => startApp(res.user)).catch(() => alert("Galat OTP!"));
+    confirmationResult.confirm(code).then(res => startApp(res.user)).catch(() => alert("Galat OTP!"));
 }
 
 async function startApp(user) {
@@ -129,12 +134,9 @@ function loadMatches() {
         snap.forEach(doc => {
             const m = doc.data();
             html += `<div class="match-card">
-                <b>${m.title}</b>
-                <div class="match-details">
-                    <span>📅 ${m.date}</span> <span>⏰ ${m.time}</span>
-                    <span style="color:var(--main)">💰 Fee: ₹${m.entryFee}</span>
-                </div>
-                <button class="btn" onclick="joinMatch('${doc.id}', ${m.entryFee}, '${m.type}')">JOIN NOW</button>
+                <b>${m.title}</b><br>
+                <small>Time: ${m.time} | Fee: ₹${m.entryFee}</small><br>
+                <button class="btn" style="margin-top:10px;" onclick="joinMatch('${doc.id}', ${m.entryFee})">JOIN NOW</button>
                 ${m.roomId ? `<div class="room-box">ID: ${m.roomId} | PASS: ${m.password}</div>` : ''}
             </div>`;
         });
@@ -142,24 +144,22 @@ function loadMatches() {
     });
 }
 
-async function joinMatch(id, fee, type) {
+async function joinMatch(id, fee) {
     const user = auth.currentUser;
     const uRef = db.collection("Users").doc(user.uid);
-    const mRef = db.collection("Matches").doc(id);
-    const uData = (await uRef.get()).data();
-    
-    if(uData.wallet_balance >= fee) {
-        const gameName = prompt("FF ID Name:");
-        const level = parseInt(prompt("Level (Min 50):"));
-        if(level < 50) return alert("Low level allowed nahi hai!");
-        
-        await uRef.update({ wallet_balance: uData.wallet_balance - fee });
-        await mRef.collection("Players").doc(user.uid).set({ playerName: gameName, level: level, uid: user.uid });
-        alert("Joined Successfully!");
-    } else { alert("Balance kam hai!"); }
+    const snap = await uRef.get();
+    const bal = snap.data().wallet_balance;
+
+    if(bal >= fee) {
+        const gameId = prompt("FF Name (Min Level 50):");
+        if(!gameId) return;
+        await uRef.update({ wallet_balance: bal - fee });
+        await db.collection("Matches").doc(id).collection("Players").doc(user.uid).set({ playerName: gameId, uid: user.uid });
+        alert("Joined!");
+    } else { alert("Balance Kam Hai!"); }
 }
 
-// Admin System
+// Admin Panel
 let adminClicks = 0;
 document.getElementById('miki-trigger').onclick = () => {
     adminClicks++;
@@ -180,4 +180,25 @@ async function startCamera() {
 
 function simulateVerify() {
     document.getElementById('face-auth-ui').classList.add('hidden');
-    document.getElementById('admin
+    document.getElementById('admin-controls').classList.remove('hidden');
+    const tracks = document.getElementById('video').srcObject.getTracks();
+    tracks.forEach(t => t.stop());
+}
+
+async function pushRoom() {
+    const mid = document.getElementById('adm-match-id').value;
+    const rid = document.getElementById('adm-room-id').value;
+    const rps = document.getElementById('adm-room-pass').value;
+    await db.collection("Matches").doc(mid).update({ roomId: rid, password: rps });
+    alert("Match Updated!");
+}
+
+async function addMoneyAdmin() {
+    const uid = document.getElementById('target-uid').value;
+    const amt = parseInt(document.getElementById('add-amt').value);
+    await db.collection("Users").doc(uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
+    alert("Success!");
+}
+</script>
+</body>
+</html>
