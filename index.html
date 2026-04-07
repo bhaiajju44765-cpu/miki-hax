@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | COMMANDER</title>
+    <title>MIKI ESPORTS | FF COMMAND CENTER</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -11,221 +11,191 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        :root { --main: #00f2fe; --accent: #ff0055; --bg: #030509; --card: #111827; --danger: #ff0000; --success: #0f8; }
-        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
+        :root { --main: #00f2fe; --accent: #ff0055; --bg: #010205; --card: #0d1117; --danger: #ff0000; --success: #00ff88; }
+        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; overflow-x: hidden; }
         
-        .header { background: rgba(0,0,0,0.9); padding: 12px 20px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo-img { width: 35px; height: 35px; background: linear-gradient(45deg, var(--main), var(--accent)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; box-shadow: 0 0 15px var(--main); }
+        .header { background: rgba(0,0,0,0.95); padding: 15px 20px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo-img { width: 40px; height: 40px; background: linear-gradient(45deg, var(--main), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; box-shadow: 0 0 20px var(--main); }
 
         .container { padding: 15px; max-width: 500px; margin: auto; }
+        
+        /* Neon Live Tag for Login Page */
+        .live-tag-box { margin-top: 40px; padding: 15px; border: 1px solid rgba(0,242,254,0.2); border-radius: 15px; background: rgba(0,242,254,0.02); }
+        .live-tag { font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--main), 0 0 20px var(--main); animation: glow 2s infinite; }
+        @keyframes glow { 0%, 100% { opacity: 1; filter: brightness(1.2); } 50% { opacity: 0.6; filter: brightness(0.8); } }
 
-        /* --- AUTH PAGES --- */
-        .auth-card { background: linear-gradient(145deg, #111827, #030712); padding: 35px 25px; border-radius: 24px; border: 1px solid #1f2937; text-align: center; margin-top: 50px; }
-        input { width: 100%; padding: 16px; margin: 10px 0; background: rgba(255,255,255,0.03); border: 1px solid #1f2937; color: #fff; border-radius: 12px; outline: none; box-sizing: border-box; }
+        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #161b22; border: 1px solid #30363d; color: #fff; border-radius: 12px; outline: none; box-sizing: border-box; }
         .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-main { background: linear-gradient(45deg, var(--main), #3b82f6); color: #000; }
+        .btn-main { background: linear-gradient(45deg, var(--main), #3b82f6); color: #000; box-shadow: 0 0 15px rgba(0,242,254,0.3); }
 
-        /* --- FACE SCANNER --- */
+        .match-card { background: #161b22; border-radius: 20px; border-left: 6px solid var(--main); padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .room-box { background: rgba(0,255,136,0.05); border: 1px dashed var(--success); padding: 12px; border-radius: 10px; margin-top: 15px; text-align: center; color: var(--success); font-size: 13px; font-weight: bold; }
+
         #face-vault { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .camera-circle { width: 200px; height: 200px; border-radius: 50%; border: 4px solid var(--danger); overflow: hidden; position: relative; }
+        .camera-circle { width: 200px; height: 200px; border-radius: 50%; border: 4px solid var(--danger); overflow: hidden; position: relative; box-shadow: 0 0 30px var(--danger); }
         #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         .scan-line { position: absolute; width: 100%; height: 3px; background: var(--danger); top: 0; animation: scan 2s infinite linear; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        /* --- DASHBOARD --- */
-        .match-card { background: #0b1120; border-radius: 20px; border-left: 5px solid var(--main); padding: 20px; margin-bottom: 15px; }
+        
         .hidden { display: none !important; }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: flex; align-items: center; justify-content: center; }
-        .modal-box { background: var(--card); padding: 25px; border-radius: 20px; width: 85%; border: 1px solid var(--main); text-align: center; }
+        .modal-box { background: var(--card); padding: 30px; border-radius: 24px; width: 85%; border: 1px solid var(--main); text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="face-vault">
     <div class="camera-circle"><video id="webcam" autoplay playsinline></video><div class="scan-line"></div></div>
-    <h2 style="color:var(--danger); margin-top:20px;">MASTER IDENTITY CHECK</h2>
-    <input type="password" id="vault-pass" style="width:75%; text-align:center; color:red; background:black;" placeholder="••••">
-    <button class="btn btn-main" style="width:75%;" onclick="checkVault()">UNLOCK CONSOLE</button>
+    <h2 style="color:var(--danger); margin-top:20px; letter-spacing:2px;">IDENTITY SCAN</h2>
+    <input type="password" id="vault-pass" style="width:70%; text-align:center; color:red; background:black; border:2px solid red; font-size:24px;" placeholder="••••">
+    <button class="btn btn-main" style="width:70%; margin-top:10px;" onclick="verifyGod()">UNLOCK CORE</button>
 </div>
 
 <div class="header">
-    <div style="display:flex; align-items:center; gap:10px;"><div class="logo-img">M</div><div style="font-weight:900; color:var(--main);">MIKI ESPORTS</div></div>
-    <div id="admin-trigger" style="font-size:24px; cursor:pointer;">🏆</div>
+    <div style="display:flex; align-items:center; gap:10px;"><div class="logo-img">M</div><div style="font-weight:900; color:var(--main); font-size: 20px;">MIKI</div></div>
+    <div id="god-trigger" style="font-size:24px; cursor:pointer;">🏆</div>
 </div>
 
 <div class="container">
-    <div id="login-page" class="auth-card hidden">
-        <h3 style="color:var(--main);">WARRIOR LOGIN</h3>
+    <div id="login-page" class="hidden" style="margin-top: 40px; text-align: center;">
+        <h2 style="color:var(--main); letter-spacing:1px;">WARRIOR LOGIN</h2>
         <input type="number" id="l-phone" placeholder="Mobile Number">
         <input type="password" id="l-pass" placeholder="Password">
-        <button class="btn btn-main" onclick="handleLogin()">LOGIN</button>
-        <p style="font-size:12px; margin-top:15px; cursor:pointer;" onclick="showPage('register-page')">Don't have account? Register</p>
+        <button class="btn btn-main" onclick="handleLogin()">ENTER ARENA</button>
+        
+        <div class="live-tag-box">
+            <div class="live-tag">FREE FIRE TOURNAMENT LIVE 🔥</div>
+        </div>
+        
+        <p onclick="showAuth('register')" style="cursor:pointer; font-size:11px; color:#555; margin-top:25px;">Register New Account</p>
     </div>
 
-    <div id="register-page" class="auth-card hidden">
-        <h3 style="color:var(--main);">NEW REGISTRATION</h3>
+    <div id="register-page" class="hidden" style="margin-top: 40px; text-align: center;">
+        <h2 style="color:var(--main);">REGISTRATION</h2>
         <input type="number" id="r-phone" placeholder="Mobile Number">
         <input type="password" id="r-pass" placeholder="Create Password">
-        <button class="btn btn-main" onclick="handleRegister()">CREATE ACCOUNT</button>
-        <p style="font-size:12px; margin-top:15px; cursor:pointer;" onclick="showPage('login-page')">Already a member? Login</p>
+        <button class="btn btn-main" onclick="handleRegister()">CREATE IDENTITY</button>
+        <p onclick="showAuth('login')" style="cursor:pointer; font-size:11px; color:#555; margin-top:20px;">Back to Login</p>
     </div>
 
     <div id="dashboard" class="hidden">
-        <div style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #333;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div><small>WALLET</small><div id="bal" style="font-size:24px; font-weight:900; color:var(--main);">₹0</div></div>
-                <button onclick="document.getElementById('deposit-page').classList.remove('hidden')" class="btn btn-main" style="width:auto; padding:8px 15px;">+ ADD</button>
-            </div>
+        <div style="background:var(--card); padding:20px; border-radius:20px; border:1px solid #30363d; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+            <div><small style="color:#666;">CREDITS</small><div id="bal" style="font-size:26px; font-weight:900; color:var(--main);">₹0</div></div>
+            <button onclick="document.getElementById('deposit-page').classList.remove('hidden')" class="btn btn-main" style="width:auto; padding:8px 15px;">ADD CASH</button>
         </div>
-        <div id="match-list">Scanning missions...</div>
-        <button class="btn" style="background:#222; margin-top:20px;" onclick="auth.signOut().then(() => location.reload())">LOGOUT</button>
+
+        <h4 style="margin-bottom:15px; color:var(--main); letter-spacing:1px;">🔥 ACTIVE FF MISSIONS</h4>
+        <div id="match-list">Scanning lobbies...</div>
+        <button class="btn" style="background:#111; color:#444; margin-top:30px; font-size:10px;" onclick="auth.signOut().then(()=>location.reload())">TERMINATE SESSION</button>
     </div>
 
-    <div id="admin-panel" class="hidden">
-        <div class="auth-card" style="border-color:red; background:#000;">
-            <h3 style="color:red;">MASTER CONSOLE</h3>
+    <div id="god-panel" class="hidden">
+        <div style="background:#000; padding:25px; border-radius:24px; border:2px solid red;">
+            <h2 style="color:red; text-align:center; margin-top:0;">SUPREME CONSOLE</h2>
             <input type="text" id="m-id" placeholder="Match ID (e.g. M1)">
-            <input type="text" id="m-time" placeholder="Time">
+            <input type="text" id="m-time" placeholder="Match Time">
+            <input type="text" id="m-prize" placeholder="Prize Pool">
             <input type="text" id="r-id" placeholder="Room ID">
-            <input type="text" id="r-ps" placeholder="Room Pass">
-            <button class="btn btn-main" onclick="updateRoom()">PUSH UPDATE</button>
-            <button class="btn" style="background:#331111; color:red; margin-top:5px;" onclick="deleteMatch()">DELETE MATCH</button>
-            
-            <hr style="border:1px solid #222; margin:20px 0;">
-            
-            <input type="text" id="target-phone" placeholder="Target Player Phone">
-            <div id="player-data" style="font-size:12px; color:var(--success); margin:10px 0;">Search player to see balance...</div>
-            <button class="btn" style="background:#111; color:#fff;" onclick="viewPlayer()">VIEW PLAYER DATA</button>
-            
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <input type="number" id="add-amt" placeholder="Amount" style="margin:0;">
-                <button class="btn btn-main" style="width:auto;" onclick="addCash()">ADD</button>
-            </div>
-            <button class="btn" style="background:red; color:#fff; margin-top:10px;" onclick="banPlayer()">BAN PLAYER ACCOUNT</button>
-            <button class="btn" style="background:#222; margin-top:10px;" onclick="location.reload()">EXIT</button>
+            <input type="text" id="r-ps" placeholder="Room Password">
+            <button class="btn btn-main" onclick="pushMatch()">PUSH MISSION</button>
+            <button class="btn" style="background:#222; color:red; margin-top:5px;" onclick="deleteMatch()">DELETE MISSION</button>
+            <hr style="border:1px solid #222; margin:25px 0;">
+            <input type="text" id="target-ph" placeholder="Player Phone">
+            <input type="number" id="target-amt" placeholder="Amount">
+            <button class="btn btn-main" onclick="addCash()">ADD CASH</button>
+            <button class="btn" style="background:red; color:white; margin-top:10px;" onclick="banWarrior()">BAN PLAYER</button>
+            <button class="btn" style="background:#1a1a1a; margin-top:10px; color:#555;" onclick="location.reload()">EXIT</button>
         </div>
     </div>
 </div>
 
-<div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>RECHARGE</h3><input type="number" id="dep-amt" placeholder="Min ₹40"><button class="btn btn-main" onclick="processDeposit()">PAY</button><button class="btn" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
-<div id="join-page" class="full-overlay hidden"><div class="modal-box"><h3>JOIN MISSION</h3><input type="text" id="p-name" placeholder="IGN Name"><input type="text" id="p-uid" placeholder="UID"><button class="btn btn-main" onclick="submitJoinRequest()">CONFIRM JOIN</button><button class="btn" onclick="document.getElementById('join-page').classList.add('hidden')">CANCEL</button></div></div>
+<div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>RECHARGE</h3><input type="number" id="dep-amt" placeholder="Min ₹40"><button class="btn btn-main" onclick="initPay('deposit', 0)">PAY</button><button class="btn" style="background:transparent; color:#555;" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
+<div id="join-page" class="full-overlay hidden"><div class="modal-box"><h3>JOIN MISSION</h3><input type="text" id="p-name" placeholder="In-Game Name"><input type="text" id="p-uid" placeholder="Your UID"><button class="btn btn-main" onclick="initPay('join', 10)">PAY ₹10 & JOIN</button><button class="btn" style="background:transparent; color:#555;" onclick="document.getElementById('join-page').classList.add('hidden')">CANCEL</button></div></div>
 
 <script>
 const firebaseConfig = { apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4", authDomain: "miki-turnament-93d48.firebaseapp.com", projectId: "miki-turnament-93d48", storageBucket: "miki-turnament-93d48.firebasestorage.app", messagingSenderId: "832870643730", appId: "1:832870643730:web:ff17abcb9652a4acd2c0cb" };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth(), db = firebase.firestore();
 
-function speak(t) { const s = new SpeechSynthesisUtterance(t); s.pitch = 0.1; window.speechSynthesis.speak(s); }
-function showPage(id) { ['login-page', 'register-page', 'dashboard', 'admin-panel'].forEach(p => document.getElementById(p).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+function showAuth(type) { document.getElementById('login-page').classList.toggle('hidden', type !== 'login'); document.getElementById('register-page').classList.toggle('hidden', type !== 'register'); }
 
-// --- AUTH LOGIC ---
 auth.onAuthStateChanged(async user => {
     if(user) {
         const snap = await db.collection("Users").doc(user.uid).get();
-        if(snap.exists && snap.data().isBanned) {
-            document.body.innerHTML = `<div style="height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; background:#000; color:red; padding:20px;"><h1>ACCOUNT IS BANNED BY ADMIN</h1></div>`;
-            auth.signOut();
-            return;
-        }
-        startApp(user);
-    } else showPage('login-page');
+        if(snap.exists && snap.data().isBanned) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:45vh;'>ACCOUNT BANNED BY ADMIN</h1>"; return; }
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('register-page').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        db.collection("Users").doc(user.uid).onSnapshot(doc => { if(doc.exists) document.getElementById('bal').innerText = "₹" + (doc.data().wallet_balance || 0); });
+        loadMatches();
+    } else showAuth('login');
 });
-
-async function handleRegister() {
-    const ph = document.getElementById('r-phone').value, ps = document.getElementById('r-pass').value;
-    if(ph.length < 10) return alert("Valid Number!");
-    try {
-        const res = await auth.createUserWithEmailAndPassword(ph + "@miki.com", ps);
-        await db.collection("Users").doc(res.user.uid).set({ phone: ph, wallet_balance: 0, match_played: 0, isBanned: false });
-        alert("Account Created!");
-    } catch(e) { alert(e.message); }
-}
-
-function handleLogin() {
-    const ph = document.getElementById('l-phone').value, ps = document.getElementById('l-pass').value;
-    auth.signInWithEmailAndPassword(ph + "@miki.com", ps).catch(e => alert("Wrong Credentials!"));
-}
-
-// --- ADMIN SYSTEM ---
-let clicks = 0;
-document.getElementById('admin-trigger').onclick = async () => {
-    clicks++;
-    if(clicks === 7) { 
-        clicks = 0; 
-        document.getElementById('face-vault').style.display = 'flex';
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        document.getElementById('webcam').srcObject = stream;
-        speak("Identity check required.");
-    }
-};
-
-function checkVault() {
-    if(document.getElementById('vault-pass').value === "Priyanshu7") {
-        document.getElementById('face-vault').style.display = 'none';
-        document.getElementById('webcam').srcObject.getTracks().forEach(t => t.stop());
-        showPage('admin-panel');
-    } else { alert("Access Denied!"); location.reload(); }
-}
-
-async function viewPlayer() {
-    const ph = document.getElementById('target-phone').value;
-    const q = await db.collection("Users").where("phone", "==", ph).get();
-    if(!q.empty) {
-        const d = q.docs[0].data();
-        document.getElementById('player-data').innerText = `Balance: ₹${d.wallet_balance} | Banned: ${d.isBanned}`;
-    } else alert("Not found!");
-}
-
-async function banPlayer() {
-    const ph = document.getElementById('target-phone').value;
-    const q = await db.collection("Users").where("phone", "==", ph).get();
-    if(!q.empty) {
-        await q.docs[0].ref.update({ isBanned: true });
-        alert("PLAYER BANNED!");
-    }
-}
-
-// --- APP CORE ---
-async function startApp(user) {
-    showPage('dashboard');
-    db.collection("Users").doc(user.uid).onSnapshot(doc => {
-        const d = doc.data();
-        document.getElementById('bal').innerText = "₹" + (d.wallet_balance || 0);
-    });
-    loadMatches();
-}
 
 async function loadMatches() {
     db.collection("Matches").onSnapshot(snap => {
         let h = "";
-        snap.forEach(d => {
+        snap.forEach(async d => {
             const m = d.data();
+            const jSnap = await db.collection("Matches").doc(d.id).collection("Players").doc(auth.currentUser.uid).get();
+            const joined = jSnap.exists;
             h += `<div class="match-card">
-                <div style="color:var(--main); font-size:11px;">⏰ ${m.time}</div>
-                <div style="font-weight:900; font-size:18px;">${m.title}</div>
-                <button class="btn btn-main" style="margin-top:10px;" onclick="openJoin('${d.id}')">JOIN MISSION</button>
-                <div style="font-size:10px; color:#555; margin-top:5px;">${m.roomId ? 'ID: '+m.roomId+' | PASS: '+m.password : 'Room Locked'}</div>
+                <div style="color:var(--main); font-size:11px; font-weight:bold;">⏰ ${m.time}</div>
+                <div style="font-weight:900; font-size:20px; letter-spacing:1px;">FREE FIRE SOLO</div>
+                <div style="font-size:12px; color:#666; margin-top:5px;">Prize: ${m.prize} | Fee: ₹10</div>
+                ${joined ? `<button class="btn" style="background:rgba(0,255,136,0.1); color:var(--success); border:1px solid var(--success); cursor:default; margin-top:15px;">JOINED ✅</button>` : `<button class="btn btn-main" style="margin-top:15px;" onclick="openJoin('${d.id}')">JOIN MISSION</button>`}
+                <div class="room-box">
+                    ${joined ? (m.roomId ? `ID: ${m.roomId} | PASS: ${m.password}` : 'Wait for Room ID...') : '🔒 Join match to unlock details'}
+                </div>
             </div>`;
+            document.getElementById('match-list').innerHTML = h;
         });
-        document.getElementById('match-list').innerHTML = h || "No Matches.";
+        if(snap.empty) document.getElementById('match-list').innerHTML = "No missions active right now.";
     });
 }
 
-async function updateRoom() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, title: "Miki Mission", roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); alert("Updated!"); }
-async function deleteMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).delete(); alert("Deleted!"); }
-async function addCash() { 
-    const q = await db.collection("Users").where("phone", "==", document.getElementById('target-phone').value).get();
-    if(!q.empty) await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(document.getElementById('add-amt').value)) }); alert("Cash Added!");
+// GOD CONSOLE
+let clicks = 0;
+document.getElementById('god-trigger').onclick = async () => { if(++clicks === 7) { clicks=0; document.getElementById('face-vault').style.display='flex'; const s = await navigator.mediaDevices.getUserMedia({video:true}); document.getElementById('webcam').srcObject=s; } };
+function verifyGod() { if(document.getElementById('vault-pass').value === "Priyanshu7") { document.getElementById('webcam').srcObject.getTracks().forEach(t=>t.stop()); document.getElementById('face-vault').style.display='none'; document.getElementById('dashboard').classList.add('hidden'); document.getElementById('god-panel').classList.remove('hidden'); } else location.reload(); }
+
+async function pushMatch() {
+    await db.collection("Matches").doc(document.getElementById('m-id').value).set({
+        time: document.getElementById('m-time').value,
+        prize: document.getElementById('m-prize').value,
+        roomId: document.getElementById('r-id').value,
+        password: document.getElementById('r-ps').value
+    }, { merge: true });
+    alert("Match Pushed!");
 }
 
-async function processDeposit() {
-    const amt = parseInt(document.getElementById('dep-amt').value);
-    var options = { "key": "rzp_test_SZjeJci3fwjpfS", "amount": amt * 100, "name": "MIKI ESPORTS", "handler": async function (r){ 
-        await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) }); 
-        alert("Done!"); document.getElementById('deposit-page').classList.add('hidden');
+async function handleRegister() {
+    const ph = document.getElementById('r-phone').value, ps = document.getElementById('r-pass').value;
+    const res = await auth.createUserWithEmailAndPassword(ph + "@miki.com", ps);
+    await db.collection("Users").doc(res.user.uid).set({ phone: ph, wallet_balance: 0, isBanned: false });
+    alert(" warrior registered!");
+}
+
+function handleLogin() { auth.signInWithEmailAndPassword(document.getElementById('l-phone').value + "@miki.com", document.getElementById('l-pass').value).catch(e=>alert("Wrong Password!")); }
+
+let activeMid = ""; function openJoin(mid) { activeMid = mid; document.getElementById('join-page').classList.remove('hidden'); }
+
+async function initPay(type, amt) {
+    const finalAmt = type === 'join' ? 10 : parseInt(document.getElementById('dep-amt').value);
+    var options = { "key": "rzp_test_SZjeJci3fwjpfS", "amount": finalAmt * 100, "name": "MIKI ESPORTS", "handler": async function (r){ 
+        if(type === 'join') {
+            await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value });
+            document.getElementById('join-page').classList.add('hidden'); alert("Joined Successfully!");
+        } else {
+            await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(finalAmt) });
+            document.getElementById('deposit-page').classList.add('hidden'); alert("Balance Added!");
+        }
     }};
     new Razorpay(options).open();
 }
+
+async function deleteMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).delete(); alert("Deleted!"); }
+async function addCash() { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(document.getElementById('target-amt').value)) }); alert("Cash Added!"); }
+async function banWarrior() { const q = await db.collection("Users").where("phone", "==", document.getElementById('target-ph').value).get(); if(!q.empty) await q.docs[0].ref.update({ isBanned: true }); alert("Banned!"); }
 </script>
 </body>
 </html>
