@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | PRO TERMINAL</title>
+    <title>MIKI ESPORTS | TOURNAMENT HUB</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -11,63 +11,206 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        :root { --main: #00ff88; --bg: #050505; --card: #111; --red: #ff4444; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; user-select: none; }
-        .header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 100; box-shadow: 0 0 15px rgba(0,255,136,0.2); }
-        .hacker-logo { width: 45px; cursor: pointer; filter: drop-shadow(0 0 5px var(--main)); }
-        .container { padding: 15px; max-width: 500px; margin: auto; }
-        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #444; color: var(--main); border-radius: 5px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 12px; background: var(--main); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; }
-        .btn:active { transform: scale(0.98); }
+        :root { 
+            --main: #00f2fe; /* Neon Blue */
+            --accent: #ff0055; /* Neon Pink */
+            --bg: #0a0e17; /* Deep Gaming Black */
+            --card: #161b29; /* Dark Gray Card */
+            --text: #ffffff;
+            --glow: 0 0 15px rgba(0, 242, 254, 0.6);
+        }
+
+        body { 
+            background: var(--bg); 
+            background-image: url('https://www.transparenttextures.com/patterns/dark-dotted-2.png'); /* Gaming texture */
+            color: var(--text); 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            user-select: none; 
+            overflow-x: hidden;
+        }
+
+        /* --- Header & Logo --- */
+        .header { 
+            background: rgba(0, 0, 0, 0.8); 
+            padding: 15px; 
+            text-align: center; 
+            border-bottom: 2px solid var(--main); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trophy-logo { 
+            font-size: 24px; 
+            cursor: pointer; 
+            filter: drop-shadow(0 0 5px var(--main));
+            transition: 0.3s;
+        }
+        .trophy-logo:active { transform: scale(1.2) rotate(10deg); }
+
+        .brand-name {
+            font-size: 18px; 
+            font-weight: 900; 
+            color: var(--main); 
+            letter-spacing: 2px; 
+            text-shadow: var(--glow);
+            text-transform: uppercase;
+        }
+
+        /* --- Main Container & Cards --- */
+        .container { padding: 20px; max-width: 500px; margin: auto; padding-bottom: 50px;}
+        .card { 
+            background: var(--card); 
+            padding: 25px; 
+            border-radius: 16px; 
+            border: 1px solid #333; 
+            margin-bottom: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--main); box-shadow: 0 10px 40px rgba(0,242,254,0.2); }
+
+        /* --- Beautiful Styling --- */
+        h3, h4 { margin-top: 0; color: var(--main); text-transform: uppercase; letter-spacing: 1px; }
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            margin: 10px 0; 
+            background: rgba(0,0,0,0.5); 
+            border: 1px solid #444; 
+            color: var(--text); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            outline: none; 
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--main); box-shadow: 0 0 10px rgba(0,242,254,0.3); }
+
+        /* Lovely Lovely Buttons */
+        .btn { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(45deg, var(--main), #4facfe);
+            color: #000; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            box-shadow: 0 5px 15px rgba(0,242,254,0.3);
+            transition: 0.3s;
+        }
+        .btn:hover { box-shadow: 0 8px 25px rgba(0,242,254,0.5); transform: translateY(-2px); }
+        .btn:active { transform: translateY(1px) scale(0.98); }
+
+        .btn-add-cash {
+            background: linear-gradient(45deg, #11998e, #38ef7d); /* Green Gradient */
+            color: #fff;
+            padding: 10px 20px;
+            width: auto;
+            margin-top: 0;
+            font-size: 12px;
+        }
+
         .hidden { display: none; }
-        .wallet-box { display: flex; justify-content: space-between; align-items: center; background: rgba(0,255,136,0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--main); margin-bottom: 20px; }
-        .match-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border-left: 5px solid var(--main); margin-bottom: 15px; position: relative; }
-        .type-tag { position: absolute; top: 10px; right: 10px; font-size: 10px; background: var(--main); color: #000; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; background: #000; }
-        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
-        th { background: #222; color: var(--main); }
-        hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
+
+        /* --- Tournament View Match Cards --- */
+        .wallet-box { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(0,242,254,0.05); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--main); 
+            margin-bottom: 25px; 
+            box-shadow: var(--glow);
+        }
+
+        .match-card { 
+            background: #111; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #222;
+            margin-bottom: 20px; 
+            position: relative; 
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .match-card:hover { border-color: var(--accent); }
+        .match-card::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,0,85,0.05) 0%, rgba(0,0,0,0) 70%);
+            z-index: 0;
+        }
+
+        .type-tag { 
+            position: absolute; top: 15px; right: 15px; 
+            font-size: 10px; background: var(--accent); color: #fff; 
+            padding: 3px 8px; border-radius: 4px; font-weight: bold; 
+            text-transform: uppercase; z-index: 1;
+        }
+
+        .match-title { font-size: 18px; font-weight: bold; color: var(--text); z-index: 1; position: relative; }
+        .match-details { font-size: 12px; color: #aaa; margin: 10px 0; z-index: 1; position: relative; display: flex; justify-content: space-between; }
+        .fee-tag { color: var(--main); font-weight: bold; }
+        .prize-tag { color: #ffca28; font-weight: bold; }
+
+        /* Admin/Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 15px; background: #000; border-radius: 8px; overflow: hidden;}
+        th, td { border: 1px solid #222; padding: 12px; text-align: left; }
+        th { background: #1a1a1a; color: var(--main); text-transform: uppercase;}
+        tr:hover { background: rgba(255,255,255,0.03); }
+        hr { border: 0; border-top: 1px solid #333; margin: 25px 0; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="header">
-    <img src="https://cdn-icons-png.flaticon.com/512/940/940544.png" class="hacker-logo" id="admin-trigger">
-    <div style="font-size:16px; font-weight:bold; color:var(--main); letter-spacing: 2px;">MIKI ESPORTS</div>
+    <div style="width:30px;"></div> <div class="brand-name">MIKI ESPORTS</div>
+    <div class="trophy-logo" id="admin-trigger">🏆</div>
 </div>
 
 <div class="container">
-    <div id="auth-section" class="card">
-        <h3 id="auth-title" style="text-align:center; color:var(--main); margin-top:0;">LOGIN TERMINAL</h3>
-        <input type="number" id="u-phone" placeholder="Enter Mobile Number">
-        <input type="password" id="u-pass" placeholder="Enter Password">
-        <button class="btn" onclick="handleAuth()">ACCESS SYSTEM</button>
-        <p style="text-align:center; font-size:12px; color:#aaa; cursor:pointer; margin-top:15px;" onclick="toggleMode()" id="mode-text">New Player? Create Account</p>
+    <div id="auth-section" class="card" style="text-align:center;">
+        <h3 id="auth-title">PLAYER LOGIN</h3>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Enter the arena to claim your glory.</p>
+        <input type="number" id="u-phone" placeholder="Mobile Number">
+        <input type="password" id="u-pass" placeholder="Password">
+        <button class="btn" onclick="handleAuth()">ENTER ARENA</button>
+        <p style="font-size:12px; color:#aaa; cursor:pointer; margin-top:20px;" onclick="toggleMode()" id="mode-text">New Warrior? Create Account</p>
     </div>
 
     <div id="dashboard" class="hidden">
         <div class="wallet-box">
             <div>
-                <small style="color:#888;">CREDITS</small>
-                <div id="bal" style="font-size:24px; font-weight:bold; color:var(--main);">₹0</div>
-                <small id="display-phone" style="color:var(--main); font-size:10px;"></small>
+                <small style="color:#888; text-transform:uppercase; font-size:10px; letter-spacing:1px;">YOUR BALANCE</small>
+                <div id="bal" style="font-size:28px; font-weight:900; color:var(--main); text-shadow: var(--glow);">₹0</div>
+                <small id="display-phone" style="color:#aaa; font-size:10px;"></small>
             </div>
-            <button onclick="openPaymentGateway()" style="background:var(--main); border:none; color:#000; padding:10px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">ADD CASH</button>
+            <button onclick="openPaymentGateway()" class="btn btn-add-cash">ADD CASH</button>
         </div>
-        <h4 style="margin:0 0 15px 0; color:var(--main); border-bottom:1px solid #222; padding-bottom:5px;">LIVE MISSIONS</h4>
-        <div id="match-list">Loading...</div>
+        <h4>LIVE MISSIONS</h4>
+        <div id="match-list">Loading missions...</div>
     </div>
 
     <div id="admin-panel" class="hidden">
-        <div class="card" style="border-color: var(--red); background: rgba(10,0,0,0.9);">
-            <h3 style="color:var(--red); text-align:center; margin-top:0;">ADMIN MASTER CONTROL</h3>
+        <div class="card" style="border-color: var(--accent); background: rgba(20,0,10,0.95);">
+            <h3 style="color:var(--accent); text-align:center; text-shadow: 0 0 10px var(--accent);">ADMIN COMMAND CENTER</h3>
             
             <p style="font-size:11px; color:#aaa;">Update Room ID/Pass:</p>
             <input type="text" id="m-id" placeholder="Match ID (M1, M2)">
             <input type="text" id="r-id" placeholder="Room ID">
             <input type="text" id="r-ps" placeholder="Room Password">
-            <button class="btn" style="background:var(--red); color:#fff;" onclick="updateRoom()">PUSH ROOM DATA</button>
+            <button class="btn" style="background:var(--accent); color:#fff; box-shadow: 0 5px 15px rgba(255,0,85,0.3);" onclick="updateRoom()">PUSH ROOM DATA</button>
             
             <hr>
             
@@ -114,8 +257,8 @@ const db = firebase.firestore();
 let isLogin = true;
 function toggleMode() {
     isLogin = !isLogin;
-    document.getElementById('auth-title').innerText = isLogin ? "LOGIN TERMINAL" : "CREATE ACCOUNT";
-    document.getElementById('mode-text').innerText = isLogin ? "New Player? Create Account" : "Back to Login";
+    document.getElementById('auth-title').innerText = isLogin ? "PLAYER LOGIN" : "CREATE ACCOUNT";
+    document.getElementById('mode-text').innerText = isLogin ? "New Warrior? Create Account" : "Back to Login";
 }
 
 function handleAuth() {
@@ -125,10 +268,10 @@ function handleAuth() {
     const email = ph + "@miki.com";
 
     if(isLogin) {
-        auth.signInWithEmailAndPassword(email, ps).then(r => startApp(r.user)).catch(e => alert("Invalid Access!"));
+        auth.signInWithEmailAndPassword(email, ps).then(r => startApp(r.user)).catch(e => alert("Access Denied!"));
     } else {
         auth.createUserWithEmailAndPassword(email, ps).then(r => { 
-            alert("Account Created! Login Now."); 
+            alert("Account Ready! Login Now."); 
             toggleMode(); 
         }).catch(e => alert("Error: " + e.message));
     }
@@ -148,7 +291,7 @@ async function startApp(user) {
     uRef.onSnapshot(doc => {
         if(doc.exists) {
             document.getElementById('bal').innerText = "₹" + (doc.data().wallet_balance || 0);
-            document.getElementById('display-phone').innerText = "ID: " + doc.data().phone;
+            document.getElementById('display-phone').innerText = "PLAYER ID: " + doc.data().phone;
         }
     });
     loadMatches();
@@ -163,14 +306,14 @@ function loadMatches() {
             const typeLabel = m.type || "Solo";
             h += `<div class="match-card">
                 <span class="type-tag">${typeLabel}</span>
-                <b style="color:var(--main); font-size:16px;">${m.title}</b><br>
-                <div style="font-size:11px; margin-top:8px; color:#ccc;">
-                    🏆 Prize: ${m.prize1 || m.prize || 'N/A'}<br>
-                    💰 Entry Fee: ₹${m.entryFee || 0}
+                <div class="match-title">${m.title}</div>
+                <div class="match-details">
+                    <div>Entry: <span class="fee-tag">₹${m.entryFee || 0}</span></div>
+                    <div>Prize: <span class="prize-tag">${m.prize1 || m.prize || 'N/A'}</span></div>
                 </div>
-                <button class="btn" style="height:35px; line-height:10px; font-size:12px;" onclick="joinMatch('${d.id}', ${m.entryFee}, '${typeLabel}')">JOIN MISSION</button>
-                ${m.roomId ? `<div style="background:#222; padding:8px; margin-top:10px; color:yellow; font-size:11px; border:1px solid #444; border-radius:4px; text-align:center;">
-                    ID: ${m.roomId} | PASS: ${m.password || m.pasword}
+                <button class="btn" style="margin-top:10px; padding:10px;" onclick="joinMatch('${d.id}', ${m.entryFee}, '${typeLabel}')">JOIN MISSION</button>
+                ${m.roomId ? `<div style="background:rgba(255,255,0,0.1); padding:10px; margin-top:10px; color:#ffca28; font-size:11px; border:1px solid #ffca28; border-radius:8px; text-align:center; z-index:1; position:relative;">
+                    ROOM ID: ${m.roomId} | PASS: ${m.password || m.pasword}
                 </div>` : ''}
             </div>`;
         });
@@ -185,11 +328,11 @@ async function joinMatch(mid, fee, type) {
     const snap = await uRef.get();
     const currentBal = snap.data().wallet_balance || 0;
 
-    if(currentBal < fee) return alert("Insufficient Credits! Balance: ₹" + currentBal);
+    if(currentBal < fee) return alert("Insufficient Credits! Need ₹" + fee);
 
     let playersList = [];
     if(type.toLowerCase() === "squad") {
-        alert("SQUAD MODE: 4 Players ki details dalo.");
+        alert("SQUAD MODE: Enter details for 4 Warriors.");
         for(let i=1; i<=4; i++) {
             let n = prompt(`Player ${i} Name:`);
             let u = prompt(`Player ${i} UID:`);
@@ -197,14 +340,14 @@ async function joinMatch(mid, fee, type) {
             playersList.push({ playerName: n, playerUid: u });
         }
     } else {
-        let n = prompt("Free Fire Name:");
-        let u = prompt("Free Fire UID:");
+        let n = prompt("Game Name:");
+        let u = prompt("Game UID:");
         let l = prompt("Game Level:");
         if(!n || !u) return alert("Name & UID required!");
         playersList.push({ playerName: n, playerUid: u, playerLevel: l });
     }
 
-    if(!confirm(`₹${fee} kaat liye jayenge. Join karein?`)) return;
+    if(!confirm(`₹${fee} will be deducted. Proceed?`)) return;
 
     try {
         await uRef.update({ wallet_balance: currentBal - fee });
@@ -215,14 +358,14 @@ async function joinMatch(mid, fee, type) {
             type: type,
             timestamp: new Date().toLocaleString()
         });
-        alert("✅ MISSION JOINED! Good luck Soldier.");
+        alert("✅ MISSION JOINED! Victory awaits.");
     } catch (e) { alert("Error: " + e.message); }
 }
 
 // RAZORPAY AUTO-ADD CASH
 async function openPaymentGateway() {
-    const amt = prompt("Kitna Paisa Add Karna Hai? (Min: ₹50)", "50");
-    if(!amt || parseInt(amt) < 50) return alert("Bhai, kam se kam ₹50 dalo!");
+    const amt = prompt("Enter Amount to Add (Min: ₹50)", "50");
+    if(!amt || parseInt(amt) < 50) return alert("Bhai, Minimum ₹50 dalo!");
 
     const user = auth.currentUser;
     const uRef = db.collection("Users").doc(user.uid);
@@ -236,10 +379,10 @@ async function openPaymentGateway() {
         "description": "Wallet Recharge",
         "handler": async function (response){
             await uRef.update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(amt)) });
-            alert("✅ ₹" + amt + " aapke wallet mein add ho gaye!");
+            alert("✅ ₹" + amt + " Credits Added!");
         },
         "prefill": { "contact": snap.data().phone },
-        "theme": { "color": "#00ff88" }
+        "theme": { "color": "#00f2fe" }
     };
     var rzp1 = new Razorpay(options);
     rzp1.open();
@@ -260,10 +403,10 @@ document.getElementById('admin-trigger').onclick = () => {
 async function addCash() {
     const ph = document.getElementById('t-uid').value;
     const amt = parseInt(document.getElementById('a-amt').value);
-    if(!ph || !amt) return alert("Bhai details dalo!");
+    if(!ph || !amt) return alert("Enter details!");
     
     const q = await db.collection("Users").where("phone", "==", ph).get();
-    if(q.empty) return alert("❌ Ye number register nahi hai!");
+    if(q.empty) return alert("❌ Number not registered!");
     
     await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
     alert(`🔥 Done! ₹${amt} added to ${ph}`);
@@ -273,21 +416,21 @@ async function updateRoom() {
     const mid = document.getElementById('m-id').value;
     const rid = document.getElementById('r-id').value;
     const rps = document.getElementById('r-ps').value;
-    if(!mid) return alert("Match ID dalo!");
+    if(!mid) return alert("Match ID required!");
     await db.collection("Matches").doc(mid).update({ roomId: rid, password: rps });
     alert("Room Details Pushed!");
 }
 
 async function viewPlayers() {
     const mid = document.getElementById('v-mid').value;
-    if(!mid) return alert("Match ID dalo!");
+    if(!mid) return alert("Match ID required!");
     
     db.collection("Matches").doc(mid).collection("Players").onSnapshot(snap => {
         let h = "";
         snap.forEach(p => {
             const d = p.data();
             d.players.forEach(pl => {
-                h += `<tr><td>${pl.playerName}</td><td>${pl.playerUid}</td><td>${pl.playerLevel || 'N/A'}</td><td style="color:#0f8;">PAID</td></tr>`;
+                h += `<tr><td>${pl.playerName}</td><td>${pl.playerUid}</td><td>${pl.playerLevel || 'N/A'}</td><td style="color:#0f8; font-weight:bold;">PAID</td></tr>`;
             });
         });
         document.getElementById('p-list').innerHTML = h || "<tr><td colspan='4'>No players yet.</td></tr>";
