@@ -3,93 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | HACKER TERMINAL</title>
+    <title>MIKI ESPORTS | PRO TERMINAL</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --main: #00ff88; --bg: #050505; --card: #111; --red: #ff0000; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; user-select: none; }
-        
-        /* Hacker Header */
-        .header { background: #000; padding: 15px; text-align: center; border-bottom: 1px solid var(--main); position: sticky; top: 0; z-index: 1000; }
-        
-        /* Black Hat Hacker Symbol (Secret Trigger) */
-        .hacker-logo { 
-            width: 50px; cursor: pointer; transition: 0.3s; filter: drop-shadow(0 0 5px var(--main));
-            display: block; margin: 0 auto 5px auto;
-        }
-        .hacker-logo:active { transform: scale(0.9); }
-
-        .container { padding: 20px; max-width: 420px; margin: auto; }
-        .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #222; box-shadow: 0 0 15px rgba(0,255,136,0.1); margin-bottom: 20px; }
-        
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid var(--main); color: var(--main); border-radius: 5px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 12px; background: var(--main); border: none; color: #000; font-weight: bold; border-radius: 5px; cursor: pointer; text-transform: uppercase; }
+        :root { --main: #00ff88; --bg: #050505; --card: rgba(17, 17, 17, 0.9); --red: #ff4444; }
+        body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; user-select: none; }
+        .header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 100; }
+        .hacker-logo { width: 45px; cursor: pointer; filter: drop-shadow(0 0 5px var(--main)); }
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid var(--main); color: var(--main); border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; background: var(--main); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .hidden { display: none; }
-
-        /* Dashboard UI */
-        .wallet-card { border: 1px solid var(--main); padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #001100; border-radius: 8px; }
-        .match-card { border-left: 3px solid var(--main); padding: 15px; background: #0a0a0a; margin-top: 15px; border-radius: 5px; }
-
-        /* Admin Face Scan */
-        #video { border: 2px solid var(--red); border-radius: 10px; display: block; margin: 10px auto; background: #000; }
-        .scan-line { width: 100%; height: 2px; background: var(--red); position: absolute; animation: scan 2s infinite; }
-        @keyframes scan { 0% { top:0; } 100% { top:100%; } }
+        .wallet-box { display: flex; justify-content: space-between; align-items: center; background: rgba(0,255,136,0.1); padding: 15px; border-radius: 10px; border: 1px dashed var(--main); }
+        .match-card { background: #111; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main); margin-top: 10px; }
+        
+        /* Admin Table Style */
+        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+        th { background: #222; color: var(--main); }
+        .status-paid { color: var(--main); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://cdn-icons-png.flaticon.com/512/940/940544.png" class="hacker-logo" id="admin-trigger" alt="Hacker">
-    <div style="color:var(--main); font-size:12px; letter-spacing:2px;">MIKI ESPORTS</div>
+    <img src="https://cdn-icons-png.flaticon.com/512/940/940544.png" class="hacker-logo" id="admin-trigger">
+    <div style="font-size:14px; font-weight:bold; color:var(--main);">MIKI ESPORTS</div>
 </div>
 
 <div class="container">
     <div id="auth-section" class="card">
-        <h3 id="auth-title" style="color:var(--main); margin-top:0;">SYSTEM LOGIN</h3>
+        <h3 id="auth-title" style="text-align:center; color:var(--main);">ACCESS KEY</h3>
         <input type="number" id="u-phone" placeholder="Mobile Number">
-        <input type="password" id="u-pass" placeholder="Password (Min 6 chars)">
-        <button class="btn" id="auth-btn" onclick="handleAuth()">ACCESS SYSTEM</button>
-        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" id="toggle-auth" onclick="toggleAuth()">[ NEW PLAYER? CREATE PASSWORD ]</p>
+        <input type="password" id="u-pass" placeholder="Password">
+        <button class="btn" onclick="handleAuth()">LOGIN / REGISTER</button>
+        <p style="text-align:center; font-size:12px; color:#aaa; cursor:pointer;" onclick="toggleMode()" id="mode-text">New Player? Register Here</p>
     </div>
 
     <div id="dashboard" class="hidden">
-        <div class="wallet-card">
-            <div>
-                <div style="font-size:10px; color:var(--main);">WALLET_CREDITS</div>
-                <div id="wallet-balance" style="font-size:24px; font-weight:bold;">₹0</div>
-            </div>
-            <button class="btn" style="width:auto; padding:5px 10px; font-size:10px;" onclick="alert('Contact Admin for Recharge')">RECHARGE</button>
+        <div class="wallet-box">
+            <div><small>WALLET_BALANCE</small><div id="bal" style="font-size:22px; font-weight:bold; color:var(--main);">₹0</div></div>
+            <button onclick="alert('Contact Admin to Deposit')" style="background:none; border:1px solid var(--main); color:var(--main); padding:5px 10px; border-radius:4px; font-size:10px;">ADD CASH</button>
         </div>
-        <h4 style="color:var(--main); margin-bottom:5px; margin-top:20px;">> ACTIVE_MISSIONS</h4>
+        <h4 style="margin:20px 0 10px 0; color:var(--main);">ACTIVE MISSIONS</h4>
         <div id="match-list"></div>
     </div>
 
-    <div id="admin-panel" class="hidden" style="border:1px solid var(--red); padding:15px; background:#0a0000; border-radius:10px;">
-        <div id="face-auth-ui" style="text-align:center; position:relative;">
-            <h4 style="color:var(--red);">ADMIN VERIFICATION</h4>
-            <video id="video" width="180" height="135" autoplay></video>
-            <button class="btn" style="background:var(--red); color:#fff;" onclick="verifyAdmin()">START SCAN</button>
-        </div>
-        <div id="admin-controls" class="hidden">
-            <h3 style="color:var(--red); text-align:center;">MASTER TERMINAL</h3>
-            <input type="text" id="m-id" placeholder="Match ID">
+    <div id="admin-panel" class="hidden">
+        <div class="card" style="border-color: var(--red);">
+            <h3 style="color:var(--red); text-align:center; margin-top:0;">MASTER CONTROL</h3>
+            
+            <input type="text" id="m-id" placeholder="Match ID (e.g. M1)">
             <input type="text" id="r-id" placeholder="Room ID">
-            <input type="text" id="r-ps" placeholder="Room Pass">
-            <button class="btn" style="background:var(--red); color:#fff;" onclick="updateRoom()">PUSH TO LIVE</button>
-            <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
-            <input type="text" id="t-uid" placeholder="Player UID">
-            <input type="number" id="a-amt" placeholder="Amount (₹)">
-            <button class="btn" onclick="addCash()">ADD CASH</button>
+            <input type="text" id="r-ps" placeholder="Room Password">
+            <button class="btn" style="background:var(--red); color:#fff;" onclick="updateRoom()">SEND ROOM ID</button>
+            
+            <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
+            
+            <input type="text" id="t-uid" placeholder="User UID (Get from Users collection)">
+            <input type="number" id="a-amt" placeholder="Amount (e.g. 100)">
+            <button class="btn" onclick="addCash()">DEPOSIT CASH</button>
+
+            <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
+
+            <h4 style="color:var(--main);">LIVE PARTICIPANTS</h4>
+            <input type="text" id="v-mid" placeholder="Enter Match ID to View (e.g. M1)">
+            <button class="btn" style="background:#444; color:#fff;" onclick="viewPlayers()">VIEW PLAYERS</button>
+            
+            <div id="players-table-area" class="hidden">
+                <table id="p-table">
+                    <thead>
+                        <tr><th>Name</th><th>UID</th><th>Level</th><th>Pay</th></tr>
+                    </thead>
+                    <tbody id="p-list"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-// --- FIREBASE SETUP ---
 const firebaseConfig = {
     apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4",
     authDomain: "miki-turnament-93d48.firebaseapp.com",
@@ -104,27 +102,22 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 let isLogin = true;
-
-function toggleAuth() {
+function toggleMode() {
     isLogin = !isLogin;
-    document.getElementById('auth-title').innerText = isLogin ? "SYSTEM LOGIN" : "CREATE ACCOUNT";
-    document.getElementById('auth-btn').innerText = isLogin ? "ACCESS SYSTEM" : "INITIALIZE ACCOUNT";
-    document.getElementById('toggle-auth').innerText = isLogin ? "[ NEW PLAYER? CREATE PASSWORD ]" : "[ ALREADY HAVE ACCESS? LOGIN ]";
+    document.getElementById('auth-title').innerText = isLogin ? "ACCESS KEY" : "CREATE ACCOUNT";
+    document.getElementById('mode-text').innerText = isLogin ? "New Player? Register Here" : "Back to Login";
 }
 
 function handleAuth() {
-    const phone = document.getElementById('u-phone').value;
-    const pass = document.getElementById('u-pass').value;
-    if(phone.length !== 10 || pass.length < 6) return alert("10 Digit Phone & 6 Digit Pass Required!");
+    const ph = document.getElementById('u-phone').value;
+    const ps = document.getElementById('u-pass').value;
+    if(ph.length < 10 || ps.length < 6) return alert("Bhai, Number aur Password sahi dalo!");
+    const email = ph + "@miki.com";
 
-    const email = phone + "@miki.com";
     if(isLogin) {
-        auth.signInWithEmailAndPassword(email, pass).then(res => startApp(res.user)).catch(e => alert(e.message));
+        auth.signInWithEmailAndPassword(email, ps).then(r => startApp(r.user)).catch(e => alert("Login Fail: " + e.message));
     } else {
-        auth.createUserWithEmailAndPassword(email, pass).then(() => {
-            alert("Account Ready! Now Login.");
-            toggleAuth();
-        }).catch(e => alert(e.message));
+        auth.createUserWithEmailAndPassword(email, ps).then(r => { alert("Account Ready! Now Login."); toggleMode(); }).catch(e => alert("Error: " + e.message));
     }
 }
 
@@ -137,7 +130,7 @@ async function startApp(user) {
     if(!snap.exists) await uRef.set({ phone: user.email.split('@')[0], wallet_balance: 0, uid: user.uid });
 
     uRef.onSnapshot(doc => {
-        document.getElementById('wallet-balance').innerText = "₹" + (doc.data().wallet_balance || 0);
+        if(doc.exists) document.getElementById('bal').innerText = "₹" + (doc.data().wallet_balance || 0);
     });
     loadMatches();
 }
@@ -148,64 +141,87 @@ function loadMatches() {
         snap.forEach(d => {
             const m = d.data();
             h += `<div class="match-card">
-                <b style="color:var(--main);">${m.title || 'FF TOURNAMENT'}</b><br>
-                <small>Entry: ₹${m.entryFee} | Prize: ₹${m.prize}</small>
-                <button class="btn" style="padding:5px; font-size:10px; margin-top:8px;" onclick="joinMatch('${d.id}', ${m.entryFee})">JOIN MISSION</button>
-                ${m.roomId ? `<div style="color:yellow; font-size:11px; margin-top:5px; border:1px dashed #444; padding:5px;">ID: ${m.roomId} | PASS: ${m.password}</div>` : ''}
+                <b style="color:var(--main);">${m.title}</b><br>
+                <small style="color:#888;">Entry: ₹${m.entryFee} | Prize: ${m.prize}</small><br>
+                <button class="btn" style="padding:5px; font-size:11px;" onclick="joinMatch('${d.id}', ${m.entryFee})">JOIN MATCH</button>
+                ${m.roomId ? `<div style="background:#222; padding:5px; margin-top:5px; color:yellow; font-size:10px;">ID: ${m.roomId} | PASS: ${m.password}</div>` : ''}
             </div>`;
         });
-        document.getElementById('match-list').innerHTML = h;
+        document.getElementById('match-list').innerHTML = h || "No matches yet.";
     });
 }
 
-async function joinMatch(id, fee) {
+async function joinMatch(mid, fee) {
     const user = auth.currentUser;
     const uRef = db.collection("Users").doc(user.uid);
     const snap = await uRef.get();
-    const bal = snap.data().wallet_balance;
+    const currentBal = snap.data().wallet_balance;
 
-    if(bal >= fee) {
-        const gameId = prompt("Enter In-Game Name (Level 50+):");
-        if(!gameId) return;
-        await uRef.update({ wallet_balance: bal - fee });
-        await db.collection("Matches").doc(id).collection("Players").doc(user.uid).set({ name: gameId, uid: user.uid });
-        alert("Mission Joined!");
-    } else { alert("Insufficient Credits!"); }
+    if(currentBal >= fee) {
+        const name = prompt("Free Fire Name:");
+        const uid = prompt("Free Fire UID:");
+        const level = prompt("Game Level:");
+        if(!name || !uid) return alert("Details bharna zaroori hai!");
+
+        await uRef.update({ wallet_balance: currentBal - fee });
+        // Saving player data in a sub-collection
+        await db.collection("Matches").doc(mid).collection("Players").doc(user.uid).set({
+            playerName: name,
+            playerUid: uid,
+            playerLevel: level,
+            payment: "PAID",
+            time: new Date().toLocaleString()
+        });
+        alert("✅ Success! Joined Match.");
+    } else { alert("Insufficient Balance!"); }
 }
 
-// --- ADMIN SECRET TRIGGER (7 CLICKS) ---
-let clicks = 0;
+// ADMIN FUNCTIONS
+let secret = 0;
 document.getElementById('admin-trigger').onclick = () => {
-    clicks++;
-    if(clicks === 7) {
-        let p = prompt("MASTER KEY:");
-        if(p === "BAN MASTER") {
+    secret++;
+    if(secret === 7) {
+        if(prompt("Admin Key:") === "Priyanshu7") {
             document.getElementById('admin-panel').classList.remove('hidden');
-            startCam();
         }
-        clicks = 0;
+        secret = 0;
     }
 };
 
-async function startCam() {
-    try {
-        const s = await navigator.mediaDevices.getUserMedia({ video: true });
-        document.getElementById('video').srcObject = s;
-    } catch(e) { alert("Camera Error!"); }
+async function viewPlayers() {
+    const mid = document.getElementById('v-mid').value;
+    if(!mid) return alert("Match ID dalo bhai!");
+    
+    db.collection("Matches").doc(mid).collection("Players").onSnapshot(snap => {
+        let h = "";
+        snap.forEach(p => {
+            const d = p.data();
+            h += `<tr>
+                <td>${d.playerName}</td>
+                <td>${d.playerUid}</td>
+                <td>${d.playerLevel}</td>
+                <td class="status-paid">${d.payment}</td>
+            </tr>`;
+        });
+        document.getElementById('p-list').innerHTML = h;
+        document.getElementById('players-table-area').classList.remove('hidden');
+    });
 }
 
-function verifyAdmin() {
-    const btn = event.target;
-    btn.innerText = "SCANNING...";
-    setTimeout(() => {
-        document.getElementById('face-auth-ui').classList.add('hidden');
-        document.getElementById('admin-controls').classList.remove('hidden');
-        const tracks = document.getElementById('video').srcObject.getTracks();
-        tracks.forEach(t => t.stop());
-    }, 2000);
-}
-
-// Admin Backend Functions
 async function updateRoom() {
     const mid = document.getElementById('m-id').value;
-    const rid = document.getElementById('r-id').
+    const rid = document.getElementById('r-id').value;
+    const rps = document.getElementById('r-ps').value;
+    await db.collection("Matches").doc(mid).update({ roomId: rid, password: rps });
+    alert("Room Details Pushed!");
+}
+
+async function addCash() {
+    const uid = document.getElementById('t-uid').value;
+    const amt = parseInt(document.getElementById('a-amt').value);
+    await db.collection("Users").doc(uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
+    alert("Cash Added!");
+}
+</script>
+</body>
+</html>
