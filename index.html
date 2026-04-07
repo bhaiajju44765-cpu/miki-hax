@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | THE HIDDEN HUB</title>
+    <title>MIKI ESPORTS | PRIME MIKU</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -14,7 +14,6 @@
         :root { --main: #00f2fe; --accent: #ff0055; --bg: #010205; --card: #0d1117; --danger: #ff0000; --success: #00ff88; --insta: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; overflow-x: hidden; }
         
-        /* Header */
         .header { background: rgba(0,0,0,0.95); padding: 15px 20px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo-img { width: 35px; height: 35px; background: linear-gradient(45deg, var(--main), var(--accent)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; box-shadow: 0 0 15px var(--main); }
 
@@ -25,21 +24,21 @@
         .live-tag { font-size: 18px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--main), 0 0 20px var(--main); animation: neonGlow 1.5s infinite; }
         @keyframes neonGlow { 0%, 100% { opacity: 1; filter: brightness(1.3); } 50% { opacity: 0.5; filter: brightness(0.8); } }
 
-        /* Hidden Admin Trigger Logo */
-        .ff-logo-trigger { width: 60px; height: 60px; margin: 20px auto; display: block; cursor: pointer; opacity: 0.6; transition: 0.3s; filter: drop-shadow(0 0 5px var(--danger)); }
-        .ff-logo-trigger:active { transform: scale(0.9); opacity: 1; }
-
-        /* Insta Icon */
-        .insta-box { position: absolute; top: 80px; right: 25px; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+        /* Instagram Box - Left Aligned */
+        .insta-box { position: absolute; top: 80px; left: 25px; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
         .insta-icon { width: 45px; height: 45px; background: var(--insta); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(204, 35, 102, 0.4); }
-        .insta-box span { font-size: 8px; color: #888; margin-top: 4px; font-weight: bold; }
+        .insta-box span { font-size: 8px; color: #888; margin-top: 4px; font-weight: bold; text-transform: uppercase; }
 
-        /* Admin System */
+        /* Secret Text Trigger */
+        .prime-trigger { margin: 25px auto; font-size: 12px; font-weight: 900; letter-spacing: 3px; color: #161b22; cursor: pointer; transition: 0.3s; text-transform: uppercase; display: inline-block; }
+        .prime-trigger:active { color: var(--main); text-shadow: 0 0 10px var(--main); }
+
+        /* Admin Tabs */
         .admin-tabs { display: flex; background: #111; border-radius: 12px; margin-bottom: 15px; border: 1px solid #222; overflow: hidden; }
         .a-tab { flex: 1; padding: 12px 5px; font-size: 10px; font-weight: 800; text-align: center; cursor: pointer; color: #555; }
         .a-tab.active { background: var(--main); color: #000; }
 
-        .auth-card { background: linear-gradient(145deg, #111827, #030712); padding: 35px 25px; border-radius: 24px; border: 1px solid #1f2937; text-align: center; margin-top: 40px; position: relative; }
+        .auth-card { background: linear-gradient(145deg, #111827, #030712); padding: 35px 25px; border-radius: 24px; border: 1px solid #1f2937; text-align: center; margin-top: 50px; position: relative; }
         input, textarea { width: 100%; padding: 15px; margin: 8px 0; background: #161b22; border: 1px solid #30363d; color: #fff; border-radius: 12px; outline: none; box-sizing: border-box; }
         
         .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top: 5px; }
@@ -48,7 +47,6 @@
         .match-card { background: #161b22; border-radius: 20px; border-left: 6px solid var(--main); padding: 20px; margin-bottom: 20px; position: relative; }
         .slots-tag { position: absolute; top: 15px; right: 15px; background: rgba(255,0,85,0.1); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; border: 1px solid var(--accent); }
 
-        /* Face Scanner */
         #face-vault { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .camera-circle { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--danger); overflow: hidden; position: relative; }
         #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -72,7 +70,8 @@
 
 <div class="header">
     <div style="display:flex; align-items:center; gap:10px;"><div class="logo-img">M</div><div style="font-weight:900; color:var(--main); font-size: 18px;">MIKI ESPORTS</div></div>
-    <div style="width: 24px;"></div> </div>
+    <div style="width: 20px;"></div>
+</div>
 
 <div class="container">
     <div id="login-page" class="auth-card hidden">
@@ -86,9 +85,9 @@
         <button class="btn btn-main" onclick="handleLogin()">ENTER ARENA</button>
         <div class="live-tag-box"><div class="live-tag">FF TOURNAMENT LIVE 🔥</div></div>
         
-        <img src="https://upload.wikimedia.org/wikipedia/en/2/23/Garena_Free_Fire_logo.png" class="ff-logo-trigger" id="admin-trigger">
+        <div class="prime-trigger" id="admin-trigger">PRIME MIKU</div>
         
-        <p onclick="showAuth('register')" style="cursor:pointer; font-size:11px; color:#64748b; margin-top:10px;">New Warrior? <b>Create Identity</b></p>
+        <p onclick="showAuth('register')" style="cursor:pointer; font-size:11px; color:#64748b;">New Warrior? <b>Create Identity</b></p>
     </div>
 
     <div id="register-page" class="auth-card hidden">
@@ -135,7 +134,7 @@
                 <input type="text" id="r-id" placeholder="Room ID">
                 <input type="text" id="r-ps" placeholder="Room Pass">
                 <button class="btn btn-main" onclick="pushMatch()">SAVE MISSION</button>
-                <button class="btn" style="background:#222; color:red;" onclick="deleteMatch()">DELETE MATCH</button>
+                <button class="btn" style="background:#222; color:red;" onclick="deleteMatch()">DELETE MISSION</button>
             </div>
 
             <div id="admin-tab2" class="hidden">
@@ -150,7 +149,7 @@
 
             <div id="admin-tab3" class="hidden">
                 <input type="text" id="list-match-id" placeholder="Match ID (M1)">
-                <button class="btn btn-main" onclick="fetchRecords()">FETCH PLAYER DATA</button>
+                <button class="btn btn-main" onclick="fetchRecords()">FETCH DATA</button>
                 <div id="admin-player-list" style="margin-top:10px; max-height:300px; overflow-y:auto;"></div>
                 <hr style="border:1px solid #222; margin:15px 0;">
                 <button class="btn btn-main" onclick="fetchAppeals()">CHECK APPEALS</button>
@@ -164,28 +163,28 @@
 
 <div id="join-page" class="full-overlay hidden">
     <div class="modal-box">
-        <h3>MISSION ENTRY</h3>
+        <h3 style="color:var(--main);">MISSION ENTRY</h3>
         <div class="rules-box">
             <b>⚠️ RULES:</b><br>
             - <b>HACK/CHEAT</b> = Permanent BAN 🚫<br>
-            - Winnings via Admin Insta. Real & Direct 💕
+            - Winning Admin Insta par. Direct payment 💕
         </div>
-        <input type="text" id="p-name" placeholder="Name">
-        <input type="text" id="p-uid" placeholder="UID">
-        <button class="btn btn-main" style="background:linear-gradient(45deg, #3399ff, var(--main));" onclick="initPay('join')">PAY ₹10 & JOIN (Fast)</button>
+        <input type="text" id="p-name" placeholder="Free Fire Name">
+        <input type="text" id="p-uid" placeholder="UID Number">
+        <button class="btn btn-main" style="background:linear-gradient(45deg, #3399ff, var(--main));" onclick="initPay('join')">PAY ₹10 & JOIN (Online)</button>
         <button class="btn" style="background:#1f2937; color:var(--main); border:1px solid var(--main);" onclick="payWithWallet()">WALLET PAY (₹10)</button>
         <button class="btn" style="background:transparent; color:#555; font-size:10px;" onclick="showUPIManual()">UPI QR CODE (₹20)</button>
         <div id="upi-m" class="hidden">
             <div style="background:#fff; padding:10px; margin:10px auto; width:120px; height:120px;"><img id="qr-img" src=""></div>
             <input type="number" id="utr-input" placeholder="12-Digit UTR">
-            <button class="btn btn-main" onclick="autoJoinUTR()">VERIFY ₹20 JOIN</button>
+            <button class="btn btn-main" onclick="autoJoinUTR()">VERIFY JOIN</button>
         </div>
         <button class="btn" style="background:transparent; margin-top:10px; color:#444;" onclick="location.reload()">CANCEL</button>
     </div>
 </div>
 
-<div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>ADD CASH</h3><p style="color:yellow; font-size:10px;">Minimum Recharge: ₹50</p><input type="number" id="dep-amt" placeholder="Min 50"><button class="btn btn-main" onclick="initPay('deposit')">PAY ONLINE</button><button class="btn" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
-<div id="appeal-modal" class="full-overlay hidden"><div class="modal-box"><h3 style="color:var(--accent);">ADMIN APPEAL</h3><p style="font-size:10px; color:#888;">Respectfully baat karein.</p><textarea id="appeal-msg" rows="4" placeholder="Apni problem likho..."></textarea><button class="btn btn-main" onclick="submitAppeal()">SEND MESSAGE</button><button class="btn" onclick="document.getElementById('appeal-modal').classList.add('hidden')">CLOSE</button></div></div>
+<div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>ADD CASH</h3><p style="color:yellow; font-size:10px;">Min Recharge: ₹50</p><input type="number" id="dep-amt" placeholder="Min 50"><button class="btn btn-main" onclick="initPay('deposit')">PAY ONLINE</button><button class="btn" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
+<div id="appeal-modal" class="full-overlay hidden"><div class="modal-box"><h3>APPEAL</h3><textarea id="appeal-msg" rows="4" placeholder="Message..."></textarea><button class="btn btn-main" onclick="submitAppeal()">SEND</button><button class="btn" onclick="document.getElementById('appeal-modal').classList.add('hidden')">CLOSE</button></div></div>
 
 <script>
 const firebaseConfig = { apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4", authDomain: "miki-turnament-93d48.firebaseapp.com", projectId: "miki-turnament-93d48", storageBucket: "miki-turnament-93d48.firebasestorage.app", messagingSenderId: "832870643730", appId: "1:832870643730:web:ff17abcb9652a4acd2c0cb" };
@@ -199,7 +198,7 @@ function openAdminTab(n) { [1,2,3].forEach(i => { document.getElementById('admin
 auth.onAuthStateChanged(async user => {
     if(user) {
         const s = await db.collection("Users").doc(user.uid).get();
-        if(s.exists && s.data().isBanned) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:45vh;'>BANNED BY ADMIN</h1>"; return; }
+        if(s.exists && s.data().isBanned) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:45vh;'>BANNED</h1>"; return; }
         document.getElementById('login-page').classList.add('hidden');
         document.getElementById('register-page').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
@@ -210,11 +209,11 @@ auth.onAuthStateChanged(async user => {
     } else showAuth('login');
 });
 
-// ADMIN SECRET TRIGGER
+// SECRET ADMIN TRIGGER (11 CLICKS)
 let clicks = 0;
 document.getElementById('admin-trigger').onclick = async () => {
     clicks++;
-    if(clicks === 7) {
+    if(clicks === 11) {
         clicks = 0;
         document.getElementById('face-vault').style.display='flex';
         const s = await navigator.mediaDevices.getUserMedia({video:true});
@@ -227,44 +226,25 @@ function handleLogin() {
     auth.signInWithEmailAndPassword(p + "@miki.com", s).catch(() => alert("❌ Access Denied: Wrong Password!"));
 }
 
-async function loadMatches() {
-    db.collection("Matches").onSnapshot(async snap => {
-        let h = "";
-        for (const doc of snap.docs) {
-            const m = doc.data(), mid = doc.id;
-            const pSnap = await db.collection("Matches").doc(mid).collection("Players").get();
-            const isJoined = (await db.collection("Matches").doc(mid).collection("Players").doc(auth.currentUser.uid).get()).exists;
-            h += `<div class="match-card"><div class="slots-tag">${pSnap.size}/50</div><div style="color:var(--main); font-size:11px;">⏰ ${m.time} | 🏆 ${m.prize}</div><div style="font-weight:900; font-size:18px; margin:5px 0;">FF SOLO WAR</div>
-                ${isJoined ? `<button class="btn" style="color:var(--success); border:1px solid var(--success);">JOINED ✅</button>` : (pSnap.size >= 50 ? `<button class="btn" disabled>FULL</button>` : `<button class="btn btn-main" onclick="activeMid='${mid}';document.getElementById('join-page').classList.remove('hidden')">JOIN ₹10</button>`)}
-                <div style="font-size:10px; color:var(--success); text-align:center; margin-top:10px;">${isJoined ? (m.roomId ? 'ID: '+m.roomId+' | PASS: '+m.password : 'Wait for Room...') : ''}</div></div>`;
-        }
-        document.getElementById('match-list').innerHTML = h || "No Matches.";
-    });
-}
-
-// REST OF CORE STABLE CODE
+// REST STABLE CORE
 function showUPIManual() { document.getElementById('upi-m').classList.remove('hidden'); document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent('upi://pay?pa=mrbituyr-1@okicici&pn=MIKI&am=20&cu=INR')}`; }
 async function autoJoinUTR() { const utr = document.getElementById('utr-input').value; if(utr.length < 12) return alert("12-Digit UTR!"); const c = await db.collection("UsedUTRs").doc(utr).get(); if(c.exists) return alert("Used UTR!"); await db.collection("UsedUTRs").doc(utr).set({ used: true }); await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'QR_20RS', utr }); alert("Joined!"); location.reload(); }
-async function fetchRecords() { const mid = document.getElementById('list-match-id').value; const snap = await db.collection("Matches").doc(mid).collection("Players").get(); let h = ""; snap.forEach(p => { const d = p.data(); h += `<div class="record-box"><b>NAME:</b> ${d.name}<br><b>UID:</b> ${d.uid}<br><b>PH:</b> ${d.phone} | ${d.paidVia}</div>`; }); document.getElementById('admin-player-list').innerHTML = h || "No records."; }
-async function fetchTargetData() { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { const d = q.docs[0].data(); document.getElementById('target-info').innerText = "Wallet: ₹" + d.wallet_balance + " | Banned: " + (d.isBanned || "No"); } }
+async function fetchRecords() { const mid = document.getElementById('list-match-id').value; const snap = await db.collection("Matches").doc(mid).collection("Players").get(); let h = ""; snap.forEach(p => { const d = p.data(); h += `<div class="record-box"><b>NAME:</b> ${d.name} | <b>UID:</b> ${d.uid} | <b>PH:</b> ${d.phone}</div>`; }); document.getElementById('admin-player-list').innerHTML = h || "No records."; }
+async function fetchTargetData() { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { const d = q.docs[0].data(); document.getElementById('target-info').innerText = "Bal: ₹" + d.wallet_balance + " | Ban: " + (d.isBanned || "No"); } }
 async function adjustCash(t) { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(t==='add'?parseInt(document.getElementById('target-amt').value):-parseInt(document.getElementById('target-amt').value)) }); alert("Done!"); } }
 async function setBanStatus(s) { const ph = document.getElementById('target-ph').value; const q = await db.collection("Users").where("phone", "==", ph).get(); if(!q.empty) { await q.docs[0].ref.update({ isBanned: s }); alert("Updated!"); } }
 async function pushMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, prize: document.getElementById('m-prize').value, roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); alert("Saved!"); }
-async function deleteMatch() { await db.collection("Matches").doc(document.getElementById('m-id').value).delete(); alert("Deleted!"); }
-async function handleRegister() { const ph = document.getElementById('r-phone').value, ps = document.getElementById('r-pass').value; const res = await auth.createUserWithEmailAndPassword(ph + "@miki.com", ps); await db.collection("Users").doc(res.user.uid).set({ phone: document.getElementById('r-phone').value, wallet_balance: 0, isBanned: false }); alert("Registered!"); }
+async function handleRegister() { const ph = document.getElementById('r-phone').value, ps = document.getElementById('r-pass').value; const res = await auth.createUserWithEmailAndPassword(ph + "@miki.com", ps); await db.collection("Users").doc(res.user.uid).set({ phone: ph, wallet_balance: 0, isBanned: false }); alert("Registered!"); }
 async function submitAppeal() { await db.collection("Appeals").add({ msg: document.getElementById('appeal-msg').value, phone: auth.currentUser.email.split('@')[0], userUid: auth.currentUser.uid, date: new Date() }); alert("Sent!"); document.getElementById('appeal-modal').classList.add('hidden'); }
 async function fetchAppeals() { const snap = await db.collection("Appeals").orderBy('date', 'desc').get(); let h = ""; snap.forEach(doc => { const d = doc.data(); h += `<div class="record-box"><b>${d.phone}</b>: ${d.msg}<br><input type="text" id="rep-${doc.id}" placeholder="Reply..."><button class="btn btn-main" style="padding:5px;" onclick="sendReply('${d.userUid}', '${doc.id}')">REPLY</button></div>`; }); document.getElementById('appeal-list-admin').innerHTML = h || "No Appeals."; }
 async function sendReply(uid, docId) { const txt = document.getElementById('rep-'+docId).value; await db.collection("Users").doc(uid).update({ adminReply: txt }); await db.collection("Appeals").doc(docId).delete(); alert("Reply Sent!"); fetchAppeals(); }
-async function initPay(type) {
-    const amt = type==='join'?10:parseInt(document.getElementById('dep-amt').value);
-    if(type==='deposit' && amt < 50) return alert("Min ₹50!");
-    new Razorpay({ "key": "rzp_test_SZjeJci3fwjpfS", "amount": amt * 100, "name": "MIKI", "handler": async function (r){ 
-        if(type === 'join') await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'Razorpay' });
-        else await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
-        location.reload();
-    }}).open();
-}
+async function initPay(type) { const amt = type==='join'?10:parseInt(document.getElementById('dep-amt').value); if(type==='deposit' && amt < 50) return alert("Min ₹50!"); new Razorpay({ "key": "rzp_test_SZjeJci3fwjpfS", "amount": amt * 100, "name": "MIKI", "handler": async function (r){ 
+    if(type === 'join') await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'Online' });
+    else await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
+    location.reload();
+}}).open(); }
 async function payWithWallet() { if(userBal < 10) return alert("Low Bal"); await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(-10) }); await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ name: document.getElementById('p-name').value, uid: document.getElementById('p-uid').value, phone: auth.currentUser.email.split('@')[0], paidVia: 'Wallet' }); alert("Joined!"); location.reload(); }
+async function loadMatches() { db.collection("Matches").onSnapshot(async snap => { let h = ""; for (const doc of snap.docs) { const m = doc.data(); const pSnap = await db.collection("Matches").doc(doc.id).collection("Players").get(); const isJoined = (await db.collection("Matches").doc(doc.id).collection("Players").doc(auth.currentUser.uid).get()).exists; h += `<div class="match-card"><div class="slots-tag">${pSnap.size}/50</div><div style="color:var(--main); font-size:11px;">⏰ ${m.time} | 🏆 ${m.prize}</div><div style="font-weight:900; font-size:18px;">FF SOLO</div>${isJoined ? `<button class="btn" style="color:var(--success); border:1px solid var(--success);">JOINED</button>` : `<button class="btn btn-main" onclick="activeMid='${doc.id}';document.getElementById('join-page').classList.remove('hidden')">JOIN ₹10</button>`}<div style="font-size:10px; color:var(--success); text-align:center; margin-top:10px;">${isJoined ? (m.roomId ? 'ID: '+m.roomId+' PASS: '+m.password : 'Wait...') : ''}</div></div>`; } document.getElementById('match-list').innerHTML = h; }); }
 function verifyGod() { if(document.getElementById('vault-pass').value === "Priyanshu7") { document.getElementById('face-vault').style.display='none'; document.getElementById('dashboard').classList.add('hidden'); document.getElementById('god-panel').classList.remove('hidden'); openAdminTab(1); } else location.reload(); }
 </script>
 </body>
