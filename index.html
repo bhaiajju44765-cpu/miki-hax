@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIKI ESPORTS | THE ZAHREELA CORE</title>
+    <title>MIKI ESPORTS | THE CORE</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
@@ -11,92 +11,92 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        :root { --main: #00f2fe; --accent: #ff0055; --bg: #030509; --card: #111827; --gold: #ffd700; --danger: #ff0000; --success: #0f8; --bone: #e5e7eb; }
+        :root { --main: #00f2fe; --accent: #ff0055; --bg: #030509; --card: #0f172a; --gold: #ffd700; --danger: #ff0000; --success: #0f8; --bone: #e5e7eb; }
         body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; overflow-x: hidden; }
         
         /* Premium Header */
-        .header { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding: 12px 20px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .header { background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); padding: 12px 20px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo-box { display: flex; align-items: center; gap: 10px; }
         .logo-img { width: 35px; height: 35px; background: linear-gradient(45deg, var(--main), var(--accent)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; box-shadow: 0 0 15px var(--main); }
 
         .container { padding: 15px; max-width: 500px; margin: auto; }
-        .card { background: var(--card); padding: 20px; border-radius: 16px; border: 1px solid #1f2937; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
-
-        /* --- THE ZAHREELA PURE CSS SKULL VAULT --- */
-        #skull-vault { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; display:none; flex-direction:column; align-items:center; justify-content:center; }
-        .fog { position: absolute; width:100%; height:100%; background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%); animation: pulse 2s infinite; pointer-events: none; }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
-        .skull { position: relative; width: 140px; height: 150px; background: var(--bone); border-radius: 70px 70px 50px 50px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(255,255,255,0.3); transition: 0.8s; animation: float 3s infinite ease-in-out; }
-        .skull::before { content: ''; position: absolute; width: 80px; height: 60px; background: var(--bone); bottom: -30px; left: 30px; border-radius: 0 0 25px 25px; box-shadow: inset 0 -15px 15px rgba(0,0,0,0.1); }
-        .skull-teeth { position: absolute; bottom: -25px; left: 40px; width: 60px; height: 18px; display: flex; gap: 6px; z-index: 2; }
-        .skull-teeth span { width: 7px; height: 100%; background: rgba(0,0,0,0.4); border-radius: 3px; }
         
-        .eye { position: absolute; width: 30px; height: 35px; background: rgba(0,0,0,0.8); border-radius: 50%; top: 50px; transition: 0.3s; overflow: hidden; }
-        .eye.l { left: 30px; transform: rotate(15deg); }
-        .eye.r { right: 30px; transform: rotate(-15deg); }
-        .eye-glow { position: absolute; width: 100%; height: 100%; background: transparent; transition: 0.3s; }
-        .nose { position: absolute; width: 18px; height: 20px; background: #000; bottom: 40px; left: 61px; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        /* --- NEW MODERN LOGIN PAGE --- */
+        .login-card { background: linear-gradient(145deg, #111827, #030712); padding: 30px 20px; border-radius: 24px; border: 1px solid #1f2937; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin-top: 40px; }
+        .login-card h3 { font-size: 24px; letter-spacing: 2px; color: var(--main); margin-bottom: 25px; text-transform: uppercase; font-weight: 900; }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 10px; color: #64748b; text-transform: uppercase; margin-left: 5px; }
+        
+        input { width: 100%; padding: 16px; margin-top: 5px; background: rgba(255,255,255,0.03); border: 1px solid #1f2937; color: #fff; border-radius: 12px; outline: none; box-sizing: border-box; transition: 0.3s; font-size: 15px; }
+        input:focus { border-color: var(--main); background: rgba(0,242,254,0.05); box-shadow: 0 0 15px rgba(0,242,254,0.1); }
+        
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; font-size: 14px; letter-spacing: 1px; }
+        .btn-main { background: linear-gradient(45deg, var(--main), #3b82f6); color: #000; box-shadow: 0 4px 15px rgba(0,242,254,0.3); }
+        .btn-main:active { transform: scale(0.96); }
 
-        /* Zahreela Animation Classes */
-        .wrong-pass .eye-glow { background: #f00; box-shadow: 0 0 20px 5px #f00; }
-        .correct-pass .eye-glow { background: #0f8; box-shadow: 0 0 20px 5px #0f8; }
-        .broken { transform: rotate(360deg) scale(2) blur(20px); opacity: 0; }
-
-        .vault-input { background: rgba(255,0,0,0.08) !important; border: 2px solid rgba(136,0,0,0.2) !important; color: #ff4444 !important; text-align: center; font-size: 20px; letter-spacing: 5px; width: 75% !important; border-radius: 12px; margin-bottom: 20px; outline: none; }
-
-        /* Dashboard & Buttons */
+        /* --- DASHBOARD ELEMENTS --- */
+        .card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #1f2937; margin-bottom: 20px; }
         .reward-card { background: linear-gradient(145deg, #1e1b4b, #0f172a); border: 1px solid var(--gold); }
         .progress-box { background: rgba(0,0,0,0.5); height: 10px; border-radius: 5px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 1s; box-shadow: 0 0 10px var(--gold); }
-        
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-main { background: linear-gradient(45deg, var(--main), #3b82f6); color: #000; }
-        .btn-logout { background: transparent; border: 1px solid #374151; color: #9ca3af; margin-top: 20px; font-size: 11px; }
+        .match-card { background: #0f172a; border-radius: 20px; border-left: 5px solid var(--main); padding: 18px; margin-bottom: 20px; position: relative; }
+        .btn-logout { background: transparent; border: 1px solid #374151; color: #9ca3af; margin-top: 10px; font-size: 11px; }
 
-        .match-card { background: #0f172a; border-radius: 16px; border-left: 5px solid var(--main); padding: 15px; margin-bottom: 20px; }
-        .room-info { background: rgba(255,202,40,0.05); border: 1px dashed #ffca28; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; color: #ffca28; font-size: 11px; }
-        
+        /* --- SKULL VAULT --- */
+        #skull-vault { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; display:none; flex-direction:column; align-items:center; justify-content:center; }
+        .skull { position: relative; width: 140px; height: 150px; background: var(--bone); border-radius: 70px 70px 50px 50px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(255,255,255,0.3); transition: 0.8s; }
+        .skull::before { content: ''; position: absolute; width: 80px; height: 60px; background: var(--bone); bottom: -30px; left: 30px; border-radius: 0 0 25px 25px; }
+        .eye { position: absolute; width: 30px; height: 35px; background: #000; border-radius: 50%; top: 50px; overflow: hidden; }
+        .eye.l { left: 30px; transform: rotate(15deg); }
+        .eye.r { right: 30px; transform: rotate(-15deg); }
+        .eye-glow { position: absolute; width: 100%; height: 100%; background: transparent; transition: 0.3s; }
+        .broken { transform: rotate(360deg) scale(2) blur(20px); opacity: 0; }
+        .correct-pass .eye-glow { background: var(--success); box-shadow: 0 0 20px var(--success); }
+        .wrong-pass .eye-glow { background: var(--danger); box-shadow: 0 0 20px var(--danger); }
+
         .hidden { display: none !important; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1500; display: flex; align-items: center; justify-content: center; }
-        .modal-box { background: var(--card); padding: 25px; border-radius: 15px; width: 85%; border: 1px solid var(--main); text-align: center; }
+        .modal-box { background: var(--card); padding: 25px; border-radius: 20px; width: 85%; border: 1px solid var(--main); text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="skull-vault">
-    <div class="fog"></div>
     <div class="skull" id="css-skull">
         <div class="eye l"><div class="eye-glow"></div></div>
         <div class="eye r"><div class="eye-glow"></div></div>
-        <div class="nose"></div>
-        <div class="skull-teeth"><span></span><span></span><span></span><span></span></div>
     </div>
-    <h2 style="color:var(--danger); letter-spacing:3px; text-shadow:0 0 10px red;" id="status-txt">CORE LOCKED</h2>
-    <input type="password" id="vault-pass" class="vault-input" placeholder="••••">
-    <button class="btn btn-main" style="width:75%;" onclick="checkVault()">REVEAL COMMANDS</button>
-    <button class="btn-logout" style="border:none;" onclick="hideVault()">ABORT</button>
+    <h2 style="color:var(--danger); letter-spacing:3px;">SYSTEM SECURED</h2>
+    <input type="password" id="vault-pass" style="width:70%; text-align:center; font-size:24px; border-color:var(--danger); color:red;" placeholder="••••">
+    <button class="btn btn-main" style="width:70%; margin-top:20px;" onclick="checkVault()">ACCESS DATA</button>
+    <button class="btn-logout" style="border:none;" onclick="location.reload()">ABORT</button>
 </div>
 
 <div class="header">
     <div class="logo-box">
         <div class="logo-img">M</div>
-        <div style="font-weight:900; color:var(--main); font-size:18px;">MIKI ESPORTS</div>
+        <div style="font-weight:900; color:var(--main); letter-spacing:1px;">MIKI ESPORTS</div>
     </div>
     <div style="display:flex; gap:15px; align-items:center;">
         <a href="https://www.instagram.com/_prime_miku_?igsh=Y296bXdpZGl5dzFs" target="_blank" style="text-decoration:none; font-size:22px;">📸</a>
-        <div id="admin-trigger" style="font-size:24px; cursor:pointer; filter:grayscale(1) brightness(0.5);">🏆</div>
+        <div id="admin-trigger" style="font-size:24px; cursor:pointer;">🏆</div>
     </div>
 </div>
 
 <div class="container">
-    <div id="auth-section" class="card hidden" style="text-align:center;">
-        <h3>WARRIOR LOGIN</h3>
-        <input type="number" id="u-phone" placeholder="Mobile Number">
-        <input type="password" id="u-pass" placeholder="Password">
-        <button class="btn btn-main" onclick="handleAuth()">ENTER ARENA</button>
-        <p style="font-size:11px; color:#4b5563; margin-top:10px; cursor:pointer;" onclick="toggleMode()">Join Miki Force?</p>
+    <div id="auth-section" class="login-card hidden">
+        <h3>Warrior Login</h3>
+        <div class="input-group">
+            <label>Mobile Number</label>
+            <input type="number" id="u-phone" placeholder="Enter your registered number">
+        </div>
+        <div class="input-group">
+            <label>Security Password</label>
+            <input type="password" id="u-pass" placeholder="••••••••">
+        </div>
+        <button class="btn btn-main" onclick="handleAuth()">Enter War Room</button>
+        <p style="font-size:12px; color:#475569; margin-top:20px; cursor:pointer;" onclick="toggleMode()">New Warrior? Register Profile</p>
     </div>
 
     <div id="dashboard" class="hidden">
@@ -108,18 +108,18 @@
             <div class="progress-box"><div class="progress-fill" id="reward-progress"></div></div>
             <div style="display:flex; justify-content:space-between; font-size:10px; color:#94a3b8;">
                 <span id="match-count-txt">Played: 0/20</span>
-                <span>Get Google Play Code</span>
+                <span>Play 20 matches to unlock code</span>
             </div>
             <button class="btn" id="claim-btn" style="background:#1e2937; color:#4b5563; margin-top:10px;" disabled onclick="claimReward()">CLAIM CODE</button>
         </div>
 
-        <div class="card" style="display:flex; justify-content:space-between; align-items:center; border: 1px solid #334155;">
-            <div><small style="color:#64748b;">WALLET</small><div id="bal" style="font-size:28px; font-weight:900; color:var(--main);">₹0</div></div>
-            <button onclick="document.getElementById('deposit-page').classList.remove('hidden')" class="btn btn-main" style="width:auto; padding:10px 15px; margin:0;">+ ADD</button>
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div><small style="color:#64748b;">CREDITS</small><div id="bal" style="font-size:28px; font-weight:900; color:var(--main);">₹0</div></div>
+            <button onclick="document.getElementById('deposit-page').classList.remove('hidden')" class="btn btn-main" style="width:auto; padding:10px 20px; margin:0;">+ ADD</button>
         </div>
-
-        <h4>ACTIVE MISSIONS</h4>
-        <div id="match-list">Searching for match data...</div>
+        
+        <h4>LIVE MISSIONS</h4>
+        <div id="match-list">Scanning lobbies...</div>
         <button class="btn btn-logout" onclick="logoutPlayer()">🚪 TERMINATE SESSION</button>
     </div>
 
@@ -133,66 +133,29 @@
             <button class="btn btn-main" onclick="updateRoom()">PUSH UPDATE</button>
             <button class="btn" style="background:#222; color:#f44; margin-top:5px;" onclick="deleteMatch()">DELETE MATCH</button>
             <hr style="border:0; border-top:1px solid #222; margin:20px 0;">
-            <input type="text" id="t-uid" placeholder="Phone">
+            <input type="text" id="t-uid" placeholder="Phone Number">
             <input type="number" id="a-amt" placeholder="Amount">
-            <button class="btn btn-main" onclick="addCash()">ADD CASH</button>
-            <button class="btn btn-logout" onclick="location.reload()">EXIT ADMIN</button>
+            <button class="btn btn-main" onclick="addCash()">RECHARGE PLAYER</button>
         </div>
     </div>
 </div>
 
-<div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>RECHARGE</h3><input type="number" id="dep-amt" placeholder="Min ₹40"><button class="btn btn-main" onclick="processDeposit()">DEPOSIT</button><button class="btn-logout" style="border:none;" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
-<div id="join-page" class="full-overlay hidden"><div class="modal-box"><h3>JOIN MISSION</h3><input type="text" id="p-name" placeholder="FF Name"><input type="text" id="p-uid" placeholder="FF UID"><div style="color:#0f8; font-weight:bold; margin:10px 0;">FEE: ₹10</div><button class="btn btn-main" onclick="submitJoinRequest()">CONFIRM JOIN</button><button class="btn-logout" style="border:none;" onclick="document.getElementById('join-page').classList.add('hidden')">CANCEL</button></div></div>
+<div id="deposit-page" class="full-overlay hidden"><div class="modal-box"><h3>RECHARGE</h3><input type="number" id="dep-amt" placeholder="Min ₹40"><button class="btn btn-main" onclick="processDeposit()">PAY</button><button class="btn-logout" style="border:none;" onclick="document.getElementById('deposit-page').classList.add('hidden')">CANCEL</button></div></div>
+<div id="join-page" class="full-overlay hidden"><div class="modal-box"><h3>JOIN MATCH</h3><input type="text" id="p-name" placeholder="In-Game Name"><input type="text" id="p-uid" placeholder="UID"><div style="color:#0f8; font-weight:bold; margin:10px 0;">ENTRY: ₹10</div><button class="btn btn-main" onclick="submitJoinRequest()">PAY & JOIN</button><button class="btn-logout" style="border:none;" onclick="document.getElementById('join-page').classList.add('hidden')">CANCEL</button></div></div>
 
 <script>
-// --- FIREBASE CONFIG ---
 const firebaseConfig = { apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4", authDomain: "miki-turnament-93d48.firebaseapp.com", projectId: "miki-turnament-93d48", storageBucket: "miki-turnament-93d48.firebasestorage.app", messagingSenderId: "832870643730", appId: "1:832870643730:web:ff17abcb9652a4acd2c0cb" };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// --- ZAHREELA SOUND ---
-const welcomeSpeech = new SpeechSynthesisUtterance("Hello Prime Miku. Welcome to the master login. Enter password.");
-welcomeSpeech.pitch = 0.01; welcomeSpeech.rate = 0.7;
-
-// --- ADMIN VAULT ---
-let clicks = 0;
-document.getElementById('admin-trigger').onclick = () => { clicks++; if(clicks === 7) { clicks = 0; showVault(); } };
-
-function showVault() {
-    document.getElementById('skull-vault').style.display = 'flex';
-    document.getElementById('css-skull').className = 'skull';
-    window.speechSynthesis.speak(welcomeSpeech);
-}
-function hideVault() { document.getElementById('skull-vault').style.display = 'none'; document.getElementById('vault-pass').value = ""; }
-
-function checkVault() {
-    const p = document.getElementById('vault-pass').value;
-    const s = document.getElementById('css-skull');
-    const st = document.getElementById('status-txt');
-
-    if(p === "Priyanshu7") {
-        s.classList.add('correct-pass');
-        st.innerText = "GRANTED"; st.style.color = "var(--success)";
-        setTimeout(() => {
-            s.classList.add('broken');
-            setTimeout(() => {
-                hideVault();
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('dashboard').classList.add('hidden');
-            }, 800);
-        }, 1000);
-    } else {
-        s.classList.add('wrong-pass');
-        st.innerText = "TERMINATING";
-        setTimeout(() => { hideVault(); }, 1800);
-    }
-}
-
-// --- CORE APP ---
+// --- PERSISTENCE ---
 auth.onAuthStateChanged(user => { 
     if(user) startApp(user); 
-    else { document.getElementById('auth-section').classList.remove('hidden'); document.getElementById('dashboard').classList.add('hidden'); }
+    else { 
+        document.getElementById('auth-section').classList.remove('hidden'); 
+        document.getElementById('dashboard').classList.add('hidden'); 
+    } 
 });
 
 async function startApp(user) {
@@ -208,10 +171,7 @@ async function startApp(user) {
             const count = d.match_played || 0;
             document.getElementById('reward-progress').style.width = (count/20)*100 + "%";
             document.getElementById('match-count-txt').innerText = `Played: ${count}/20`;
-            if(count >= 20) { 
-                const btn = document.getElementById('claim-btn');
-                btn.disabled = false; btn.style.background = "var(--gold)"; btn.style.color = "#000"; btn.innerText = "CLAIM ₹29 CODE";
-            }
+            if(count >= 20) { document.getElementById('claim-btn').disabled = false; document.getElementById('claim-btn').style.background = "var(--gold)"; document.getElementById('claim-btn').style.color = "#000"; }
         }
     });
     loadMatches();
@@ -226,17 +186,19 @@ async function loadMatches() {
             const joined = pSnap.exists;
             h += `<div class="match-card">
                 <div class="time-badge">⏰ ${m.time || 'TBA'}</div>
-                <div style="font-weight:900; color:var(--main); font-size:18px;">${m.title || 'SOLO MATCH'}</div>
-                <div style="font-size:12px; color:#64748b; margin:5px 0;">ENTRY: ₹10 | PRIZE: ${m.prize || '₹50'}</div>
-                <span style="color:#0f8; font-size:11px; font-weight:bold;">🎯 Per Kill: ₹5</span>
-                ${joined ? `<button class="btn" style="background:#0f81; color:#0f8; border:1px solid #0f8; cursor:default;">JOINED ✅</button>` : `<button class="btn btn-main" onclick="openJoin('${mid}')">JOIN MISSION</button>`}
-                <div class="room-info">${joined ? (m.roomId ? `ID: ${m.roomId} | PASS: ${m.password}` : 'Wait for Room') : '🔒 Join to see Room'}</div>
+                <div style="font-weight:900; color:var(--main); font-size:19px;">${m.title || 'SOLO MISSION'}</div>
+                <div style="font-size:12px; color:#64748b; margin-top:5px;">ENTRY: ₹10 | PRIZE: ${m.prize || '₹50'}</div>
+                <span style="color:#0f8; font-size:11px; font-weight:bold; display:block; margin:8px 0;">🎯 Per Kill: ₹5</span>
+                ${joined ? `<button class="btn" style="background:rgba(16,185,129,0.1); color:#10b981; border:1px solid #10b981; cursor:default;">JOINED ✅</button>` : `<button class="btn btn-main" onclick="openJoin('${mid}')">JOIN MISSION</button>`}
+                <div class="room-info">${joined ? (m.roomId ? `ID: ${m.roomId} | PASS: ${m.password}` : 'Room ID will show 10m before start') : '🔒 Join to see Room Details'}</div>
             </div>`;
         });
         document.getElementById('match-list').innerHTML = h || "No Active Missions.";
     });
 }
 
+// --- CORE FUNCTIONS ---
+let activeMid = "";
 function openJoin(mid) { activeMid = mid; document.getElementById('join-page').classList.remove('hidden'); }
 async function submitJoinRequest() {
     const name = document.getElementById('p-name').value, puid = document.getElementById('p-uid').value;
@@ -246,21 +208,42 @@ async function submitJoinRequest() {
     await uRef.update({ wallet_balance: firebase.firestore.FieldValue.increment(-10), match_played: firebase.firestore.FieldValue.increment(1) });
     await db.collection("Matches").doc(activeMid).collection("Players").doc(auth.currentUser.uid).set({ players: [{playerName: name, playerUid: puid}] });
     document.getElementById('join-page').classList.add('hidden');
+    alert("✅ Success!");
 }
 
 async function processDeposit() {
     const amt = parseInt(document.getElementById('dep-amt').value);
     if(amt < 40) return alert("Min ₹40!");
     await db.collection("Users").doc(auth.currentUser.uid).update({ wallet_balance: firebase.firestore.FieldValue.increment(amt) });
-    document.getElementById('deposit-page').classList.add('hidden');
+    alert("Recharge Success!"); document.getElementById('deposit-page').classList.add('hidden');
 }
 
-function handleAuth() { auth.signInWithEmailAndPassword(document.getElementById('u-phone').value + "@miki.com", document.getElementById('u-pass').value).catch(e => alert(e.message)); }
-function toggleMode() { alert("Use login form to create account automatically on first sign-up."); }
-function logoutPlayer() { auth.signOut().then(() => location.reload()); }
-function claimReward() { alert("🎁 REDEEM CODE: MIKI-PLAY-29-GIFT"); }
-async function addCash() { const q = await db.collection("Users").where("phone", "==", document.getElementById('t-uid').value).get(); if(!q.empty) await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(document.getElementById('a-amt').value)) }); }
-async function updateRoom() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); }
+function handleAuth() {
+    const ph = document.getElementById('u-phone').value, ps = document.getElementById('u-pass').value;
+    if(!ph || !ps) return alert("Details bharo!");
+    auth.signInWithEmailAndPassword(ph + "@miki.com", ps).catch(e => {
+        auth.createUserWithEmailAndPassword(ph + "@miki.com", ps).catch(err => alert("Auth Error!"));
+    });
+}
+
+function logoutPlayer() { if(confirm("Terminate session?")) auth.signOut().then(() => location.reload()); }
+function toggleMode() { alert("Use login form to register/login."); }
+function claimReward() { alert("🎁 REDEEM CODE: MIKI-GIFT-29-REWARD"); }
+
+// --- ADMIN VAULT ---
+let clicks = 0;
+document.getElementById('admin-trigger').onclick = () => { clicks++; if(clicks === 7) { clicks = 0; document.getElementById('skull-vault').style.display='flex'; } };
+function checkVault() {
+    const p = document.getElementById('vault-pass').value;
+    const s = document.getElementById('css-skull');
+    if(p === "Priyanshu7") {
+        s.classList.add('correct-pass');
+        setTimeout(() => { s.classList.add('broken'); setTimeout(() => { document.getElementById('skull-vault').style.display='none'; document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('dashboard').classList.add('hidden'); }, 800); }, 1000);
+    } else { s.classList.add('wrong-pass'); setTimeout(() => { document.getElementById('skull-vault').style.display='none'; document.getElementById('vault-pass').value=""; s.classList.remove('wrong-pass'); }, 1500); }
+}
+
+async function addCash() { const q = await db.collection("Users").where("phone", "==", document.getElementById('t-uid').value).get(); if(!q.empty) { await q.docs[0].ref.update({ wallet_balance: firebase.firestore.FieldValue.increment(parseInt(document.getElementById('a-amt').value)) }); alert("Done!"); } }
+async function updateRoom() { await db.collection("Matches").doc(document.getElementById('m-id').value).set({ time: document.getElementById('m-time').value, roomId: document.getElementById('r-id').value, password: document.getElementById('r-ps').value }, { merge: true }); alert("Updated!"); }
 async function deleteMatch() { if(confirm("Delete?")) await db.collection("Matches").doc(document.getElementById('m-id').value).delete(); }
 </script>
 </body>
