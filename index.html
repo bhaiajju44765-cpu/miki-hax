@@ -1,181 +1,275 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIKI MODS | VIP ACCESS</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-  :root { --main: #00ff88; --bg: #0d0d0d; --card: #1a1a1a; --red: #ff4444; }
-  body { background: var(--bg); color: #fff; font-family: 'Roboto Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-  .status-bar { font-size: 10px; color: var(--main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; letter-spacing: 1px; }
-  .dot { width: 8px; height: 8px; background: var(--main); border-radius: 50%; box-shadow: 0 0 10px var(--main); animation: blink 1.5s infinite; }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .panel { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-  h1 { color: var(--main); cursor: pointer; user-select: none; border-bottom: 2px solid var(--main); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; font-size: 24px; transition: 0.2s; }
-  .btn { background: var(--main); color: #000; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; transition: 0.3s; }
-  .btn-red { background: var(--red); color: #fff; }
-  input { background: #222; border: 1px solid #444; color: #fff; padding: 15px; width: calc(100% - 32px); border-radius: 8px; margin-bottom: 10px; text-align: center; font-family: inherit; outline: none; }
-  .hidden { display: none; }
-  
-  /* Admin Payment List Styles */
-  .txn-list { text-align: left; font-size: 11px; background: #000; padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto; border: 1px solid #444; margin-top: 15px; }
-  .txn-item { border-bottom: 1px solid #222; padding: 8px 0; display: flex; justify-content: space-between; }
-  
-  .footer { margin-top: auto; padding: 20px; text-align: center; width: 100%; }
-  .social-icons a { color: var(--main); font-size: 24px; margin: 0 15px; text-decoration: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIKI ESPORTS | MASTER TERMINAL</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root { --main: #00ff88; --bg: #0a0a0a; --card: #151515; --red: #ff4444; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; user-select: none; overflow-x: hidden; }
+        
+        /* Header & Logo */
+        .header { background: var(--card); padding: 15px; text-align: center; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+        .logo { margin: 0; color: var(--main); letter-spacing: 4px; cursor: pointer; text-transform: uppercase; font-size: 22px; text-shadow: 0 0 10px var(--main); }
+
+        .container { padding: 15px; max-width: 450px; margin: auto; min-height: 85vh; }
+
+        /* Wallet UI */
+        .wallet-card { background: linear-gradient(135deg, #151515, #222); padding: 20px; border-radius: 15px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border: 1px solid rgba(0,255,136,0.2); }
+        .bal-amt { font-size: 28px; color: var(--main); font-weight: bold; }
+
+        /* Match Card */
+        .match-card { background: var(--card); border-radius: 12px; padding: 15px; margin-top: 15px; border: 1px solid #222; border-left: 4px solid var(--main); transition: 0.3s; }
+        .match-details { font-size: 13px; color: #aaa; margin: 10px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .tag { background: #222; padding: 3px 8px; border-radius: 4px; font-size: 10px; color: var(--main); border: 1px solid #333; }
+
+        /* Inputs & Buttons */
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; font-family: inherit; }
+        input:focus { border-color: var(--main); }
+        .btn { background: var(--main); color: #000; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 0 #008f4c; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+        
+        .hidden { display: none; }
+
+        /* Face Scan UI */
+        #face-scan-area { text-align: center; background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--red); }
+        #video { border-radius: 50%; border: 3px solid var(--main); box-shadow: 0 0 20px var(--main); object-fit: cover; }
+        
+        @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
+        .scan-bar { position: absolute; width: 100%; height: 2px; background: var(--main); box-shadow: 0 0 15px var(--main); animation: scanLine 2s infinite linear; }
+
+        .room-box { margin-top: 10px; padding: 10px; background: #000; color: yellow; border: 1px dashed var(--main); font-family: monospace; font-size: 13px; text-align: center; }
+    </style>
 </head>
 <body>
 
-<div class="status-bar"><div class="dot"></div> SYSTEM: ONLINE | SECURE CONNECTION</div>
+<div class="header">
+    <h2 class="logo" id="miki-trigger">MIKI ESPORTS</h2>
+</div>
 
-<h1 onclick="adminTrigger()">MIKI MODS</h1>
-
-<div id="userSide" style="width:100%; max-width:400px">
-  <div class="panel" id="payPanel">
-    <p style="color:var(--main); font-weight:bold;">[ STEP 01: DETAILS ]</p>
-    <input type="text" id="userName" placeholder="ENTER YOUR NAME">
-    <button class="btn" onclick="showQR()">PROCEED TO PAYMENT</button>
-    <div id="qrBox" class="hidden"><br>
-      <img id="upiQR" width="180" style="background:white; padding:10px; border-radius:10px; border: 2px solid var(--main);">
+<div class="container">
+    <div id="login-page">
+        <h3 style="text-align:center; color:var(--main); letter-spacing:1px;">ENTRY AUTHORIZATION</h3>
+        <div id="recaptcha-container"></div>
+        <input type="text" id="phone" placeholder="+91 Mobile Number">
+        <button class="btn" onclick="sendOTP()">REQUEST ACCESS (OTP)</button>
+        <div id="otp-section" class="hidden">
+            <input type="number" id="otp" placeholder="Enter 6-Digit Code">
+            <button class="btn" onclick="verifyOTP()">VERIFY IDENTITY</button>
+        </div>
     </div>
-    <div id="verifyBox" class="hidden" style="margin-top:20px">
-      <p style="color:var(--main); font-weight:bold;">[ STEP 02: VERIFICATION ]</p>
-      <input type="number" id="txnId" placeholder="ENTER 12-DIGIT TRANS ID">
-      <button class="btn" onclick="submitTxn()">GET MY CODE</button>
+
+    <div id="dashboard" class="hidden">
+        <div class="wallet-card">
+            <div>
+                <div style="font-size:11px; color:#888;">CREDITS AVAILABLE</div>
+                <div class="bal-amt" id="wallet-balance">₹0</div>
+            </div>
+            <button class="btn" style="width:auto; padding:5px 15px; font-size:12px;" onclick="window.open('YOUR_RAZORPAY_LINK')">+ DEPOSIT</button>
+        </div>
+
+        <h3 style="font-size: 15px; color:var(--main); border-left: 3px solid var(--main); padding-left:10px;">ACTIVE TOURNAMENTS</h3>
+        <div id="match-list">
+            </div>
     </div>
-  </div>
 
-  <div class="panel hidden" id="unlockPanel">
-    <p id="welcomeMsg" style="color:var(--main); font-weight:bold;"></p>
-    <h2 id="finalCode" style="color:yellow; font-size:40px; margin:10px 0;"></h2>
-    <input type="text" id="inputCode" placeholder="PASTE CODE HERE">
-    <button class="btn" onclick="showFiles()">UNLOCK MODS</button>
-  </div>
+    <div id="admin-panel" class="hidden" style="margin-top:20px; border:1px solid var(--red); padding:15px; border-radius:12px; background:#111;">
+        
+        <div id="face-auth-ui">
+            <h4 style="color:var(--red); text-align:center; margin-top:0;">BIOMETRIC SCAN REQUIRED</h4>
+            <div style="position:relative; width:150px; height:150px; margin:auto;">
+                <video id="video" width="150" height="150" autoplay></video>
+                <div class="scan-bar"></div>
+            </div>
+            <button class="btn" style="margin-top:15px;" onclick="simulateVerify()">SCAN & VERIFY</button>
+        </div>
+
+        <div id="admin-controls" class="hidden">
+            <h3 style="color:var(--red); text-align:center; border-bottom:1px solid #333; padding-bottom:5px;">MASTER PANEL</h3>
+            
+            <p style="font-size:10px; color:var(--main);">UPDATE ROOM (MATCH ID LIKHO)</p>
+            <input type="text" id="adm-match-id" placeholder="Match ID">
+            <input type="text" id="adm-room-id" placeholder="Room ID">
+            <input type="text" id="adm-room-pass" placeholder="Room Password">
+            <button class="btn" style="background:var(--red); color:#fff;" onclick="pushRoom()">UPDATE DATA</button>
+
+            <p style="font-size:10px; color:var(--main); margin-top:15px;">WALLET MGMT (UID LIKHO)</p>
+            <input type="text" id="target-uid" placeholder="Player UID">
+            <input type="number" id="add-amt" placeholder="Amount (₹)">
+            <div style="display:flex; gap:5px;">
+                <button class="btn" onclick="addMoneyAdmin()">ADD ₹</button>
+                <button class="btn" style="background:#444; color:#fff;" onclick="getPlayersAdmin()">PLAYERS</button>
+            </div>
+            <div id="adm-log" style="font-size:10px; color:#aaa; margin-top:10px; font-family:monospace;"></div>
+        </div>
+    </div>
 </div>
 
-<div id="adminDashboard" class="panel hidden">
-  <h2 style="color:var(--main);">ADMIN PANEL</h2>
-  <input type="text" id="newModName" placeholder="NEW MOD NAME">
-  <input type="text" id="newModLink" placeholder="DOWNLOAD LINK">
-  <button class="btn" onclick="updateModNow()">UPDATE MOD & CLEAN OLD</button>
-  
-  <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
-  <p style="font-size:12px; color:var(--main);">RECENT PAYMENTS:</p>
-  <div id="payList" class="txn-list">Loading payments...</div>
-  
-  <button class="btn btn-red" onclick="location.reload()" style="margin-top:20px;">LOGOUT</button>
-</div>
-
-<div id="fileArea" class="hidden" style="width:100%; max-width:400px"></div>
-
-<div class="footer">
-  <div class="social-icons">
-    <a href="https://youtube.com/@prime_miku" target="_blank"><i class="fab fa-youtube"></i></a>
-    <a href="https://www.instagram.com/_prime_miku_" target="_blank"><i class="fab fa-instagram"></i></a>
-  </div>
-  <p style="font-size:10px; color:#555; margin-top:10px;">© 2026 MIKI MODS OFFICIAL</p>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, deleteDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
+<script>
+// --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
- apiKey:"AIzaSyDp4VvkYPWrTZifunRTsyf2oEce2KA2L8o",
- authDomain:"game-65d26.firebaseapp.com",
- projectId:"game-65d26",
- storageBucket:"game-65d26.firebasestorage.app",
- messagingSenderId:"1078240145943",
- appId:"1:1078240145943:web:259e64e15644153317e252"
+    apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4",
+    authDomain: "miki-turnament-93d48.firebaseapp.com",
+    projectId: "miki-turnament-93d48",
+    storageBucket: "miki-turnament-93d48.firebasestorage.app",
+    messagingSenderId: "832870643730",
+    appId: "1:832870643730:web:ff17abcb9652a4acd2c0cb",
+    measurementId: "G-32NZPS8D9B"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const upiId = "mrbituyr-1@okicici";
-let generatedCode = "";
-let userEnteredName = "";
-let clickCount = 0;
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+let verifier;
 
-// ADMIN LOGIN & SHOW PAYMENTS
-window.adminTrigger = async function() {
-  clickCount++;
-  if(clickCount >= 5) {
-    let p1 = prompt("Admin Key 1:");
-    let p2 = prompt("Admin Key 2:");
-    if(p1 === "Anjali" && p2 === "priyanshu") {
-      document.getElementById("userSide").classList.add("hidden");
-      document.getElementById("adminDashboard").classList.remove("hidden");
-      loadAdminData();
-    } else { alert("❌ Wrong Access!"); }
-    clickCount = 0;
-  }
+// 1. Auth Flow
+function sendOTP() {
+    const num = document.getElementById('phone').value;
+    if(num.length < 10) return alert("Valid number dalo bhai!");
+    const recap = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
+    auth.signInWithPhoneNumber(num, recap).then(res => {
+        verifier = res;
+        document.getElementById('otp-section').classList.remove('hidden');
+        alert("OTP Sent!");
+    }).catch(err => alert(err.message));
 }
 
-async function loadAdminData() {
-  const pList = document.getElementById("payList");
-  const q = query(collection(db, "payments"), orderBy("time", "desc"));
-  const snap = await getDocs(q);
-  let html = "";
-  snap.forEach(doc => {
-    const d = doc.data();
-    html += `<div class="txn-item">
-              <span><strong>${d.name || 'User'}</strong></span>
-              <span style="color:cyan">${d.txnId}</span>
-             </div>`;
-  });
-  pList.innerHTML = html || "No payments yet.";
+function verifyOTP() {
+    const code = document.getElementById('otp').value;
+    verifier.confirm(code).then(res => startApp(res.user)).catch(() => alert("Galat OTP!"));
 }
 
-window.updateModNow = async function() {
-  const n = document.getElementById("newModName").value.trim();
-  const l = document.getElementById("newModLink").value.trim();
-  if(!n || !l) return alert("Fill both boxes!");
-  try {
-    const oldDocs = await getDocs(collection(db, "games"));
-    const deletePromises = oldDocs.docs.map(d => deleteDoc(doc(db, "games", d.id)));
-    await Promise.all(deletePromises);
-    await addDoc(collection(db, "games"), { name: n, link: l, time: serverTimestamp() });
-    alert("✅ New Mod Live!");
-    location.reload();
-  } catch(e) { alert("Error!"); }
+async function startApp(user) {
+    const uRef = db.collection("Users").doc(user.uid);
+    const snap = await uRef.get();
+    if(!snap.exists) await uRef.set({ phone: user.phoneNumber, wallet_balance: 0, uid: user.uid });
+    
+    document.getElementById('login-page').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    
+    uRef.onSnapshot(doc => {
+        document.getElementById('wallet-balance').innerText = "₹" + (doc.data().wallet_balance || 0);
+    });
+    loadMatches();
 }
 
-window.showQR = function() {
-  userEnteredName = document.getElementById("userName").value.trim();
-  if(!userEnteredName) return alert("Enter Name!");
-  const url = `upi://pay?pa=${upiId}&pn=MikiMods&am=20&cu=INR`;
-  document.getElementById("upiQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
-  document.getElementById("qrBox").classList.remove("hidden");
-  document.getElementById("verifyBox").classList.remove("hidden");
+// 2. Tournament System
+function loadMatches() {
+    db.collection("Matches").onSnapshot(snap => {
+        let html = "";
+        snap.forEach(doc => {
+            const m = doc.data();
+            html += `
+                <div class="match-card">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b class="match-title">${m.title}</b>
+                        <span class="tag">${m.type || 'FULL'}</span>
+                    </div>
+                    <div class="match-details">
+                        <span>📅 ${m.date}</span> <span>⏰ ${m.time}</span>
+                        <span style="color:var(--main)">💰 Fee: ₹${m.entryFee}</span>
+                        <span style="color:gold">🏆 Prize: ₹${m.prize}</span>
+                    </div>
+                    <button class="btn" onclick="joinMatch('${doc.id}', ${m.entryFee}, '${m.type}')">JOIN NOW</button>
+                    ${m.roomId ? `<div class="room-box">ID: ${m.roomId} | PASS: ${m.password}</div>` : ''}
+                </div>`;
+        });
+        document.getElementById('match-list').innerHTML = html;
+    });
 }
 
-window.submitTxn = async function() {
-  const id = document.getElementById("txnId").value.trim();
-  if(id.length !== 12) return alert("❌ 12-digit ID required!");
-  const q = query(collection(db, "payments"), where("txnId", "==", id));
-  const snap = await getDocs(q);
-  if (!snap.empty) return alert("❌ Used!");
-  await addDoc(collection(db, "payments"), { txnId: id, name: userEnteredName, time: serverTimestamp() });
-  generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
-  document.getElementById("welcomeMsg").innerText = `WELCOME, ${userEnteredName.toUpperCase()}!`;
-  document.getElementById("payPanel").classList.add("hidden");
-  document.getElementById("unlockPanel").classList.remove("hidden");
-  document.getElementById("finalCode").innerText = generatedCode;
+async function joinMatch(id, fee, type) {
+    const user = auth.currentUser;
+    const uRef = db.collection("Users").doc(user.uid);
+    const mRef = db.collection("Matches").doc(id);
+
+    // Slot Check
+    const pSnap = await mRef.collection("Players").get();
+    const limit = (type === "CS") ? 8 : 50;
+    if(pSnap.size >= limit) return alert("Match Full ho chuka hai!");
+
+    const uData = (await uRef.get()).data();
+    if(uData.wallet_balance >= fee) {
+        const gameName = prompt("Free Fire Game Name (ID):");
+        const level = parseInt(prompt("Your Level (Min 50):"));
+        
+        if(!gameName || isNaN(level)) return alert("Details jaruri hain!");
+        if(level < 50) return alert("50 Level se kam players allowed nahi hain!");
+
+        if(confirm(`₹${fee} entry fee katenge. Confirm?`)) {
+            await uRef.update({ wallet_balance: uData.wallet_balance - fee });
+            await mRef.collection("Players").doc(user.uid).set({
+                playerName: gameName, level: level, phone: user.phoneNumber, uid: user.uid
+            });
+            alert("Success! Room details match time par yahi milengi.");
+        }
+    } else { alert("Balance kam hai! Recharge karein."); }
 }
 
-window.showFiles = async function() {
-  if(document.getElementById("inputCode").value !== generatedCode) return alert("Wrong Code!");
-  const snap = await getDocs(collection(db, "games"));
-  let h = `<h2 style='color:var(--main);'>HELLO ${userEnteredName.toUpperCase()}</h2>`;
-  snap.forEach(doc => {
-    h += `<div class="panel"><h3>${doc.data().name}</h3><a href="${doc.data().link}" target="_blank"><button class="btn">DOWNLOAD</button></a></div>`;
-  });
-  document.getElementById("userSide").classList.add("hidden");
-  document.getElementById("fileArea").innerHTML = h;
-  document.getElementById("fileArea").classList.remove("hidden");
+// 3. MASTER ADMIN SYSTEM
+let adminClicks = 0;
+document.getElementById('miki-trigger').onclick = () => {
+    adminClicks++;
+    if(adminClicks == 5) {
+        let pass = prompt("ENTER MASTER PASSWORD:");
+        if(pass === "BAN MASTER") {
+            document.getElementById('admin-panel').classList.remove('hidden');
+            startCamera();
+        } else { alert("ACCESS DENIED!"); }
+        adminClicks = 0;
+    }
+};
+
+async function startCamera() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('video').srcObject = stream;
+    } catch (e) { alert("Camera Error!"); }
+}
+
+function simulateVerify() {
+    const btn = event.target;
+    btn.innerText = "SCANNING...";
+    setTimeout(() => {
+        btn.innerText = "VERIFIED MASTER ✓";
+        document.getElementById('face-auth-ui').classList.add('hidden');
+        document.getElementById('admin-controls').classList.remove('hidden');
+        const tracks = document.getElementById('video').srcObject.getTracks();
+        tracks.forEach(t => t.stop());
+    }, 2000);
+}
+
+// Admin Core Functions
+async function pushRoom() {
+    const mid = document.getElementById('adm-match-id').value;
+    const rid = document.getElementById('adm-room-id').value;
+    const rps = document.getElementById('adm-room-pass').value;
+    await db.collection("Matches").doc(mid).update({ roomId: rid, password: rps });
+    alert("Match Updated!");
+}
+
+async function addMoneyAdmin() {
+    const uid = document.getElementById('target-uid').value;
+    const amt = parseInt(document.getElementById('add-amt').value);
+    const uRef = db.collection("Users").doc(uid);
+    const snap = await uRef.get();
+    if(snap.exists) {
+        await uRef.update({ wallet_balance: snap.data().wallet_balance + amt });
+        alert("Paisa Add ho gaya!");
+    } else { alert("User UID nahi mili!"); }
+}
+
+async function getPlayersAdmin() {
+    const mid = document.getElementById('adm-match-id').value;
+    const snap = await db.collection("Matches").doc(mid).collection("Players").get();
+    let log = "PLAYERS:<br>";
+    snap.forEach(d => { log += `${d.data().playerName} (UID: ${d.id})<br>`; });
+    document.getElementById('adm-log').innerHTML = log;
 }
 </script>
 </body>
