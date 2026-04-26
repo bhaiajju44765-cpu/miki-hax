@@ -3,145 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ET-PRO | Smart Wallet System</title>
+    <title>FF LEGEND TOURNAMENT | Prime Miku</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --success: #22c55e; --error: #ef4444; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        :root { --gold: #f59e0b; --dark: #0a0a0c; --card: #16161e; }
+        body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
         
-        /* Glassmorphism Navbar */
-        nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #334155; }
-        .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
-        .wallet-display { background: rgba(34, 197, 94, 0.1); border: 1px solid var(--success); padding: 5px 15px; border-radius: 30px; color: var(--success); font-weight: bold; }
-
-        .container { max-width: 600px; margin: auto; padding: 20px; }
-
-        /* Tournament Card */
-        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+        /* Auth Screen */
+        #auth-screen { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 350px; text-align: center; }
         
-        .btn-action { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-action:disabled { background: #475569; cursor: not-allowed; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #000; color: white; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--gold); color: black; margin-top: 10px; transition: 0.3s; }
 
-        /* UTR Modal */
-        #utrModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--primary); }
-        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 1.1rem; box-sizing: border-box; }
+        /* Main UI */
+        header { text-align: center; padding: 20px; background: linear-gradient(to bottom, #1e1b4b, var(--dark)); border-bottom: 2px solid var(--gold); }
+        nav { background: rgba(0,0,0,0.9); padding: 12px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         
-        .status-msg { margin-top: 10px; font-size: 0.9rem; font-weight: bold; }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .match-card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border-left: 5px solid var(--gold); }
+        .wallet-box { color: #22c55e; font-weight: bold; background: rgba(34, 197, 94, 0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid #22c55e; cursor: pointer; }
+        
+        .section-title { font-size: 1.1rem; margin: 25px 0 10px; border-left: 3px solid var(--gold); padding-left: 10px; color: var(--gold); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .m-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid var(--gold); text-align: center; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <nav>
-        <div class="logo">ET-PRO</div>
-        <div class="wallet-display">Wallet: ₹<span id="balance">0</span></div>
-    </nav>
-
-    <div class="container">
-        <div class="card" style="border-color: var(--success);">
-            <h3 style="margin-top: 0; color: var(--success);"><i class="fas fa-wallet"></i> Quick Deposit</h3>
-            <p style="font-size: 0.9rem; color: #94a3b8;">Pay using any UPI App & enter UTR below.</p>
-            <div style="background: #0f172a; padding: 10px; border-radius: 10px; border: 1px dashed #22c55e; margin-bottom: 10px;">
-                <span style="font-size: 0.8rem; display: block;">UPI ID:</span>
-                <strong id="myUpi">yourname@upi</strong>
+    <div id="auth-screen">
+        <div class="login-box">
+            <h2 style="color:var(--gold); margin-bottom:5px;">FF LEGEND</h2>
+            <p style="font-size: 10px; color: #64748b; margin-bottom: 20px;">OWNER: PRIME MIKU</p>
+            
+            <div id="login-form">
+                <input type="email" id="email" placeholder="Email Address">
+                <input type="password" id="pass" placeholder="Password">
+                <button class="btn" onclick="login()">LOGIN</button>
+                <p style="font-size: 12px; margin-top:15px;">New Player? <span onclick="showReg(true)" style="color:var(--gold); cursor:pointer;">Register</span></p>
             </div>
-            <button class="btn-action" onclick="openUtrModal()" style="background: var(--success);">Add Money / Verify UTR</button>
-        </div>
 
-        <div class="section-header" style="margin: 20px 0 10px; font-weight: bold; color: #64748b;">LIVE TOURNAMENTS</div>
-
-        <div class="card">
-            <div style="display: flex; justify-content: space-between;">
-                <div>
-                    <h4 style="margin:0;">Bermuda Classic (Solo)</h4>
-                    <span style="font-size: 0.8rem; color: #94a3b8;">Entry: ₹10 | Per Kill: ₹5</span>
-                </div>
-                <button class="btn-action" id="joinBtn" onclick="joinMatch(10)" style="width: auto; padding: 5px 25px;">JOIN</button>
+            <div id="reg-form" style="display:none">
+                <input type="text" id="reg-name" placeholder="Full Name">
+                <input type="email" id="reg-email" placeholder="Email Address">
+                <input type="password" id="reg-pass" placeholder="Create Password">
+                <button class="btn" onclick="register()">CREATE ACCOUNT</button>
+                <p style="font-size: 12px; margin-top:15px;">Back to <span onclick="showReg(false)" style="color:var(--gold); cursor:pointer;">Login</span></p>
             </div>
         </div>
     </div>
 
-    <div id="utrModal">
-        <div class="modal-box">
-            <h3 style="margin-top: 0;">Verify Payment</h3>
-            <p style="font-size: 0.8rem; color: #94a3b8;">Enter 12-digit UTR/Ref Number from your payment receipt</p>
-            
-            <input type="number" id="utrInput" placeholder="Enter 12 Digit UTR" oninput="limitUTR(this)">
-            <div id="status" class="status-msg"></div>
-            
-            <button class="btn-action" id="verifyBtn" onclick="verifyUTR()">VERIFY & ADD ₹10</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:#64748b; margin-top:15px; cursor:pointer;">Cancel</button>
+    <header>
+        <h1 style="margin:0; font-size:1.5rem; color:var(--gold);">FF LEGEND TOURNAMENT</h1>
+    </header>
+
+    <nav>
+        <div id="user-id" style="font-size: 12px; color: #94a3b8;">ID: Loading...</div>
+        <div class="wallet-box" id="wallet-val" onclick="openDeposit()">Wallet: ₹0</div>
+    </nav>
+
+    <div class="container">
+        <div class="section-title">BERMUDA WINNERS</div>
+        <div class="match-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h4 style="margin:0;">Bermuda Solo Match</h4>
+                    <p style="font-size:12px; color:#94a3b8; margin:5px 0;">Entry: ₹10 | Kill: ₹5</p>
+                </div>
+                <button class="btn" style="width:auto; padding:8px 20px;" onclick="joinMatch('B-101', 10)">JOIN</button>
+            </div>
+        </div>
+
+        <div class="section-title">CLASH SQUAD</div>
+        <div class="match-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h4 style="margin:0;">CS 4v4 Ranked</h4>
+                    <p style="font-size:12px; color:#94a3b8; margin:5px 0;">Entry: ₹10 | Win: ₹40</p>
+                </div>
+                <button class="btn" style="width:auto; padding:8px 20px;" onclick="joinMatch('CS-101', 10)">JOIN</button>
+            </div>
+        </div>
+        
+        <button onclick="logout()" style="width:100%; background:none; border:1px solid #334155; color:#64748b; margin-top:30px; padding:10px; border-radius:10px;">Logout</button>
+    </div>
+
+    <div id="deposit-modal" class="modal">
+        <div class="m-content">
+            <h3 style="color:var(--gold)">Recharge Wallet</h3>
+            <p style="font-size:12px; color:#94a3b8">Pay to UPI and send screenshot on WhatsApp.</p>
+            <div style="background:#000; padding:10px; border-radius:10px; border:1px dashed var(--gold); margin:15px 0; color:var(--gold);">
+                <strong>miku@upi</strong>
+            </div>
+            <button class="btn" onclick="window.location.href='https://wa.me/91XXXXXXXXXX'">SEND SCREENSHOT</button>
+            <button onclick="closeDeposit()" style="background:none; border:none; color:#64748b; margin-top:10px; cursor:pointer;">Close</button>
         </div>
     </div>
 
     <script>
-        let walletBalance = 0;
-        let usedUTRs = ["123456789012"]; // Demo ke liye ek used UTR
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyAFvaJjgrPghBwx5FPFeLPc0XCi6GFNA1k",
+            authDomain: "ff-legend-tournament.firebaseapp.com",
+            projectId: "ff-legend-tournament",
+            storageBucket: "ff-legend-tournament.firebasestorage.app",
+            messagingSenderId: "648355009637",
+            appId: "1:648355009637:web:2a7b87b72566a129ae228c",
+            measurementId: "G-03NXK62TX8"
+        };
 
-        function limitUTR(element) {
-            if (element.value.length > 12) element.value = element.value.slice(0, 12);
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // AUTH FUNCTIONS
+        function showReg(isReg) {
+            document.getElementById('login-form').style.display = isReg ? 'none' : 'block';
+            document.getElementById('reg-form').style.display = isReg ? 'block' : 'none';
         }
 
-        function openUtrModal() {
-            document.getElementById('utrModal').style.display = 'flex';
+        async function register() {
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const name = document.getElementById('reg-name').value;
+            const sID = "FFL-" + Math.floor(1000 + Math.random() * 9000);
+
+            if(!email || !pass || !name) return alert("Fill all fields!");
+            try {
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.collection("users").doc(cred.user.uid).set({
+                    name: name, siteID: sID, wallet: 0, isAdmin: false
+                });
+                alert("Account Created! ID: " + sID);
+            } catch (e) { alert(e.message); }
         }
 
-        function closeModal() {
-            document.getElementById('utrModal').style.display = 'none';
-            document.getElementById('status').innerText = "";
+        async function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            try { await auth.signInWithEmailAndPassword(email, pass); } 
+            catch (e) { alert("Invalid Login!"); }
         }
 
-        function verifyUTR() {
-            const utr = document.getElementById('utrInput').value;
-            const status = document.getElementById('status');
-            const verifyBtn = document.getElementById('verifyBtn');
-
-            if (utr.length !== 12) {
-                status.innerText = "❌ Invalid UTR! Must be 12 digits.";
-                status.style.color = "var(--error)";
-                return;
-            }
-
-            if (usedUTRs.includes(utr)) {
-                status.innerText = "❌ UTR Already Used!";
-                status.style.color = "var(--error)";
-                return;
-            }
-
-            // Simulating Verification
-            verifyBtn.innerText = "Verifying...";
-            verifyBtn.disabled = true;
-
-            setTimeout(() => {
-                walletBalance += 10;
-                usedUTRs.push(utr); // Save UTR so it can't be used again
-                document.getElementById('balance').innerText = walletBalance;
-                
-                status.innerText = "✅ ₹10 Added Successfully!";
-                status.style.color = "var(--success)";
-                
-                setTimeout(() => {
-                    closeModal();
-                    verifyBtn.innerText = "VERIFY & ADD ₹10";
-                    verifyBtn.disabled = false;
-                    document.getElementById('utrInput').value = "";
-                }, 1500);
-            }, 2000);
-        }
-
-        function joinMatch(fee) {
-            if (walletBalance >= fee) {
-                walletBalance -= fee;
-                document.getElementById('balance').innerText = walletBalance;
-                alert("Successfully Joined the Match!");
-                document.getElementById('joinBtn').innerText = "JOINED";
-                document.getElementById('joinBtn').disabled = true;
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                document.getElementById('auth-screen').style.display = 'none';
+                updateUI(user.uid);
             } else {
-                alert("Insufficient Balance! Please add money first.");
-                openUtrModal();
+                document.getElementById('auth-screen').style.display = 'flex';
+            }
+        });
+
+        async function updateUI(uid) {
+            const doc = await db.collection("users").doc(uid).get();
+            if(doc.exists) {
+                document.getElementById('user-id').innerText = "ID: " + doc.data().siteID;
+                document.getElementById('wallet-val').innerText = "Wallet: ₹" + doc.data().wallet;
             }
         }
+
+        async function joinMatch(code, fee) {
+            const uid = prompt("Enter Game UID:");
+            const lvl = prompt("Enter Level (50+):");
+            if(lvl < 50) return alert("Level 50+ Required!");
+
+            const user = auth.currentUser;
+            const docRef = db.collection("users").doc(user.uid);
+            const doc = await docRef.get();
+            if(doc.data().wallet >= fee) {
+                await docRef.update({ wallet: firebase.firestore.FieldValue.increment(-fee) });
+                await db.collection("registrations").add({
+                    user: user.email, gameUID: uid, match: code, time: new Date()
+                });
+                alert("Joined Successfully!");
+                location.reload();
+            } else { alert("Low Balance!"); openDeposit(); }
+        }
+
+        function openDeposit() { document.getElementById('deposit-modal').style.display = 'flex'; }
+        function closeDeposit() { document.getElementById('deposit-modal').style.display = 'none'; }
+        function logout() { auth.signOut(); }
+
+        // SECURITY
+        document.onkeydown = function(e) { if(e.keyCode == 123) return false; }
     </script>
 </body>
 </html>
