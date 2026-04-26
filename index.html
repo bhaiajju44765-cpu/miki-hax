@@ -1,300 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>MIKI ESPORTS FINAL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ET-PRO | Smart Wallet System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --success: #22c55e; --error: #ef4444; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        /* Glassmorphism Navbar */
+        nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #334155; }
+        .logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .wallet-display { background: rgba(34, 197, 94, 0.1); border: 1px solid var(--success); padding: 5px 15px; border-radius: 30px; color: var(--success); font-weight: bold; }
 
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
+        .container { max-width: 600px; margin: auto; padding: 20px; }
 
-<style>
-body{background:#000;color:#fff;font-family:sans-serif;text-align:center}
-.box{background:#111;padding:20px;margin:10px;border-radius:10px}
-input,textarea{padding:10px;margin:5px;width:85%;background:#222;color:#fff;border:none}
-button{padding:10px;margin:5px;background:#00f2fe;border:none;font-weight:bold;border-radius:5px}
-.hidden{display:none}
-</style>
+        /* Tournament Card */
+        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+        
+        .btn-action { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-action:disabled { background: #475569; cursor: not-allowed; }
+
+        /* UTR Modal */
+        #utrModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--primary); }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 1.1rem; box-sizing: border-box; }
+        
+        .status-msg { margin-top: 10px; font-size: 0.9rem; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<h2>🔥 MIKI ESPORTS 🔥</h2>
+    <nav>
+        <div class="logo">ET-PRO</div>
+        <div class="wallet-display">Wallet: ₹<span id="balance">0</span></div>
+    </nav>
 
-<!-- LOGIN -->
-<div id="auth" class="box">
-<input id="email" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
-<input id="phone" placeholder="Phone (register)">
-<br>
-<button onclick="register()">Register</button>
-<button onclick="login()">Login</button>
-</div>
+    <div class="container">
+        <div class="card" style="border-color: var(--success);">
+            <h3 style="margin-top: 0; color: var(--success);"><i class="fas fa-wallet"></i> Quick Deposit</h3>
+            <p style="font-size: 0.9rem; color: #94a3b8;">Pay using any UPI App & enter UTR below.</p>
+            <div style="background: #0f172a; padding: 10px; border-radius: 10px; border: 1px dashed #22c55e; margin-bottom: 10px;">
+                <span style="font-size: 0.8rem; display: block;">UPI ID:</span>
+                <strong id="myUpi">yourname@upi</strong>
+            </div>
+            <button class="btn-action" onclick="openUtrModal()" style="background: var(--success);">Add Money / Verify UTR</button>
+        </div>
 
-<!-- DASHBOARD -->
-<div id="dash" class="box hidden">
-<h3>Balance: ₹<span id="bal">0</span></h3>
+        <div class="section-header" style="margin: 20px 0 10px; font-weight: bold; color: #64748b;">LIVE TOURNAMENTS</div>
 
-<input id="name" placeholder="IGN Name">
-<input id="uid" placeholder="Game UID">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between;">
+                <div>
+                    <h4 style="margin:0;">Bermuda Classic (Solo)</h4>
+                    <span style="font-size: 0.8rem; color: #94a3b8;">Entry: ₹10 | Per Kill: ₹5</span>
+                </div>
+                <button class="btn-action" id="joinBtn" onclick="joinMatch(10)" style="width: auto; padding: 5px 25px;">JOIN</button>
+            </div>
+        </div>
+    </div>
 
-<h4>🎮 Matches</h4>
-<div id="matches"></div>
+    <div id="utrModal">
+        <div class="modal-box">
+            <h3 style="margin-top: 0;">Verify Payment</h3>
+            <p style="font-size: 0.8rem; color: #94a3b8;">Enter 12-digit UTR/Ref Number from your payment receipt</p>
+            
+            <input type="number" id="utrInput" placeholder="Enter 12 Digit UTR" oninput="limitUTR(this)">
+            <div id="status" class="status-msg"></div>
+            
+            <button class="btn-action" id="verifyBtn" onclick="verifyUTR()">VERIFY & ADD ₹10</button>
+            <button onclick="closeModal()" style="background:none; border:none; color:#64748b; margin-top:15px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
 
-<!-- MESSAGE -->
-<div class="box">
-<h4>📩 Contact Admin</h4>
-<textarea id="msg"></textarea>
-<button onclick="sendMsg()">Send</button>
-</div>
+    <script>
+        let walletBalance = 0;
+        let usedUTRs = ["123456789012"]; // Demo ke liye ek used UTR
 
-<div id="replyBox" class="box hidden">
-<h4>📨 Admin Reply</h4>
-<p id="reply"></p>
-</div>
+        function limitUTR(element) {
+            if (element.value.length > 12) element.value = element.value.slice(0, 12);
+        }
 
-<button onclick="logout()">Logout</button>
-</div>
+        function openUtrModal() {
+            document.getElementById('utrModal').style.display = 'flex';
+        }
 
-<!-- ADMIN -->
-<div id="admin" class="box hidden">
-<h3>👑 ADMIN PANEL</h3>
+        function closeModal() {
+            document.getElementById('utrModal').style.display = 'none';
+            document.getElementById('status').innerText = "";
+        }
 
-<input id="secret" placeholder="Secret Key">
-<button onclick="unlock()">Unlock</button>
+        function verifyUTR() {
+            const utr = document.getElementById('utrInput').value;
+            const status = document.getElementById('status');
+            const verifyBtn = document.getElementById('verifyBtn');
 
-<div id="panel" class="hidden">
+            if (utr.length !== 12) {
+                status.innerText = "❌ Invalid UTR! Must be 12 digits.";
+                status.style.color = "var(--error)";
+                return;
+            }
 
-<h4>Create Match</h4>
-<input id="mId" placeholder="Match ID">
-<input id="mTime" placeholder="Time">
-<input id="mRoom" placeholder="Room ID">
-<input id="mPass" placeholder="Room Pass">
-<input id="mPrize" placeholder="Prize">
-<button onclick="createMatch()">Create Match</button>
+            if (usedUTRs.includes(utr)) {
+                status.innerText = "❌ UTR Already Used!";
+                status.style.color = "var(--error)";
+                return;
+            }
 
-<h4>Player Control</h4>
-<input id="tUid" placeholder="User UID">
-<input id="amt" placeholder="Amount">
-<button onclick="addCash()">Add Cash</button>
-<button onclick="ban()">Ban</button>
-<button onclick="unban()">Unban</button>
+            // Simulating Verification
+            verifyBtn.innerText = "Verifying...";
+            verifyBtn.disabled = true;
 
-<h4>👥 All Users</h4>
-<button onclick="loadUsers()">Load Users</button>
-<div id="users"></div>
+            setTimeout(() => {
+                walletBalance += 10;
+                usedUTRs.push(utr); // Save UTR so it can't be used again
+                document.getElementById('balance').innerText = walletBalance;
+                
+                status.innerText = "✅ ₹10 Added Successfully!";
+                status.style.color = "var(--success)";
+                
+                setTimeout(() => {
+                    closeModal();
+                    verifyBtn.innerText = "VERIFY & ADD ₹10";
+                    verifyBtn.disabled = false;
+                    document.getElementById('utrInput').value = "";
+                }, 1500);
+            }, 2000);
+        }
 
-<h4>📬 Messages</h4>
-<button onclick="loadMsgs()">Load Messages</button>
-<div id="msgs"></div>
-
-</div>
-</div>
-
-<script>
-const firebaseConfig = {
- apiKey: "AIzaSyDiVgQ-FMis2N77nHu6dTY17aTPpmBrNL4",
- authDomain: "miki-turnament-93d48.firebaseapp.com",
- projectId: "miki-turnament-93d48"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// 🔥 ADMIN SETTINGS
-const ADMIN_UID = "SPzQMnoqVYdVnQR81RCcb9r9lLy1";
-const SECRET_KEY = "MIKI-999";
-
-// AUTH STATE
-auth.onAuthStateChanged(async user=>{
- if(user){
-  const doc = await db.collection("Users").doc(user.uid).get();
-  const data = doc.data();
-
-  if(data.isBanned){
-    document.body.innerHTML="<h1 style='color:red'>BANNED</h1>";
-    return;
-  }
-
-  document.getElementById("auth").style.display="none";
-  document.getElementById("dash").classList.remove("hidden");
-
-  document.getElementById("bal").innerText = data.wallet_balance || 0;
-
-  if(user.uid === ADMIN_UID){
-    document.getElementById("admin").classList.remove("hidden");
-  }
-
-  db.collection("Users").doc(user.uid).onSnapshot(d=>{
-    if(d.data().adminReply){
-      document.getElementById("replyBox").classList.remove("hidden");
-      document.getElementById("reply").innerText = d.data().adminReply;
-    }
-  });
-
-  loadMatches();
- }
-});
-
-// REGISTER
-async function register(){
- const res = await auth.createUserWithEmailAndPassword(email.value,pass.value);
-
- await db.collection("Users").doc(res.user.uid).set({
-  email: email.value,
-  phone: phone.value,
-  wallet_balance: 0,
-  isBanned: false
- });
-
- alert("Registered Successfully");
-}
-
-// LOGIN
-function login(){
- auth.signInWithEmailAndPassword(email.value,pass.value);
-}
-
-// LOGOUT
-function logout(){
- auth.signOut();
-}
-
-// LOAD MATCHES
-async function loadMatches(){
- const snap = await db.collection("Matches").get();
- let html="";
- snap.forEach(doc=>{
-  const m = doc.data();
-
-  html += `
-  <div class="box">
-  <b>${m.id}</b><br>
-  Time: ${m.time}<br>
-  Prize: ₹${m.prize}<br>
-  <button onclick="join('${doc.id}')">Join ₹10</button>
-  </div>`;
- });
- matches.innerHTML = html;
-}
-
-// JOIN MATCH
-async function join(id){
- const ref = db.collection("Users").doc(auth.currentUser.uid);
-
- await db.runTransaction(async t=>{
-  const doc = await t.get(ref);
-  let bal = doc.data().wallet_balance;
-
-  if(bal < 10) throw "Low balance";
-
-  t.update(ref,{wallet_balance: bal - 10});
- });
-
- const match = await db.collection("Matches").doc(id).get();
- const m = match.data();
-
- alert("ROOM ID: " + m.roomId + "\nPASS: " + m.pass);
-
- await db.collection("Matches")
- .doc(id)
- .collection("Players")
- .doc(auth.currentUser.uid)
- .set({
-  name: name.value,
-  uid: uid.value
- });
-
-}
-
-// ADMIN UNLOCK
-function unlock(){
- if(auth.currentUser.uid !== ADMIN_UID) return alert("Not Admin");
-
- if(secret.value === SECRET_KEY){
-  document.getElementById("panel").classList.remove("hidden");
- }
-}
-
-// CREATE MATCH
-async function createMatch(){
- await db.collection("Matches").doc(mId.value).set({
-  id: mId.value,
-  time: mTime.value,
-  roomId: mRoom.value,
-  pass: mPass.value,
-  prize: mPrize.value
- });
-
- alert("Match Created");
-}
-
-// CASH
-async function addCash(){
- const ref = db.collection("Users").doc(tUid.value);
-
- await db.runTransaction(async t=>{
-  const doc = await t.get(ref);
-  let bal = doc.data().wallet_balance || 0;
-
-  t.update(ref,{wallet_balance: bal + Number(amt.value)});
- });
-
- alert("Cash Added");
-}
-
-// BAN
-function ban(){
- db.collection("Users").doc(tUid.value).update({isBanned:true});
-}
-
-// UNBAN
-function unban(){
- db.collection("Users").doc(tUid.value).update({isBanned:false});
-}
-
-// USERS
-async function loadUsers(){
- const snap = await db.collection("Users").get();
- let html="";
- snap.forEach(doc=>{
-  let d = doc.data();
-  html += `<div class="box">${doc.id} | ₹${d.wallet_balance}</div>`;
- });
- users.innerHTML = html;
-}
-
-// MESSAGE
-function sendMsg(){
- db.collection("Messages").add({
-  uid: auth.currentUser.uid,
-  msg: msg.value
- });
- alert("Message Sent");
-}
-
-// ADMIN MESSAGES
-async function loadMsgs(){
- const snap = await db.collection("Messages").get();
- let html="";
- snap.forEach(doc=>{
-  let d = doc.data();
-  html += `
-  <div class="box">
-  ${d.msg}
-  <input id="r${doc.id}">
-  <button onclick="replyUser('${d.uid}','${doc.id}')">Reply</button>
-  </div>`;
- });
- msgs.innerHTML = html;
-}
-
-function replyUser(uid,id){
- let txt = document.getElementById("r"+id).value;
- db.collection("Users").doc(uid).update({adminReply:txt});
-}
-</script>
-
+        function joinMatch(fee) {
+            if (walletBalance >= fee) {
+                walletBalance -= fee;
+                document.getElementById('balance').innerText = walletBalance;
+                alert("Successfully Joined the Match!");
+                document.getElementById('joinBtn').innerText = "JOINED";
+                document.getElementById('joinBtn').disabled = true;
+            } else {
+                alert("Insufficient Balance! Please add money first.");
+                openUtrModal();
+            }
+        }
+    </script>
 </body>
 </html>
