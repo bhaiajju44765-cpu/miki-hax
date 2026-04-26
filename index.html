@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FF LEGEND | PRIME MIKU</title>
+    <title>FF LEGEND | PRIME MIKU OFFICIAL</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -12,135 +12,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --gold: #ffcc00; --blue: #00d4ff; --bg: #0a0a0f; --card: #151520; --red: #ff3131; --green: #00ff88; --glass: rgba(255, 255, 255, 0.05); }
+        :root { --gold: #ffcc00; --blue: #00d4ff; --bg: #0a0a0f; --card: #151520; --red: #ff3131; --green: #00ff88; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: #fff; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
         
-        /* 💎 PREMIUM HEADER */
-        header { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding: 15px; border-bottom: 2px solid var(--gold); text-align: center; position: sticky; top: 0; z-index: 1000; }
-        header h1 { font-family: 'Orbitron'; color: var(--gold); margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; }
+        header { background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); padding: 15px; border-bottom: 2px solid var(--gold); text-align: center; position: sticky; top: 0; z-index: 1000; }
+        header h1 { font-family: 'Orbitron'; color: var(--gold); margin: 0; font-size: 20px; letter-spacing: 2px; }
 
-        /* 🚫 BAN SCREEN */
         #ban-screen { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--red); padding: 20px; }
 
-        /* 🔐 AUTH UI */
-        #auth-page { position: fixed; inset: 0; background: radial-gradient(circle, #1a1a2e 0%, #000 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 380px; box-shadow: 0 0 30px rgba(255,204,0,0.1); }
+        #auth-page { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 380px; }
 
-        /* 🧭 NAVIGATION BAR */
-        nav { background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; z-index: 1000; }
-        .nav-btn { color: #666; font-size: 10px; font-family: 'Orbitron'; cursor: pointer; text-align: center; transition: 0.3s; }
-        .nav-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        nav { background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; z-index: 1000; }
+        .nav-btn { color: #666; font-size: 10px; font-family: 'Orbitron'; cursor: pointer; text-align: center; }
+        .nav-btn.active { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
 
-        /* 📦 UI ELEMENTS */
         .container { padding: 15px; max-width: 500px; margin: auto; display: none; }
-        .container.active { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .container.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #252535; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #252535; }
         
-        /* 🔘 BUTTONS */
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-top: 10px; font-size: 14px; }
-        .btn-gold { background: linear-gradient(90deg, #ffcc00, #ffaa00); color: #000; box-shadow: 0 0 15px rgba(255,204,0,0.2); }
-        .btn-red { background: linear-gradient(90deg, #ff3131, #aa0000); color: #fff; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-red { background: var(--red); color: #fff; }
         .btn-mini { padding: 5px 10px; font-size: 9px; width: auto; margin: 2px; border-radius: 5px; }
 
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; font-size: 14px; outline: none; }
-        input:focus { border-color: var(--gold); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; outline: none; }
 
-        /* 💬 CHAT DESIGN */
-        #chat-win { height: 400px; overflow-y: auto; background: #08080c; border-radius: 15px; padding: 15px; border: 1px solid #1a1a1a; display: flex; flex-direction: column; }
-        .bubble { padding: 10px 14px; border-radius: 15px; margin-bottom: 8px; font-size: 13px; max-width: 80%; line-height: 1.3; }
-        .bubble.me { background: var(--gold); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .bubble.adm { background: #1a1a25; border: 1px solid var(--blue); align-self: flex-start; border-bottom-left-radius: 2px; }
+        #chat-win { height: 380px; overflow-y: auto; background: #08080c; border-radius: 15px; padding: 15px; border: 1px solid #1a1a1a; display: flex; flex-direction: column; }
+        .bubble { padding: 10px 14px; border-radius: 15px; margin-bottom: 8px; font-size: 13px; max-width: 85%; }
+        .bubble.me { background: var(--gold); color: #000; align-self: flex-end; }
+        .bubble.adm { background: #1a1a25; border: 1px solid var(--blue); align-self: flex-start; }
 
-        /* ⚔️ MATCH CARDS */
-        .m-timer { color: var(--blue); font-size: 12px; font-weight: 700; background: rgba(0,212,255,0.1); padding: 4px 10px; border-radius: 50px; display: inline-block; margin-bottom: 10px; }
-        .room-box { margin-top: 15px; padding: 15px; background: rgba(0, 212, 255, 0.05); border: 1px dashed var(--blue); border-radius: 10px; }
-        .p-row { background: #0a0a0f; padding: 10px; border-radius: 8px; margin-top: 5px; border: 1px solid #222; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .m-timer { color: var(--blue); font-size: 11px; font-weight: 700; background: rgba(0,212,255,0.1); padding: 4px 10px; border-radius: 50px; margin-bottom: 8px; display: inline-block; }
+        .room-box { margin-top: 12px; padding: 12px; background: rgba(0,212,255,0.05); border: 1px dashed var(--blue); border-radius: 10px; }
+        .p-row { background: #0a0a0f; padding: 8px; border-radius: 8px; margin-top: 5px; border: 1px solid #222; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
     <div id="ban-screen">
-        <h1 style="font-family:Orbitron;">ACCESS DENIED</h1>
-        <p>Aapko rules todne ki wajah se BAN kiya gaya hai.</p>
+        <h1>ACCESS BANNED</h1>
+        <p>Aapko Rules todne ki wajah se block kar diya gaya hai.</p>
     </div>
 
     <div id="auth-page">
         <div class="auth-box">
-            <h1 style="font-family:Orbitron; color:var(--gold); text-align:center;">FF LEGEND</h1>
+            <h1 style="text-align:center; color:var(--gold); font-family:Orbitron;">FF LEGEND</h1>
             <div id="login-form">
                 <input type="email" id="l-email" placeholder="Email">
                 <input type="password" id="l-pass" placeholder="Password">
-                <button class="btn btn-gold" onclick="login()">ENTER ARENA</button>
-                <p onclick="toggleA(true)" style="font-size:12px; color:#666; text-align:center; cursor:pointer; margin-top:15px;">NEW PLAYER? REGISTER</p>
+                <button class="btn btn-gold" onclick="login()">LOGIN</button>
+                <p onclick="toggleA(true)" style="text-align:center; font-size:12px; cursor:pointer; margin-top:10px;">New Player? <span style="color:var(--gold)">Register</span></p>
             </div>
             <div id="reg-form" style="display:none;">
                 <input type="text" id="r-name" placeholder="Game Name">
                 <input type="email" id="r-email" placeholder="Email">
                 <input type="password" id="r-pass" placeholder="Password">
                 <button class="btn btn-gold" onclick="register()">CREATE ACCOUNT</button>
-                <p onclick="toggleA(false)" style="font-size:12px; color:#666; text-align:center; cursor:pointer; margin-top:15px;">ALREADY HAVE ID? LOGIN</p>
+                <p onclick="toggleA(false)" style="text-align:center; font-size:12px; cursor:pointer; margin-top:10px;">Have ID? <span style="color:var(--gold)">Login</span></p>
             </div>
         </div>
     </div>
 
     <div id="app" style="display:none;">
-        <header><h1>FF LEGEND</h1></header>
+        <header><h1>FF LEGEND TOURNAMENT</h1></header>
 
         <div id="home" class="container active">
-            <div class="card" style="display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, #151520 0%, #1a1a2e 100%);">
-                <div><small style="color:var(--gold); letter-spacing:1px;">BALANCE</small><br><b id="u-bal" style="color:var(--green); font-size:22px;">₹0</b></div>
-                <div style="text-align:right;"><small style="color:var(--blue); letter-spacing:1px;">SITE ID</small><br><b id="u-sid" style="font-family:Orbitron;">...</b></div>
+            <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div><small>WALLET</small><br><b id="u-bal" style="color:var(--green); font-size:24px;">₹0</b></div>
+                <div style="text-align:right;"><small>ID</small><br><b id="u-sid" style="color:var(--blue); font-family:Orbitron;">...</b></div>
             </div>
             <div id="match-feed"></div>
         </div>
 
         <div id="chat" class="container">
-            <div style="background:var(--red); font-size:10px; padding:5px; text-align:center; font-weight:bold; border-radius:5px; margin-bottom:10px;">⚠️ BADTAMEEZI = PERMANENT BAN</div>
+            <div style="background:var(--red); font-size:10px; padding:5px; text-align:center; border-radius:5px; margin-bottom:10px;">⚠️ BADTAMEEZI = BAN</div>
             <div id="chat-win"></div>
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <input type="text" id="chat-in" placeholder="Message Admin..." style="margin:0;">
-                <button class="btn btn-gold" style="width:80px; margin:0;" onclick="sendMsg()">SEND</button>
+            <div style="display:flex; gap:5px; margin-top:10px;">
+                <input type="text" id="chat-in" placeholder="Message..." style="margin:0;">
+                <button class="btn btn-gold" style="width:70px; margin:0;" onclick="sendMsg()">SEND</button>
             </div>
         </div>
 
         <div id="wallet" class="container">
             <div class="card" style="text-align:center;">
-                <h3 style="color:var(--gold);">ADD CASH</h3>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="border:2px solid var(--gold); border-radius:10px; padding:5px; background:#fff;">
-                <p style="font-size:12px; color:#888; margin-top:10px;">Pay ₹20 and submit UTR below</p>
-                <input type="text" id="utr" placeholder="Enter 12 Digit UTR">
+                <h3>RECHARGE</h3>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="padding:5px; background:#fff; border-radius:10px;">
+                <input type="text" id="utr" placeholder="12 Digit UTR">
                 <button class="btn btn-gold" onclick="submitUTR()">SUBMIT PAYMENT</button>
             </div>
-            <button class="btn btn-red" onclick="auth.signOut()">LOGOUT ACCOUNT</button>
+            <button class="btn btn-red" onclick="auth.signOut()">LOGOUT</button>
         </div>
 
         <div id="admin" class="container">
-            <div class="card" style="border-left:4px solid var(--blue);">
-                <h4 style="margin:0 0 10px 0;">PLAYER CONTROL</h4>
-                <input id="search-sid" placeholder="Search Site ID (FFL-xxxx)">
+            <div class="card">
+                <h4>ADMIN PANEL</h4>
+                <input id="search-sid" placeholder="Search Site ID">
                 <button class="btn btn-gold btn-mini" onclick="findUser()">SEARCH</button>
-                <div id="u-edit" style="display:none; margin-top:15px; border-top:1px solid #333; padding-top:10px;">
-                    <p id="edit-name" style="font-weight:bold; color:var(--gold);"></p>
+                <div id="u-edit" style="display:none; margin-top:10px;">
+                    <p id="edit-name"></p>
                     <input type="number" id="amt-edit" placeholder="Amount">
-                    <div style="display:flex; gap:5px;">
-                        <button class="btn-gold btn-mini" style="flex:1" onclick="changeBal(true)">ADD</button>
-                        <button class="btn-red btn-mini" style="flex:1" onclick="changeBal(false)">SUB</button>
-                    </div>
-                    <button id="ban-btn" class="btn btn-red" style="padding:10px; font-size:12px;" onclick="toggleBan()">BAN USER</button>
+                    <button class="btn-gold btn-mini" onclick="changeBal(true)">ADD</button>
+                    <button class="btn-red btn-mini" onclick="changeBal(false)">SUB</button>
+                    <button id="ban-btn" class="btn btn-red" onclick="toggleBan()">BAN</button>
                 </div>
             </div>
-
             <div class="card">
                 <h4>CREATE MATCH</h4>
-                <input id="m-t" placeholder="Match Title">
+                <input id="m-t" placeholder="Title">
                 <input id="m-f" type="number" placeholder="Fee">
                 <input id="m-tm" type="datetime-local">
-                <button class="btn btn-gold" onclick="postMatch()">POST MATCH</button>
+                <button class="btn btn-gold" onclick="postMatch()">POST</button>
             </div>
-
             <div id="adm-match-list"></div>
             <div id="adm-utr-list" class="card"><h4>UTR REQUESTS</h4></div>
         </div>
@@ -149,16 +135,16 @@
             <div class="nav-btn active" id="n-home" onclick="nav('home')">MATCHES</div>
             <div class="nav-btn" id="n-chat" onclick="nav('chat')">SUPPORT</div>
             <div class="nav-btn" id="n-wallet" onclick="nav('wallet')">WALLET</div>
-            <div id="adm-nav" class="nav-btn" style="display:none; color:var(--red);" onclick="nav('admin')">ADMIN 👑</div>
+            <div id="adm-nav" class="nav-btn" style="display:none; color:var(--red);" onclick="nav('admin')">ADMIN</div>
         </nav>
     </div>
 
     <div id="join-popup" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px;">
         <div class="card" style="width:100%; max-width:400px; border:1px solid var(--gold);">
-            <h2 style="text-align:center; font-family:Orbitron; color:var(--gold);">JOIN MATCH</h2>
+            <h3>JOIN TOURNAMENT</h3>
             <input type="text" id="p-name" placeholder="FF Name">
             <input type="text" id="p-uid" placeholder="FF UID">
-            <input type="number" id="p-lvl" placeholder="Level (50+ Only)">
+            <input type="number" id="p-lvl" placeholder="Level (50+)">
             <button class="btn btn-gold" id="confirm-btn">PAY & JOIN</button>
             <button class="btn" style="background:transparent; color:#555;" onclick="document.getElementById('join-popup').style.display='none'">CANCEL</button>
         </div>
@@ -191,11 +177,11 @@
                     const isJ = m.players.some(p => p.uid === auth.currentUser.uid);
                     feed.innerHTML += `
                         <div class="card">
-                            <span class="m-timer" id="t-${mid}">Loading...</span>
+                            <span class="m-timer" id="t-${mid}">Wait..</span>
                             <h3 style="margin:5px 0;">${m.title}</h3>
-                            <p style="font-size:12px; color:#888;">ENTRY: ₹${m.fee} | PRIZE: ₹${m.fee*40}</p>
+                            <p style="font-size:12px; color:#777;">FEE: ₹${m.fee} | PRIZE: ₹${m.fee*40}</p>
                             <div id="room-${mid}" class="room-box" style="display:none;">
-                                <div style="display:flex; justify-content:space-between; font-size:13px;">
+                                <div style="display:flex; justify-content:space-between;">
                                     <div><small style="color:var(--blue);">ID:</small> <b>${m.rId || 'Wait..'}</b></div>
                                     <div><small style="color:var(--blue);">PASS:</small> <b>${m.rPs || 'Wait..'}</b></div>
                                 </div>
@@ -208,8 +194,8 @@
                         const t = document.getElementById(`t-${mid}`), b = document.getElementById(`b-${mid}`), r = document.getElementById(`room-${mid}`);
                         if(!t) return;
                         if(diff <= 0){
-                            t.innerText = "LIVE 🟢"; t.style.color = "var(--green)";
-                            if(isJ) { r.style.display = 'block'; b.innerHTML = `<button class="btn" style="background:#222; color:#555;" disabled>JOINED</button>`; }
+                            t.innerText = "MATCH LIVE 🟢"; t.style.color = "var(--green)";
+                            if(isJ) { r.style.display = 'block'; b.innerHTML = `<button class="btn" style="background:#222;" disabled>JOINED</button>`; }
                             else { b.innerHTML = `<button class="btn btn-red" disabled>STARTED</button>`; }
                         } else {
                             const h=Math.floor(diff/36e5), mi=Math.floor((diff%36e5)/6e4), s=Math.floor((diff%6e4)/1000);
@@ -223,25 +209,41 @@
         }
 
         function openJ(id, fee){ document.getElementById('join-popup').style.display='flex'; document.getElementById('confirm-btn').onclick = () => processJoin(id, fee); }
+        
+        // --- 🛡️ FIXED MONEY CHECK JOIN LOGIC ---
         async function processJoin(mid, fee){
             const lvl = parseInt(document.getElementById('p-lvl').value);
+            const pName = document.getElementById('p-name').value;
+            const pUid = document.getElementById('p-uid').value;
+
+            if(!pName || !pUid || !lvl) return alert("Fill all details!");
             if(lvl < 50) return alert("Level 50+ Required!");
+
             const uRef = db.collection("users").doc(auth.currentUser.uid);
-            const u = (await uRef.get()).data();
-            if(u.wallet < fee) return alert("Low Balance!");
-            await uRef.update({ wallet: u.wallet - fee });
-            await db.collection("matches").doc(mid).update({ players: firebase.firestore.FieldValue.arrayUnion({ uid:auth.currentUser.uid, name:document.getElementById('p-name').value, ffid:document.getElementById('p-uid').value, level:lvl, kills:0 }) });
+            const uData = (await uRef.get()).data();
+
+            // 🛑 STRICT CHECK: Agar paisa kam hai toh yahi se code band (Return)
+            if(uData.wallet < fee) {
+                alert("Insufficient Balance! Recharge Wallet.");
+                return; 
+            }
+
+            // ✅ Agar paisa hai toh aage badho
+            await uRef.update({ wallet: firebase.firestore.FieldValue.increment(-fee) });
+            await db.collection("matches").doc(mid).update({ 
+                players: firebase.firestore.FieldValue.arrayUnion({ uid:auth.currentUser.uid, name:pName, ffid:pUid, level:lvl, kills:0 }) 
+            });
+            alert("Joined Successfully!");
             document.getElementById('join-popup').style.display='none';
         }
 
         async function findUser(){
-            const sid = document.getElementById('search-sid').value;
-            const q = await db.collection("users").where("siteID","==",sid).get();
-            if(q.empty) return alert("User Not Found!");
+            const q = await db.collection("users").where("siteID","==",document.getElementById('search-sid').value).get();
+            if(q.empty) return alert("Not Found");
             targetUid = q.docs[0].id; const u = q.docs[0].data();
             document.getElementById('u-edit').style.display = 'block';
             document.getElementById('edit-name').innerText = u.name + " (₹" + u.wallet + ")";
-            document.getElementById('ban-btn').innerText = u.isBanned ? "UNBAN USER" : "BAN USER";
+            document.getElementById('ban-btn').innerText = u.isBanned ? "UNBAN" : "BAN";
         }
         async function changeBal(a){ await db.collection("users").doc(targetUid).update({ wallet: firebase.firestore.FieldValue.increment(a?parseInt(document.getElementById('amt-edit').value):-parseInt(document.getElementById('amt-edit').value)) }); findUser(); }
         async function toggleBan(){ const u=(await db.collection("users").doc(targetUid).get()).data(); await db.collection("users").doc(targetUid).update({isBanned:!u.isBanned}); findUser(); }
@@ -252,7 +254,7 @@
                 snap.forEach(doc => {
                     const m = doc.data(), mid = doc.id;
                     let ps = ""; m.players.forEach((p, i) => ps += `<div class="p-row"><span>${p.name} (K:${p.kills})</span> <div><button class="btn-gold btn-mini" onclick="addKill('${mid}',${i})">+K</button><button class="btn-red btn-mini" onclick="kickP('${mid}','${p.uid}')">X</button></div></div>`);
-                    box.innerHTML += `<div class="card"><b>${m.title}</b><input id="ri-${mid}" value="${m.rId}" placeholder="ID"><input id="rp-${mid}" value="${m.rPs}" placeholder="Pass"><button class="btn btn-gold btn-mini" onclick="updateR('${mid}')">Update</button><button class="btn btn-red btn-mini" onclick="delM('${mid}')">Del</button>${ps}</div>`;
+                    box.innerHTML += `<div class="card"><b>${m.title}</b><input id="ri-${mid}" value="${m.rId}" placeholder="Room ID"><input id="rp-${mid}" value="${m.rPs}" placeholder="Pass"><button class="btn btn-gold btn-mini" onclick="updateR('${mid}')">Update</button><button class="btn btn-red btn-mini" onclick="delM('${mid}')">Del</button>${ps}</div>`;
                 });
             });
             db.collection("deposits").where("status","==","pending").onSnapshot(s => {
@@ -264,17 +266,14 @@
         async function kickP(id, uid){ const m=(await db.collection("matches").doc(id).get()).data(); const f=m.players.filter(p=>p.uid!==uid); await db.collection("matches").doc(id).update({players:f}); }
         async function updateR(id){ await db.collection("matches").doc(id).update({rId:document.getElementById('ri-'+id).value, rPs:document.getElementById('rp-'+id).value}); alert("Updated"); }
         async function delM(id){ if(confirm("Delete?")) await db.collection("matches").doc(id).delete(); }
-        async function postMatch(){ await db.collection("matches").add({ title:document.getElementById('m-t').value, fee:parseInt(document.getElementById('m-f').value), time:document.getElementById('m-tm').value, players:[], rId:"", rPs:"" }); alert("Posted"); }
+        async function postMatch(){ await db.collection("matches").add({ title:document.getElementById('m-t').value, fee:parseInt(document.getElementById('m-f').value), time:document.getElementById('m-tm').value, players:[], rId:"", rPs:"" }); }
         async function appr(id, uid){ await db.collection("users").doc(uid).update({wallet:firebase.firestore.FieldValue.increment(20)}); await db.collection("deposits").doc(id).update({status:"ok"}); }
         async function submitUTR(){ await db.collection("deposits").add({ uid:auth.currentUser.uid, utr:document.getElementById('utr').value, status:"pending" }); alert("Submitted"); }
 
         function nav(id){ document.querySelectorAll('.container').forEach(c=>c.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById('n-'+id).classList.add('active'); }
         function toggleA(r){ document.getElementById('login-form').style.display=r?'none':'block'; document.getElementById('reg-form').style.display=r?'block':'none'; }
-        async function login(){ try { await auth.signInWithEmailAndPassword(document.getElementById('l-email').value, document.getElementById('l-pass').value); } catch(e){ alert("Wrong Details!"); } }
-        async function register(){ 
-            const r = await auth.createUserWithEmailAndPassword(document.getElementById('r-email').value, document.getElementById('r-pass').value);
-            await db.collection("users").doc(r.user.uid).set({ name:document.getElementById('r-name').value, wallet:0, siteID:"FFL-"+Math.floor(1000+Math.random()*9000), isAdmin:false, isBanned:false });
-        }
+        async function login(){ try { await auth.signInWithEmailAndPassword(document.getElementById('l-email').value, document.getElementById('l-pass').value); } catch(e){ alert("Login Error!"); } }
+        async function register(){ const r = await auth.createUserWithEmailAndPassword(document.getElementById('r-email').value, document.getElementById('r-pass').value); await db.collection("users").doc(r.user.uid).set({ name:document.getElementById('r-name').value, wallet:0, siteID:"FFL-"+Math.floor(1000+Math.random()*9000), isAdmin:false, isBanned:false }); }
         async function sendMsg(){ const u=(await db.collection("users").doc(auth.currentUser.uid).get()).data(); await db.collection("chats").add({name:u.name, text:document.getElementById('chat-in').value, ts:Date.now(), isAdm:u.isAdmin}); document.getElementById('chat-in').value=""; }
         function loadChats(){ db.collection("chats").orderBy("ts","asc").onSnapshot(s => { const b=document.getElementById('chat-win'); b.innerHTML=""; s.forEach(d=>b.innerHTML+=`<div class="bubble ${d.data().isAdm?'adm':'me'}"><b>${d.data().name}</b><br>${d.data().text}</div>`); b.scrollTop=b.scrollHeight; }); }
     </script>
