@@ -3,147 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF LEGEND TOURNAMENT | PRIME MIKU</title>
-    
+    <title>FF LEGEND | PRIME MIKU</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffcc00; --neon-blue: #00d4ff; --bg: #0a0a0c; --card-bg: #16161e; --red: #ff4d4d; }
+        :root { --gold: #ffcc00; --blue: #00d4ff; --dark: #07070a; --card: #12121a; --red: #ff4d4d; --green: #22c55e; }
+        body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
         
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
-
-        /* Navigation - Pro Look */
-        nav { background: rgba(0,0,0,0.9); padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; position: sticky; top: 0; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .nav-btn { color: #888; cursor: pointer; text-transform: uppercase; font-size: 11px; font-weight: bold; transition: 0.3s; padding: 5px 10px; border-radius: 5px; }
-        .nav-btn.active { color: var(--gold); background: rgba(255, 204, 0, 0.1); box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.2); }
-
-        /* Admin Panel - Hard Lock */
-        #adm-nav, #admin-pan { display: none !important; } 
-        /* Jab Admin login hoga tabhi JS ise display: block karega */
-
-        .container { padding: 15px; max-width: 500px; margin: auto; }
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Match Cards */
-        .match-card { background: var(--card-bg); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid #2d2d3a; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .match-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
-        .match-card h4 { margin: 0; font-size: 18px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Buttons */
-        .btn { background: linear-gradient(90deg, var(--gold), #ffaa00); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 800; width: 100%; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: 0.2s; }
-        .btn:active { transform: scale(0.96); }
-        .adm-btn { background: linear-gradient(90deg, #8b5cf6, #6d28d9); color: white; }
-
-        /* Inputs */
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; font-size: 14px; }
-        input:focus { border-color: var(--gold); outline: none; }
-
-        /* Chat */
-        #chat-box { height: 250px; background: #000; border: 1px solid #222; border-radius: 15px; padding: 15px; overflow-y: auto; margin-bottom: 10px; border-bottom: 3px solid var(--gold); }
-        .msg { font-size: 13px; margin-bottom: 10px; padding: 8px; border-radius: 8px; background: #111; border-left: 3px solid #444; }
-        .msg.admin { border-left-color: var(--gold); background: rgba(255, 204, 0, 0.05); color: var(--gold); }
-
-        /* Header Info */
-        .owner-tag { text-align: center; font-size: 10px; color: #555; margin-top: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        
-        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #loader { position: fixed; inset: 0; background: #000; z-index: 10001; display: flex; align-items: center; justify-content: center; }
+        nav { background: #000; padding: 12px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .nav-btn { color: #888; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 8px; font-family: 'Orbitron', sans-serif; }
+        .nav-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+
+        .container { padding: 15px; max-width: 450px; margin: auto; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Stylish User Board */
+        .user-bord { background: linear-gradient(135deg, #1e1e26 0%, #0a0a0f 100%); border: 1px solid var(--blue); border-radius: 20px; padding: 25px; margin: 15px auto; text-align: center; box-shadow: 0 0 20px rgba(0, 212, 255, 0.15); position: relative; overflow: hidden; }
+        .user-name { font-size: 24px; font-family: 'Orbitron'; color: var(--gold); margin: 0; }
+        .user-id { font-size: 12px; color: var(--blue); letter-spacing: 3px; margin-top: 5px; }
+
+        .wallet-box { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 15px; border-radius: 12px; margin: 10px 0; border: 1px solid #222; }
+        .match-card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+        
+        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-family: 'Orbitron'; transition: 0.2s; }
+        .btn-gold { background: var(--gold); color: black; }
+        .btn-blue { background: var(--blue); color: black; }
+        .btn-red { background: var(--red); color: white; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
+
+        #chat-box { height: 200px; background: #050505; border-radius: 10px; padding: 10px; overflow-y: auto; border: 1px solid #222; margin-top: 10px; }
+        .msg { font-size: 12px; margin-bottom: 8px; padding: 5px; border-bottom: 1px solid #111; }
+        .msg.admin { color: var(--gold); border-left: 2px solid var(--gold); padding-left: 5px; }
+
+        /* UTR Status */
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+        .pending { background: #b45309; color: white; }
+
+        #adm-nav, #admin-pan { display: none !important; }
+        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
     <div id="loader"><div style="width:40px; height:40px; border:4px solid #222; border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;"></div></div>
-    <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
     <div id="auth-screen" style="display:none;">
-        <div style="background:var(--card-bg); padding:35px; border-radius:25px; border:1px solid var(--gold); width:100%; max-width:320px; text-align:center;">
-            <h1 style="color:var(--gold); margin:0; font-size:24px;">FF LEGEND</h1>
-            <p style="color:#666; font-size:10px; margin-bottom:25px;">OWNER: PRIME MIKU</p>
-            
+        <div style="background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--gold); width:100%; max-width:320px; text-align:center;">
+            <h2 style="color:var(--gold); font-family:'Orbitron'; margin:0;">FF LEGEND</h2>
+            <p style="color:#666; font-size:9px; letter-spacing:2px;">BY PRIME MIKU</p>
             <div id="login-form">
-                <input type="email" id="el" placeholder="Email Address">
-                <input type="password" id="pl" placeholder="Password">
-                <button class="btn" onclick="login()">ENTER ARENA</button>
-                <p onclick="toggleA(true)" style="font-size:11px; margin-top:20px; color:var(--neon-blue); cursor:pointer;">Create New Account</p>
+                <input type="email" id="le" placeholder="Email">
+                <input type="password" id="lp" placeholder="Password">
+                <button class="btn btn-gold" onclick="login()">LOGIN</button>
+                <p onclick="toggleA(true)" style="font-size:11px; margin-top:15px; color:var(--blue); cursor:pointer;">New Account? Register</p>
             </div>
-
             <div id="reg-form" style="display:none">
-                <input type="text" id="nr" placeholder="Full Name">
-                <input type="email" id="er" placeholder="Email Address">
-                <input type="password" id="pr" placeholder="Password (6+ Char)">
-                <button class="btn" onclick="register()">REGISTER NOW</button>
-                <p onclick="toggleA(false)" style="font-size:11px; margin-top:20px; color:var(--neon-blue); cursor:pointer;">Back to Login</p>
+                <input type="text" id="rn" placeholder="Full Name">
+                <input type="email" id="re" placeholder="Email">
+                <input type="password" id="rp" placeholder="Password">
+                <button class="btn btn-gold" onclick="register()">SIGN UP</button>
+                <p onclick="toggleA(false)" style="font-size:11px; margin-top:15px; color:var(--blue); cursor:pointer;">Back to Login</p>
             </div>
         </div>
     </div>
 
     <div id="main-app" style="display:none;">
         <nav>
-            <div class="nav-btn active" onclick="switchN('home', this)">MATCHES</div>
-            <div class="nav-btn" onclick="switchN('my-play', this)">MY PLAY</div>
-            <div class="nav-btn" id="adm-nav" onclick="switchN('admin-pan', this)">ADMIN</div>
-            <div id="w-val" style="color:#22c55e; font-weight:800;">₹0</div>
+            <div class="nav-btn active" onclick="switchS('home', this)">MATCHES</div>
+            <div class="nav-btn" onclick="switchS('profile', this)">WALLET</div>
+            <div class="nav-btn" id="adm-nav" onclick="switchS('admin-pan', this)">ADMIN</div>
         </nav>
 
         <div id="home" class="section active">
-            <div class="container" id="match-ui"></div>
+            <div class="container">
+                <div class="wallet-box">
+                    <span>Cash: <b id="w-amt" style="color:var(--green)">₹0</b></span>
+                    <button class="btn btn-gold" style="width:100px; margin:0; font-size:10px;" onclick="switchS('profile', null)">DEPOSIT</button>
+                </div>
+                <div id="match-ui"></div>
+            </div>
         </div>
 
-        <div id="my-play" class="section">
+        <div id="profile" class="section">
             <div class="container">
-                <h3 style="color:var(--gold); border-bottom:1px solid #222; padding-bottom:10px;">Joined Tournaments</h3>
-                <div id="joined-ui"></div>
+                <div class="user-bord">
+                    <h2 class="user-name" id="p-name">LOADING...</h2>
+                    <div class="user-id" id="p-sid">FFL-0000</div>
+                </div>
 
-                <div class="match-card" style="margin-top:30px; border-left-color:var(--neon-blue);">
-                    <h4 style="color:var(--gold); font-size:14px;">💬 CONTACT PRIME MIKU</h4>
-                    <p style="font-size:9px; color:var(--red); margin:5px 0 10px 0;">Warning: Main Admin se badtameezi matlab permanent Ban.</p>
-                    <div id="chat-box"></div>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="msg-in" placeholder="Message Admin...">
-                        <button class="btn" style="width:80px; margin:0;" onclick="sendM()">SEND</button>
+                <div class="match-card" style="border-left-color:var(--green)">
+                    <h4 style="color:var(--green); margin:0;">ADD CASH (UPI)</h4>
+                    <p style="font-size:11px; color:#888;">Step 1: Scan QR & Pay Min ₹20</p>
+                    <div style="text-align:center; margin:15px 0;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="background:white; padding:5px; border-radius:10px;">
+                        <p style="font-size:11px; color:var(--gold); margin-top:5px;">mrbituyr-1@okicici</p>
+                    </div>
+                    
+                    <hr style="border:0; border-top:1px solid #222; margin:15px 0;">
+                    
+                    <h4 style="color:var(--blue); margin:0;">Step 2: Submit Details</h4>
+                    <div id="utr-form">
+                        <input type="text" id="u-name" placeholder="Payer Name">
+                        <input type="number" id="u-amt" placeholder="Amount Paid">
+                        <input type="text" id="u-utr" placeholder="12 Digit UTR Number">
+                        <button class="btn btn-blue" id="sub-btn" onclick="submitUTR()">SUBMIT PAYMENT</button>
+                    </div>
+                    <div id="utr-status" style="display:none; text-align:center; margin-top:10px;">
+                        <span class="status-badge pending">Checking... Please Wait</span>
                     </div>
                 </div>
-                <div class="owner-tag">FF LEGEND TOURNAMENT | BY PRIME MIKU</div>
-                <button onclick="auth.signOut()" style="width:100%; background:none; border:none; color:#444; padding:20px; font-size:11px;">LOGOUT ACCOUNT</button>
+
+                <div class="match-card">
+                    <h4 style="color:var(--gold); margin:0;">SUPPORT</h4>
+                    <div id="chat-box"></div>
+                    <div style="display:flex; gap:5px; margin-top:10px;">
+                        <input type="text" id="m-in" placeholder="Message...">
+                        <button class="btn btn-gold" style="width:70px; margin:0;" onclick="sendM()">SEND</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="admin-pan" class="section">
             <div class="container">
-                <h2 style="color:var(--gold); text-shadow:0 0 10px rgba(255,204,0,0.3);">ADMIN CONTROL</h2>
+                <h2 style="color:var(--gold); font-family:'Orbitron';">OWNER PANEL</h2>
                 
-                <div class="match-card">
-                    <p style="font-size:11px; color:#888;">Wallet Recharge</p>
-                    <input type="text" id="asid" placeholder="User Site ID (FFL-XXXX)">
-                    <input type="number" id="aamt" placeholder="Amount to Add">
-                    <button class="btn adm-btn" onclick="admCash()">ADD MONEY</button>
-                </div>
-
-                <div class="match-card" style="border-left-color:var(--red);">
-                    <p style="font-size:11px; color:#888;">Ban Management</p>
-                    <input type="text" id="bsid" placeholder="User Site ID">
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn" style="background:var(--red); color:white;" onclick="admBan(true)">BAN PLAYER</button>
-                        <button class="btn" style="background:#22c55e; color:white;" onclick="admBan(false)">UNBAN</button>
-                    </div>
+                <div class="match-card" style="border-left-color:var(--blue)">
+                    <h4>PENDING DEPOSITS</h4>
+                    <div id="pending-utr-list" style="font-size:11px;"></div>
                 </div>
 
                 <div class="match-card">
-                    <p style="font-size:11px; color:#888;">Create Match</p>
-                    <input type="text" id="mt" placeholder="Match Title">
+                    <h4>MATCH CONTROL</h4>
+                    <input type="text" id="mt" placeholder="Match Name">
                     <input type="number" id="mf" placeholder="Entry Fee">
-                    <input type="text" id="mti" placeholder="Time (e.g. 9:00 PM)">
-                    <select id="mc"><option value="bermuda">Bermuda</option><option value="cs">CS Ranked</option></select>
-                    <button class="btn adm-btn" onclick="admMatch()">PUBLISH MATCH</button>
+                    <input type="text" id="mti" placeholder="Time">
+                    <button class="btn btn-gold" onclick="admMatch()">PUBLISH MATCH</button>
                 </div>
 
-                <div class="match-card">
-                    <p style="font-size:11px; color:#888;">Live Stats</p>
-                    <div id="adm-stats" style="font-size:11px; color:#ccc; line-height:1.6;"></div>
+                <div class="match-card" style="border-left-color:var(--red)">
+                    <h4>BAN PLAYER</h4>
+                    <input type="text" id="bsid" placeholder="Site ID">
+                    <button class="btn btn-red" onclick="admBan(true)">BAN PLAYER</button>
                 </div>
             </div>
         </div>
@@ -158,66 +165,101 @@
             document.getElementById('loader').style.display='none';
             if(u){
                 const d = await db.collection("users").doc(u.uid).get();
-                if(d.data().isBanned){ alert("YOUR ACCOUNT IS BANNED BY ADMIN!"); auth.signOut(); return; }
-                
+                if(d.data().isBanned){ alert("ACCESS DENIED: BANNED"); auth.signOut(); return; }
                 document.getElementById('auth-screen').style.display='none';
                 document.getElementById('main-app').style.display='block';
-                
-                // ADMIN UNLOCK LOGIC
-                if(d.data().isAdmin === true){
-                    document.getElementById('adm-nav').style.setProperty('display', 'block', 'important');
-                    document.getElementById('admin-pan').style.setProperty('display', 'none'); // Still hidden until clicked
-                    loadAdmData();
+                if(d.data().isAdmin){ 
+                    document.getElementById('adm-nav').style.setProperty('display','block','important'); 
+                    loadPendingUTR();
                 }
-
-                sync(u.uid); loadM(); loadC();
+                document.getElementById('p-name').innerText = d.data().name;
+                document.getElementById('p-sid').innerText = d.data().siteID;
+                sync(u.uid); loadM(); loadC(); checkMyUTR(u.uid);
             } else { 
                 document.getElementById('auth-screen').style.display='flex'; 
                 document.getElementById('main-app').style.display='none'; 
             }
         });
 
+        async function submitUTR(){
+            const n = document.getElementById('u-name').value, a = document.getElementById('u-amt').value, u = document.getElementById('u-utr').value;
+            if(!n || !a || u.length < 10) return alert("Enter Valid Details!");
+            
+            document.getElementById('sub-btn').disabled = true;
+            document.getElementById('sub-btn').innerText = "SUBMITTING...";
+
+            await db.collection("deposits").add({
+                uid: auth.currentUser.uid,
+                siteID: document.getElementById('p-sid').innerText,
+                name: n,
+                amount: parseInt(a),
+                utr: u,
+                status: "pending",
+                ts: Date.now()
+            });
+            
+            alert("Submitted! Wait for Admin Verification.");
+            checkMyUTR(auth.currentUser.uid);
+        }
+
+        function checkMyUTR(uid){
+            db.collection("deposits").where("uid","==",uid).where("status","==","pending").onSnapshot(s=>{
+                if(!s.empty){
+                    document.getElementById('utr-form').style.display = 'none';
+                    document.getElementById('utr-status').style.display = 'block';
+                } else {
+                    document.getElementById('utr-form').style.display = 'block';
+                    document.getElementById('utr-status').style.display = 'none';
+                    document.getElementById('sub-btn').disabled = false;
+                    document.getElementById('sub-btn').innerText = "SUBMIT PAYMENT";
+                }
+            });
+        }
+
+        // ADMIN: Load Requests
+        function loadPendingUTR(){
+            db.collection("deposits").where("status","==","pending").onSnapshot(s=>{
+                const l = document.getElementById('pending-utr-list');
+                l.innerHTML = "";
+                s.forEach(d=>{
+                    l.innerHTML += `<div style="background:#1a1a24; padding:10px; margin-bottom:5px; border-radius:8px;">
+                        <b>${d.data().name}</b> (${d.data().siteID})<br>
+                        Amount: ₹${d.data().amount} | UTR: ${d.data().utr}<br>
+                        <button class="btn btn-gold" style="width:48%; padding:5px; font-size:10px;" onclick="approveDep('${d.id}','${d.data().uid}',${d.data().amount})">APPROVE</button>
+                        <button class="btn btn-red" style="width:48%; padding:5px; font-size:10px;" onclick="db.collection('deposits').doc('${d.id}').delete()">REJECT</button>
+                    </div>`;
+                });
+            });
+        }
+
+        async function approveDep(docId, userUid, amt){
+            await db.collection("users").doc(userUid).update({ wallet: firebase.firestore.FieldValue.increment(amt) });
+            await db.collection("deposits").doc(docId).update({ status: "approved" });
+            alert("Money Added to Player Wallet!");
+        }
+
+        // Standard Functions
         async function register(){
-            const n=document.getElementById('nr').value, e=document.getElementById('er').value, p=document.getElementById('pr').value, sid="FFL-"+Math.floor(1000+Math.random()*8999);
-            if(!n || !e || p.length < 6) return alert("Fill correctly!");
-            try{ const r=await auth.createUserWithEmailAndPassword(e,p); await db.collection("users").doc(r.user.uid).set({name:n,email:e,siteID:sid,wallet:0,isAdmin:false,isBanned:false,joined:[]}); }catch(err){alert(err.message);}
+            const n=document.getElementById('rn').value, e=document.getElementById('re').value, p=document.getElementById('rp').value, sid="FFL-"+Math.floor(1000+Math.random()*8999);
+            if(!n || !e || p.length<6) return alert("Valid Info Required!");
+            try{ const r=await auth.createUserWithEmailAndPassword(e,p); await db.collection("users").doc(r.user.uid).set({name:n,email:e,siteID:sid,wallet:0,isAdmin:false,isBanned:false,joined:[]}); }catch(e){alert(e.message);}
         }
-
-        async function login(){ try{await auth.signInWithEmailAndPassword(document.getElementById('el').value,document.getElementById('pl').value);}catch(e){alert("Access Denied!");}}
-
-        // ADMIN FUNCTIONS
-        async function admCash(){
-            const s=document.getElementById('asid').value, a=parseInt(document.getElementById('aamt').value), q=await db.collection("users").where("siteID","==",s).get();
-            if(!q.empty){ await db.collection("users").doc(q.docs[0].id).update({wallet:firebase.firestore.FieldValue.increment(a)}); alert("Cash Sent!"); }
-        }
-        async function admBan(v){ const s=document.getElementById('bsid').value, q=await db.collection("users").where("siteID","==",s).get(); if(!q.empty){ await db.collection("users").doc(q.docs[0].id).update({isBanned:v}); alert("Status Updated!"); }}
-        async function admMatch(){ await db.collection("matches").add({title:document.getElementById('mt').value,fee:parseInt(document.getElementById('mf').value),time:document.getElementById('mti').value,cat:document.getElementById('mc').value,players:[]}); alert("Match Live!"); }
-        function loadAdmData(){ db.collection("matches").onSnapshot(s=>{let h="";s.forEach(d=>{h+=`<b>${d.data().title}</b>: ${d.data().players.length} Players<br>`;d.data().players.forEach(p=>h+=`- ${p.name} [FFID:${p.uid}]<br>`);h+="<hr style='border:0;border-top:1px solid #333;'>";});document.getElementById('adm-stats').innerHTML=h;});}
-
-        // PLAYER FUNCTIONS
-        function loadM(){ db.collection("matches").onSnapshot(s=>{const l=document.getElementById('match-ui');l.innerHTML="";s.forEach(d=>{l.innerHTML+=`<div class="match-card"><h4>${d.data().title}</h4><p style="font-size:12px;color:#888;">Category: ${d.data().cat.toUpperCase()}<br>Entry: ₹${d.data().fee} | Time: ${d.data().time}</p><button class="btn" onclick="joinM('${d.id}',${d.data().fee})">JOIN TOURNAMENT</button></div>`;});});}
+        async function login(){ try{await auth.signInWithEmailAndPassword(document.getElementById('le').value,document.getElementById('lp').value);}catch(e){alert("Login Failed!");}}
+        function loadM(){ db.collection("matches").onSnapshot(s=>{const l=document.getElementById('match-ui');l.innerHTML="";s.forEach(d=>{l.innerHTML+=`<div class="match-card"><h4>${d.data().title}</h4><p style="font-size:11px;color:#888;">Entry: ₹${d.data().fee} | Time: ${d.data().time}</p><button class="btn btn-gold" onclick="joinM('${d.id}',${d.data().fee})">JOIN MATCH</button></div>`;});});}
         async function joinM(id,f){
             const u=auth.currentUser, d=await db.collection("users").doc(u.uid).get();
-            if(d.data().wallet<f)return alert("Insufficient Wallet Balance!");
-            const fid=prompt("Enter Your Free Fire UID:"); if(!fid)return;
-            await db.collection("users").doc(u.uid).update({wallet:firebase.firestore.FieldValue.increment(-f),joined:firebase.firestore.FieldValue.arrayUnion({matchId:id,time:new Date().toLocaleTimeString()})});
-            await db.collection("matches").doc(id).update({players:firebase.firestore.FieldValue.arrayUnion({name:d.data().name,uid:fid})}); alert("Registration Successful!");
+            if(d.data().wallet<f){ alert("Low Balance! Please Deposit."); switchS('profile',null); return; }
+            const fid=prompt("Enter FF UID:"); if(!fid)return;
+            await db.collection("users").doc(u.uid).update({wallet:firebase.firestore.FieldValue.increment(-f),joined:firebase.firestore.FieldValue.arrayUnion(id)});
+            await db.collection("matches").doc(id).update({players:firebase.firestore.FieldValue.arrayUnion({name:d.data().name,uid:fid})}); alert("Joined Successfully!");
         }
-
-        async function sendM(){ const t=document.getElementById('msg-in').value, u=await db.collection("users").doc(auth.currentUser.uid).get(); if(!t)return; await db.collection("chats").add({name:u.data().name,text:t,ts:Date.now(),isAdmin:u.data().isAdmin}); document.getElementById('msg-in').value="";}
+        async function sendM(){ const t=document.getElementById('m-in').value, u=await db.collection("users").doc(auth.currentUser.uid).get(); if(!t)return; await db.collection("chats").add({name:u.data().name,text:t,ts:Date.now(),isAdmin:u.data().isAdmin}); document.getElementById('m-in').value="";}
         function loadC(){ db.collection("chats").orderBy("ts","asc").onSnapshot(s=>{const b=document.getElementById('chat-box');b.innerHTML="";s.forEach(d=>{b.innerHTML+=`<div class="msg ${d.data().isAdmin?'admin':''}"><b>${d.data().name}:</b> ${d.data().text}</div>`;});b.scrollTop=b.scrollHeight;});}
-        function sync(uid){ db.collection("users").doc(uid).onSnapshot(d=>{document.getElementById('w-val').innerText="₹"+d.data().wallet;const e=document.getElementById('joined-ui');e.innerHTML="";d.data().joined.forEach(m=>e.innerHTML+=`<div class="match-card" style="border-left-color:var(--neon-blue);padding:10px;">Enrolled Match ID: ${m.matchId}<br><span style="font-size:10px;color:#666;">Joined: ${m.time}</span></div>`);});}
-        
-        function switchN(id,el){
-            document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-            const target = document.getElementById(id);
-            target.classList.add('active');
-            // Special case for admin panel display
-            if(id === 'admin-pan') target.style.setProperty('display', 'block', 'important');
-            el.classList.add('active');
-        }
-        function toggleA(r){document.getElementById('login-form').style.display=r?'none':'block';document.getElementById('reg-form').style.display=r?'block':'none';}
+        function sync(uid){ db.collection("users").doc(uid).onSnapshot(d=>{document.getElementById('w-amt').innerText="₹"+d.data().wallet;});}
+        async function admMatch(){ await db.collection("matches").add({title:document.getElementById('mt').value,fee:parseInt(document.getElementById('mf').value),time:document.getElementById('mti').value,players:[]}); alert("Match Published!"); }
+        async function admBan(v){ const s=document.getElementById('bsid').value, q=await db.collection("users").where("siteID","==",s).get(); if(!q.empty){ await db.collection("users").doc(q.docs[0].id).update({isBanned:v}); alert("Status Updated!"); }}
+        function switchS(id, el){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); if(el) el.classList.add('active'); if(id === 'admin-pan') document.getElementById(id).style.setProperty('display','block','important'); }
+        function toggleA(r){ document.getElementById('login-form').style.display=r?'none':'block'; document.getElementById('reg-form').style.display=r?'block':'none'; }
     </script>
 </body>
 </html>
