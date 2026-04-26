@@ -3,36 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF LEGEND | PRIME MIKU PRO</title>
+    <title>FF LEGEND TOURNAMENT | PRIME MIKU</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --gold: #ffcc00; --blue: #00d4ff; --dark: #07070a; --card: #12121a; --red: #ff4d4d; --green: #22c55e; }
-        body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
+        :root { --gold: #ffcc00; --blue: #00d4ff; --dark: #08080b; --card: #12121a; --red: #ff4d4d; --green: #22c55e; }
+        
+        body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; overflow-x: hidden; }
+        
         #loader { position: fixed; inset: 0; background: #000; z-index: 10001; display: flex; align-items: center; justify-content: center; }
-        nav { background: #000; padding: 12px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; position: sticky; top: 0; z-index: 1000; }
-        .nav-btn { color: #888; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; font-family: 'Orbitron'; }
-        .nav-btn.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        
+        /* Navbar */
+        nav { background: #000; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.8); }
+        .nav-btn { color: #888; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; font-family: 'Orbitron'; transition: 0.3s; }
+        .nav-btn.active { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+
         .container { padding: 15px; max-width: 450px; margin: auto; }
-        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .match-card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-family: 'Orbitron'; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Branding Cards */
+        .branding-header { text-align: center; padding: 20px 0; }
+        .branding-header h1 { font-family: 'Orbitron'; color: var(--gold); margin: 0; font-size: 22px; letter-spacing: 2px; }
+        .branding-header p { font-size: 9px; color: var(--blue); letter-spacing: 4px; margin: 5px 0 0 0; font-weight: bold; }
+
+        /* Match Cards */
+        .cat-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+        .cat-btn { flex: 1; padding: 12px; background: #1a1a24; border: 1px solid #333; color: white; border-radius: 10px; font-size: 10px; font-family: 'Orbitron'; cursor: pointer; }
+        .cat-btn.active { background: var(--blue); color: black; border-color: var(--blue); box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+
+        .match-card { background: var(--card); border-radius: 18px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--gold); position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .match-card h4 { margin: 0 0 10px 0; font-family: 'Orbitron'; color: var(--gold); font-size: 16px; }
+        
+        .timer { font-family: 'Orbitron'; color: var(--red); font-size: 12px; margin-bottom: 10px; font-weight: bold; }
+
+        /* Buttons & Inputs */
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-family: 'Orbitron'; transition: 0.2s; }
         .btn-gold { background: var(--gold); color: black; }
         .btn-blue { background: var(--blue); color: black; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
-        .timer { font-family: 'Orbitron'; color: var(--red); font-size: 14px; font-weight: bold; margin: 10px 0; }
-        .room-box { background: #1a1a24; border: 1px dashed var(--blue); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 12px; }
-        .history-card { background: #0f0f15; padding: 10px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222; display: flex; justify-content: space-between; }
+        .btn-red { background: var(--red); color: white; }
+        
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #2d2d3a; background: #000; color: white; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: var(--gold); outline: none; }
+
+        /* Admin Lock */
         #adm-nav, #admin-pan { display: none !important; }
+
+        /* Auth Screen */
+        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-box { background: var(--card); padding: 35px; border-radius: 25px; border: 1px solid var(--gold); width: 100%; max-width: 340px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="loader"><div style="width:40px; height:40px; border:4px solid #222; border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;"></div></div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+    <div id="auth-screen" style="display:none;">
+        <div class="auth-box">
+            <h1 style="color:var(--gold); font-family:'Orbitron'; margin:0;">FF LEGEND</h1>
+            <p style="color:var(--blue); font-size:9px; letter-spacing:3px; margin-bottom:25px;">OWNER: PRIME MIKU</p>
+            
+            <div id="login-form">
+                <input type="email" id="le" placeholder="Email Address">
+                <input type="password" id="lp" placeholder="Password">
+                <button class="btn btn-gold" onclick="login()">ENTER ARENA</button>
+                <p onclick="toggleA(true)" style="font-size:11px; margin-top:20px; color:var(--blue); cursor:pointer;">New Player? Register Here</p>
+            </div>
+
+            <div id="reg-form" style="display:none">
+                <input type="text" id="rn" placeholder="Your Name">
+                <input type="email" id="re" placeholder="Email Address">
+                <input type="password" id="rp" placeholder="Create Password (6+ Char)">
+                <button class="btn btn-gold" onclick="register()">CREATE ACCOUNT</button>
+                <p onclick="toggleA(false)" style="font-size:11px; margin-top:20px; color:var(--blue); cursor:pointer;">Already a Member? Login</p>
+            </div>
+        </div>
+    </div>
 
     <div id="main-app" style="display:none;">
         <nav>
@@ -43,192 +96,257 @@
 
         <div id="home" class="section active">
             <div class="container">
-                <div style="background:#000; padding:10px; border-radius:10px; margin-bottom:15px; display:flex; justify-content:space-between;">
-                    <span>Balance: <b id="w-amt" style="color:var(--green)">₹0</b></span>
-                    <span id="p-sid" style="color:var(--blue); font-size:10px;">FFL-0000</span>
+                <div class="branding-header">
+                    <h1>FF LEGEND</h1>
+                    <p>TOURNAMENT ARENA</p>
                 </div>
+
+                <div style="background:#1a1a24; padding:15px; border-radius:15px; margin-bottom:20px; display:flex; justify-content:space-between; border:1px solid #333;">
+                    <div><span style="font-size:10px; color:#888;">Wallet Balance</span><br><b id="w-amt" style="color:var(--green); font-size:18px;">₹0</b></div>
+                    <div style="text-align:right;"><span style="font-size:10px; color:#888;">Your Site ID</span><br><b id="p-sid" style="color:var(--blue); font-family:monospace;">FFL-0000</b></div>
+                </div>
+
+                <div class="cat-selector">
+                    <button class="cat-btn active" onclick="filterM('BERMUDA', this)">BERMUDA</button>
+                    <button class="cat-btn" onclick="filterM('CLASH SQUAD', this)">CLASH SQUAD</button>
+                </div>
+
                 <div id="match-ui"></div>
             </div>
         </div>
 
         <div id="profile" class="section">
             <div class="container">
-                <h3 style="font-family:'Orbitron'; color:var(--gold);">MATCH HISTORY</h3>
-                <div id="history-ui"></div>
-                <hr style="border:1px solid #222; margin:20px 0;">
-                <button class="btn btn-blue" onclick="switchS('deposit', null)">DEPOSIT CASH</button>
-                <button onclick="auth.signOut()" class="btn" style="background:none; color:#555;">Logout</button>
-            </div>
-        </div>
-
-        <div id="deposit" class="section">
-            <div class="container">
-                <div class="match-card" style="border-left-color:var(--green); text-align:center;">
-                    <h4>SCAN & PAY</h4>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="background:white; padding:5px; border-radius:10px;">
-                    <p style="color:var(--gold); margin:10px 0;">mrbituyr-1@okicici</p>
-                    <input type="text" id="u-utr" placeholder="Enter 12 Digit UTR">
-                    <button class="btn btn-gold" onclick="submitUTR()">SUBMIT PAYMENT</button>
+                <div class="match-card" style="text-align:center; border-left:none; border:1px solid var(--blue);">
+                    <h2 id="user-display-name" style="color:var(--gold); font-family:'Orbitron'; margin:0;">PLAYER</h2>
+                    <p id="user-display-id" style="color:var(--blue); letter-spacing:2px; font-size:12px;">FFL-0000</p>
                 </div>
+
+                <div class="match-card" style="border-left-color:var(--green);">
+                    <h4 style="color:var(--green);">DEPOSIT MONEY</h4>
+                    <p style="font-size:11px; color:#888;">Scan QR to pay (Minimum ₹20)</p>
+                    <div style="text-align:center; margin:15px 0;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="background:white; padding:8px; border-radius:12px;">
+                        <p style="font-size:12px; color:var(--gold); margin-top:10px;">UPI: mrbituyr-1@okicici</p>
+                    </div>
+                    <input type="text" id="u-utr" placeholder="Enter 12-Digit UTR After Payment">
+                    <button class="btn btn-gold" onclick="submitUTR()">SUBMIT FOR CHECKING</button>
+                </div>
+
+                <h3 style="font-family:'Orbitron'; font-size:14px; color:var(--gold); margin-top:30px;">MY KILLS & HISTORY</h3>
+                <div id="history-ui"></div>
+
+                <button onclick="auth.signOut()" class="btn btn-red" style="margin-top:40px;">LOGOUT ACCOUNT</button>
+                <p style="text-align:center; font-size:9px; color:#444; margin-top:20px;">FF LEGEND v2.0 | BY PRIME MIKU</p>
             </div>
         </div>
 
         <div id="admin-pan" class="section">
             <div class="container">
-                <h3 style="font-family:'Orbitron'; color:var(--gold);">OWNER CONTROL</h3>
+                <h2 style="font-family:'Orbitron'; color:var(--gold);">OWNER PANEL</h2>
+                
                 <div class="match-card">
-                    <h4>New Match</h4>
-                    <input type="text" id="mt" placeholder="Title">
-                    <input type="number" id="mf" placeholder="Fee">
-                    <input type="datetime-local" id="mti" placeholder="Match Date Time">
-                    <button class="btn btn-gold" onclick="admMatch()">PUBLISH</button>
+                    <h4>CREATE MATCH</h4>
+                    <select id="adm-cat"><option value="BERMUDA">BERMUDA</option><option value="CLASH SQUAD">CLASH SQUAD</option></select>
+                    <input type="text" id="adm-title" placeholder="Match Title">
+                    <input type="number" id="adm-fee" placeholder="Entry Fee">
+                    <input type="datetime-local" id="adm-time">
+                    <button class="btn btn-gold" onclick="admCreateMatch()">PUBLISH MATCH</button>
                 </div>
-                <div class="match-card" style="border-left-color:var(--blue)">
-                    <h4>Live Match Management</h4>
-                    <div id="adm-live-ui"></div>
+
+                <div class="match-card" style="border-left-color:var(--blue);">
+                    <h4>PENDING DEPOSITS</h4>
+                    <div id="adm-utr-list" style="font-size:12px;"></div>
                 </div>
+
+                <div id="adm-active-matches"></div>
             </div>
         </div>
     </div>
 
-    <div id="auth-screen" style="display:flex; height:100vh; align-items:center; justify-content:center; background:#000;">
-        <div style="background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--gold); text-align:center;">
-            <h2 style="color:var(--gold); font-family:'Orbitron';">FF LEGEND</h2>
-            <input type="email" id="le" placeholder="Email"><br>
-            <input type="password" id="lp" placeholder="Password"><br>
-            <button class="btn btn-gold" onclick="login()">LOGIN</button>
-        </div>
-    </div>
-
     <script>
+        // FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyAFvaJjgrPghBwx5FPFeLPc0XCi6GFNA1k", authDomain: "ff-legend-tournament.firebaseapp.com", projectId: "ff-legend-tournament", storageBucket: "ff-legend-tournament.firebasestorage.app", messagingSenderId: "648355009637", appId: "1:648355009637:web:2a7b87b72566a129ae228c" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
+        let currentCategory = "BERMUDA";
+
+        // AUTH STATE
         auth.onAuthStateChanged(async u => {
             document.getElementById('loader').style.display='none';
             if(u){
+                const d = await db.collection("users").doc(u.uid).get();
+                if(d.data().isBanned){ alert("YOUR ACCOUNT IS BANNED!"); auth.signOut(); return; }
+                
                 document.getElementById('auth-screen').style.display='none';
                 document.getElementById('main-app').style.display='block';
-                const d = await db.collection("users").doc(u.uid).get();
-                if(d.data().isAdmin) { document.getElementById('adm-nav').style.setProperty('display','block','important'); loadAdm(); }
+                
+                if(d.data().isAdmin){ 
+                    document.getElementById('adm-nav').style.setProperty('display','block','important'); 
+                    loadAdminData();
+                }
+
+                document.getElementById('user-display-name').innerText = d.data().name;
+                document.getElementById('user-display-id').innerText = d.data().siteID;
                 document.getElementById('p-sid').innerText = d.data().siteID;
-                sync(u.uid); loadM();
+
+                syncData(u.uid); loadMatches();
+            } else {
+                document.getElementById('auth-screen').style.display='flex';
+                document.getElementById('main-app').style.display='none';
             }
         });
 
-        // LOAD MATCHES WITH TIMER
-        function loadM(){
-            db.collection("matches").onSnapshot(s => {
-                const l = document.getElementById('match-ui'); l.innerHTML = "";
+        // REGISTRATION
+        async function register(){
+            const n=document.getElementById('rn').value, e=document.getElementById('re').value, p=document.getElementById('rp').value, sid="FFL-"+Math.floor(1000+Math.random()*8999);
+            if(!n || !e || p.length < 6) return alert("Please fill all details correctly!");
+            try{ 
+                const r = await auth.createUserWithEmailAndPassword(e,p);
+                await db.collection("users").doc(r.user.uid).set({name:n, email:e, siteID:sid, wallet:0, isAdmin:false, isBanned:false, joined:[]});
+            } catch(err){ alert(err.message); }
+        }
+
+        // LOGIN
+        async function login(){ 
+            const e=document.getElementById('le').value, p=document.getElementById('lp').value;
+            try{ await auth.signInWithEmailAndPassword(e,p); } catch(err){ alert("Login Failed! Check Email/Password."); }
+        }
+
+        // MATCH LOADING & FILTERING
+        function filterM(cat, btn){
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadMatches();
+        }
+
+        function loadMatches(){
+            db.collection("matches").where("category","==",currentCategory).onSnapshot(s => {
+                const ui = document.getElementById('match-ui'); ui.innerHTML = "";
                 s.forEach(d => {
                     const data = d.data();
                     const mTime = new Date(data.time).getTime();
+                    const now = new Date().getTime();
+
+                    // AUTO REMOVE OLD MATCHES (1 Hour after start)
+                    if(now > (mTime + 3600000)){ db.collection("matches").doc(d.id).delete(); return; }
+
                     const isJoined = data.players.some(p => p.uid === auth.currentUser.uid);
                     
-                    l.innerHTML += `
+                    ui.innerHTML += `
                         <div class="match-card">
                             <h4>${data.title}</h4>
                             <div class="timer" id="timer-${d.id}">Calculating...</div>
-                            <p style="font-size:12px;">Fee: ₹${data.fee}</p>
-                            ${isJoined ? `<div class="room-box">Room ID: ${data.roomId || '********'}<br>Pass: ${data.roomPass || '********'}</div>` : `<button class="btn btn-gold" id="btn-${d.id}" onclick="joinM('${d.id}',${data.fee})">JOIN MATCH</button>`}
-                            <p style="font-size:9px; color:#666;">Room Details will be visible 10 mins before start to joined players only.</p>
+                            <p style="font-size:12px; color:#888;">Mode: ${data.category} | Fee: ₹${data.fee}</p>
+                            ${isJoined ? 
+                                `<div style="background:#1a1a24; padding:12px; border-radius:10px; border:1px dashed var(--blue); color:var(--blue); font-size:12px;">
+                                    ROOM ID: ${data.roomId || '********'} <br> PASS: ${data.roomPass || '********'}
+                                    <p style="font-size:9px; color:#555; margin-top:5px;">Room details will be visible 10 mins before start.</p>
+                                </div>` : 
+                                `<button class="btn btn-gold" id="btn-${d.id}" onclick="joinMatch('${d.id}',${data.fee})">JOIN TOURNAMENT</button>`
+                            }
                         </div>
                     `;
-                    startTimer(mTime, d.id);
+                    startCountdown(mTime, d.id);
                 });
             });
         }
 
-        function startTimer(target, id) {
-            const intv = setInterval(() => {
-                const now = new Date().getTime();
-                const dist = target - now;
+        function startCountdown(target, id){
+            const i = setInterval(() => {
+                const dist = target - new Date().getTime();
                 const el = document.getElementById(`timer-${id}`);
                 const btn = document.getElementById(`btn-${id}`);
-                
-                if (dist < 0) {
-                    clearInterval(intv);
-                    if(el) el.innerText = "MATCH LIVE";
-                    if(btn) { btn.disabled = true; btn.innerText = "CLOSED"; }
-                    return;
+                if(dist < 0){ 
+                    if(el) el.innerText = "MATCH LIVE"; 
+                    if(btn){ btn.disabled = true; btn.innerText = "CLOSED"; }
+                    clearInterval(i); return; 
                 }
-
-                const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((dist % (1000 * 60)) / 1000);
+                const h=Math.floor(dist/3600000), m=Math.floor((dist%3600000)/60000), s=Math.floor((dist%60000)/1000);
                 if(el) el.innerText = `Starts In: ${h}h ${m}m ${s}s`;
             }, 1000);
         }
 
+        // PLAYER ACTIONS
+        async function joinMatch(id, fee){
+            const u = await db.collection("users").doc(auth.currentUser.uid).get();
+            if(u.data().wallet < fee){ alert("Insufficient Balance! Please deposit."); switchS('profile'); return; }
+            const ffid = prompt("Enter your Free Fire UID:"); if(!ffid) return;
+            
+            await db.collection("users").doc(auth.currentUser.uid).update({ wallet: firebase.firestore.FieldValue.increment(-fee) });
+            await db.collection("matches").doc(id).update({ players: firebase.firestore.FieldValue.arrayUnion({ name: u.data().name, uid: auth.currentUser.uid, ffid: ffid }) });
+            alert("Match Joined Successfully!");
+        }
+
+        async function submitUTR(){
+            const u = document.getElementById('u-utr').value; if(u.length < 10) return alert("Enter valid UTR!");
+            const userData = await db.collection("users").doc(auth.currentUser.uid).get();
+            await db.collection("deposits").add({ uid: auth.currentUser.uid, siteID: userData.data().siteID, name: userData.data().name, utr: u, status: "pending", ts: Date.now() });
+            alert("Submitted! Please wait for Prime Miku to approve.");
+        }
+
         // ADMIN FUNCTIONS
-        async function admMatch(){
-            await db.collection("matches").add({
-                title: document.getElementById('mt').value,
-                fee: parseInt(document.getElementById('mf').value),
-                time: document.getElementById('mti').value,
-                players: [], roomId: "", roomPass: ""
-            }); alert("Live!");
+        async function admCreateMatch(){
+            const c=document.getElementById('adm-cat').value, t=document.getElementById('adm-title').value, f=parseInt(document.getElementById('adm-fee').value), ti=document.getElementById('adm-time').value;
+            if(!t || !f || !ti) return alert("Fill all match info!");
+            await db.collection("matches").add({ category:c, title:t, fee:f, time:ti, players:[], roomId:"", roomPass:"" });
+            alert("Match Published!");
         }
 
-        function loadAdm(){
+        function loadAdminData(){
+            // Pending UTRs
+            db.collection("deposits").where("status","==","pending").onSnapshot(s => {
+                const ui = document.getElementById('adm-utr-list'); ui.innerHTML = "";
+                s.forEach(d => {
+                    ui.innerHTML += `<div style="background:#000; padding:10px; margin-top:5px; border-radius:10px;">
+                        ${d.data().name} (${d.data().siteID}) - UTR: ${d.data().utr}
+                        <button class="btn btn-blue" style="padding:5px; font-size:10px;" onclick="approveUTR('${d.id}','${d.data().uid}')">APPROVE ₹20</button>
+                    </div>`;
+                });
+            });
+
+            // Active Matches Management
             db.collection("matches").onSnapshot(s => {
-                const l = document.getElementById('adm-live-ui'); l.innerHTML = "";
+                const ui = document.getElementById('adm-active-matches'); ui.innerHTML = "<h4 style='margin-top:20px;'>MANAGE MATCHES</h4>";
                 s.forEach(d => {
-                    const data = d.data();
-                    let pList = "";
-                    data.players.forEach((p, index) => {
-                        pList += `<div>${p.name} <input type="number" placeholder="Kills" onchange="updateKills('${d.id}','${p.uid}', this.value)" style="width:60px; padding:2px;"></div>`;
-                    });
-                    l.innerHTML += `
-                        <div style="background:#000; padding:10px; margin-bottom:10px; border-radius:10px;">
-                            <b>${data.title}</b>
-                            <input type="text" placeholder="Room ID" id="rid-${d.id}" value="${data.roomId}">
-                            <input type="text" placeholder="Room Pass" id="rps-${d.id}" value="${data.roomPass}">
-                            <button class="btn btn-blue" style="padding:5px;" onclick="setRoom('${d.id}')">UPDATE ROOM</button>
-                            <div style="margin-top:10px;">${pList}</div>
-                        </div>
-                    `;
+                    ui.innerHTML += `<div class="match-card" style="border-left-color:var(--red);">
+                        <b>${d.data().title}</b>
+                        <input type="text" id="rid-${d.id}" placeholder="Room ID" value="${d.data().roomId}">
+                        <input type="text" id="rpass-${d.id}" placeholder="Room Password" value="${d.data().roomPass}">
+                        <button class="btn btn-blue" onclick="updateRoom('${d.id}')">UPDATE ROOM</button>
+                        <button class="btn btn-red" onclick="deleteMatch('${d.id}')">DELETE MATCH</button>
+                    </div>`;
                 });
             });
         }
 
-        async function setRoom(id){
-            await db.collection("matches").doc(id).update({
-                roomId: document.getElementById(`rid-${id}`).value,
-                roomPass: document.getElementById(`rps-${id}`).value
-            }); alert("Room Updated!");
+        async function approveUTR(docId, userUid){
+            await db.collection("users").doc(userUid).update({ wallet: firebase.firestore.FieldValue.increment(20) });
+            await db.collection("deposits").doc(docId).update({ status: "approved" });
+            alert("Approved!");
         }
 
-        async function updateKills(mId, pUid, kills){
-            // Logic to update kill history in user document
-            await db.collection("users").doc(pUid).collection("history").doc(mId).set({
-                matchId: mId,
-                kills: kills,
-                date: new Date().toLocaleDateString()
-            });
+        async function updateRoom(id){
+            const rid = document.getElementById(`rid-${id}`).value, rps = document.getElementById(`rpass-${id}`).value;
+            await db.collection("matches").doc(id).update({ roomId: rid, roomPass: rps });
+            alert("Room Details Updated!");
         }
 
-        function sync(uid){
-            db.collection("users").doc(uid).onSnapshot(d => { document.getElementById('w-amt').innerText = "₹"+d.data().wallet; });
-            db.collection("users").doc(uid).collection("history").onSnapshot(s => {
-                const h = document.getElementById('history-ui'); h.innerHTML = "";
-                s.forEach(d => {
-                    h.innerHTML += `<div class="history-card"><span>Date: ${d.data().date}</span> <b style="color:var(--gold)">Kills: ${d.data().kills}</b></div>`;
-                });
-            });
-        }
+        async function deleteMatch(id){ if(confirm("Remove this match?")){ await db.collection("matches").doc(id).delete(); } }
 
-        // Standard Login/Join functions as before...
-        async function login(){ try{await auth.signInWithEmailAndPassword(document.getElementById('le').value,document.getElementById('lp').value);}catch(e){alert("Error");}}
-        async function joinM(id,f){
-            const d=await db.collection("users").doc(auth.currentUser.uid).get();
-            if(d.data().wallet < f) return alert("Low Balance!");
-            const ffid = prompt("FF UID:"); if(!ffid) return;
-            await db.collection("users").doc(auth.currentUser.uid).update({wallet:firebase.firestore.FieldValue.increment(-f)});
-            await db.collection("matches").doc(id).update({players:firebase.firestore.FieldValue.arrayUnion({name:d.data().name, uid:auth.currentUser.uid, ffid:ffid})});
+        // UTILS
+        function syncData(uid){
+            db.collection("users").doc(uid).onSnapshot(d => { document.getElementById('w-amt').innerText = "₹" + d.data().wallet; });
         }
-        function switchS(id, el){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(el){ document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }}
+        function switchS(id, el){
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(el){ document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
+            if(id === 'admin-pan') document.getElementById(id).style.setProperty('display','block','important');
+        }
+        function toggleA(r){ document.getElementById('login-form').style.display=r?'none':'block'; document.getElementById('reg-form').style.display=r?'block':'none'; }
     </script>
 </body>
 </html>
