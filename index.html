@@ -3,124 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF LEGEND | PRO CONTROL</title>
+    <title>FF LEGEND TOURNAMENT | PRIME MIKU</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --gold: #f59e0b; --dark: #050505; --card: #111111; --blue: #3b82f6; --red: #ef4444; --admin: #8b5cf6; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; user-select: none; }
-        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .spinner { width: 45px; height: 45px; border: 4px solid #222; border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        nav { background: #000; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; position: sticky; top: 0; z-index: 100; font-size: 11px; font-weight: 800; }
-        .nav-btn { color: #4b5563; cursor: pointer; text-transform: uppercase; }
-        .nav-btn.active { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+        :root { --gold: #ffcc00; --neon-blue: #00d4ff; --bg: #0a0a0c; --card-bg: #16161e; --red: #ff4d4d; }
+        
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+        /* Navigation - Pro Look */
+        nav { background: rgba(0,0,0,0.9); padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; position: sticky; top: 0; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .nav-btn { color: #888; cursor: pointer; text-transform: uppercase; font-size: 11px; font-weight: bold; transition: 0.3s; padding: 5px 10px; border-radius: 5px; }
+        .nav-btn.active { color: var(--gold); background: rgba(255, 204, 0, 0.1); box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.2); }
+
+        /* Admin Panel - Hard Lock */
+        #adm-nav, #admin-pan { display: none !important; } 
+        /* Jab Admin login hoga tabhi JS ise display: block karega */
+
         .container { padding: 15px; max-width: 500px; margin: auto; }
-        .section { display: none; animation: slideUp 0.4s ease-out; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .match-card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #1f2937; border-left: 4px solid var(--gold); }
-        .admin-box { background: #1e1b4b; border: 1px solid var(--admin); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-        input, select { width: 100%; padding: 12px; margin: 6px 0; border-radius: 10px; border: 1px solid #374151; background: #000; color: white; outline: none; box-sizing: border-box; }
-        .btn { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
-        .adm-btn { background: var(--admin); color: white; }
-        #chat-box { height: 200px; background: #000; border: 1px solid #1f2937; border-radius: 10px; padding: 10px; overflow-y: auto; margin-bottom: 10px; }
-        .m-msg { font-size: 12px; padding: 5px; border-bottom: 1px solid #111; }
-        .m-admin { color: var(--gold); border-left: 2px solid var(--gold); padding-left: 8px; }
-        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Match Cards */
+        .match-card { background: var(--card-bg); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid #2d2d3a; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .match-card::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
+        .match-card h4 { margin: 0; font-size: 18px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Buttons */
+        .btn { background: linear-gradient(90deg, var(--gold), #ffaa00); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 800; width: 100%; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: 0.2s; }
+        .btn:active { transform: scale(0.96); }
+        .adm-btn { background: linear-gradient(90deg, #8b5cf6, #6d28d9); color: white; }
+
+        /* Inputs */
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: var(--gold); outline: none; }
+
+        /* Chat */
+        #chat-box { height: 250px; background: #000; border: 1px solid #222; border-radius: 15px; padding: 15px; overflow-y: auto; margin-bottom: 10px; border-bottom: 3px solid var(--gold); }
+        .msg { font-size: 13px; margin-bottom: 10px; padding: 8px; border-radius: 8px; background: #111; border-left: 3px solid #444; }
+        .msg.admin { border-left-color: var(--gold); background: rgba(255, 204, 0, 0.05); color: var(--gold); }
+
+        /* Header Info */
+        .owner-tag { text-align: center; font-size: 10px; color: #555; margin-top: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #loader { position: fixed; inset: 0; background: #000; z-index: 10001; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
-<body oncontextmenu="return false;">
-    <div id="loader"><div class="spinner"></div></div>
-    <div id="auth-screen">
-        <div style="background:var(--card); padding:30px; border-radius:25px; border:1px solid var(--gold); width:100%; max-width:320px; text-align:center;">
-            <h1 style="color:var(--gold); margin:0;">FF LEGEND</h1>
+<body>
+
+    <div id="loader"><div style="width:40px; height:40px; border:4px solid #222; border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;"></div></div>
+    <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
+
+    <div id="auth-screen" style="display:none;">
+        <div style="background:var(--card-bg); padding:35px; border-radius:25px; border:1px solid var(--gold); width:100%; max-width:320px; text-align:center;">
+            <h1 style="color:var(--gold); margin:0; font-size:24px;">FF LEGEND</h1>
+            <p style="color:#666; font-size:10px; margin-bottom:25px;">OWNER: PRIME MIKU</p>
+            
             <div id="login-form">
-                <input type="email" id="email-l" placeholder="Email">
-                <input type="password" id="pass-l" placeholder="Password">
-                <button class="btn" onclick="login()">LOGIN</button>
-                <p onclick="toggleAuth(true)" style="font-size:11px; margin-top:20px; color:#888; cursor:pointer;">Create Account</p>
+                <input type="email" id="el" placeholder="Email Address">
+                <input type="password" id="pl" placeholder="Password">
+                <button class="btn" onclick="login()">ENTER ARENA</button>
+                <p onclick="toggleA(true)" style="font-size:11px; margin-top:20px; color:var(--neon-blue); cursor:pointer;">Create New Account</p>
             </div>
+
             <div id="reg-form" style="display:none">
-                <input type="text" id="name-r" placeholder="Full Name">
-                <input type="email" id="email-r" placeholder="Email">
-                <input type="password" id="pass-r" placeholder="Password (6+)">
-                <button class="btn" onclick="register()">SIGN UP</button>
-                <p onclick="toggleAuth(false)" style="font-size:11px; margin-top:20px; color:#888; cursor:pointer;">Back to Login</p>
+                <input type="text" id="nr" placeholder="Full Name">
+                <input type="email" id="er" placeholder="Email Address">
+                <input type="password" id="pr" placeholder="Password (6+ Char)">
+                <button class="btn" onclick="register()">REGISTER NOW</button>
+                <p onclick="toggleA(false)" style="font-size:11px; margin-top:20px; color:var(--neon-blue); cursor:pointer;">Back to Login</p>
             </div>
         </div>
     </div>
+
     <div id="main-app" style="display:none;">
         <nav>
-            <div class="nav-btn active" onclick="switchNav('home', this)">MATCHES</div>
-            <div class="nav-btn" onclick="switchNav('my-matches', this)">MY PLAY</div>
-            <div class="nav-btn" id="adm-nav" style="display:none; color:var(--admin);" onclick="switchNav('admin-pan', this)">ADMIN</div>
-            <div id="wallet-val" style="color:#22c55e">₹0</div>
+            <div class="nav-btn active" onclick="switchN('home', this)">MATCHES</div>
+            <div class="nav-btn" onclick="switchN('my-play', this)">MY PLAY</div>
+            <div class="nav-btn" id="adm-nav" onclick="switchN('admin-pan', this)">ADMIN</div>
+            <div id="w-val" style="color:#22c55e; font-weight:800;">₹0</div>
         </nav>
-        <div id="home" class="section active"><div class="container" id="match-list-ui"></div></div>
-        <div id="my-matches" class="section">
+
+        <div id="home" class="section active">
+            <div class="container" id="match-ui"></div>
+        </div>
+
+        <div id="my-play" class="section">
             <div class="container">
-                <div id="enrolled-ui"></div>
-                <div class="admin-box" style="margin-top:20px; border-color:var(--gold);">
-                    <h4 style="margin:0; color:var(--gold);">💬 ADMIN SUPPORT</h4>
-                    <p style="font-size:9px; color:var(--red);">Respect the Admin. No Spam.</p>
+                <h3 style="color:var(--gold); border-bottom:1px solid #222; padding-bottom:10px;">Joined Tournaments</h3>
+                <div id="joined-ui"></div>
+
+                <div class="match-card" style="margin-top:30px; border-left-color:var(--neon-blue);">
+                    <h4 style="color:var(--gold); font-size:14px;">💬 CONTACT PRIME MIKU</h4>
+                    <p style="font-size:9px; color:var(--red); margin:5px 0 10px 0;">Warning: Main Admin se badtameezi matlab permanent Ban.</p>
                     <div id="chat-box"></div>
-                    <div style="display:flex; gap:5px;"><input type="text" id="chat-inp" placeholder="Ask..."><button class="btn" style="width:70px;" onclick="sendMsg()">SEND</button></div>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="msg-in" placeholder="Message Admin...">
+                        <button class="btn" style="width:80px; margin:0;" onclick="sendM()">SEND</button>
+                    </div>
                 </div>
-                <button onclick="auth.signOut()" style="width:100%; background:none; border:none; color:#444; padding:20px;">Logout</button>
+                <div class="owner-tag">FF LEGEND TOURNAMENT | BY PRIME MIKU</div>
+                <button onclick="auth.signOut()" style="width:100%; background:none; border:none; color:#444; padding:20px; font-size:11px;">LOGOUT ACCOUNT</button>
             </div>
         </div>
+
         <div id="admin-pan" class="section">
             <div class="container">
-                <div class="admin-box"><h4>Add Money</h4><input type="text" id="asid" placeholder="Site ID"><input type="number" id="aamt" placeholder="Amount"><button class="btn adm-btn" onclick="admAddMoney()">ADD</button></div>
-                <div class="admin-box" style="border-color:var(--red)"><h4>Ban System</h4><input type="text" id="bsid" placeholder="Site ID"><div style="display:flex; gap:5px;"><button class="btn" style="background:var(--red);color:white" onclick="admBan(true)">BAN</button><button class="btn" style="background:#22c55e;color:white" onclick="admBan(false)">UNBAN</button></div></div>
-                <div class="admin-box"><h4>New Match</h4><input type="text" id="mt" placeholder="Title"><input type="number" id="mf" placeholder="Fee"><input type="text" id="mti" placeholder="Time"><select id="mc"><option value="bermuda">Bermuda</option><option value="cs">CS Ranked</option></select><button class="btn adm-btn" onclick="admMatch()">PUBLISH</button></div>
-                <div class="admin-box"><h4>Live Data</h4><div id="adm-data" style="font-size:11px;"></div></div>
+                <h2 style="color:var(--gold); text-shadow:0 0 10px rgba(255,204,0,0.3);">ADMIN CONTROL</h2>
+                
+                <div class="match-card">
+                    <p style="font-size:11px; color:#888;">Wallet Recharge</p>
+                    <input type="text" id="asid" placeholder="User Site ID (FFL-XXXX)">
+                    <input type="number" id="aamt" placeholder="Amount to Add">
+                    <button class="btn adm-btn" onclick="admCash()">ADD MONEY</button>
+                </div>
+
+                <div class="match-card" style="border-left-color:var(--red);">
+                    <p style="font-size:11px; color:#888;">Ban Management</p>
+                    <input type="text" id="bsid" placeholder="User Site ID">
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn" style="background:var(--red); color:white;" onclick="admBan(true)">BAN PLAYER</button>
+                        <button class="btn" style="background:#22c55e; color:white;" onclick="admBan(false)">UNBAN</button>
+                    </div>
+                </div>
+
+                <div class="match-card">
+                    <p style="font-size:11px; color:#888;">Create Match</p>
+                    <input type="text" id="mt" placeholder="Match Title">
+                    <input type="number" id="mf" placeholder="Entry Fee">
+                    <input type="text" id="mti" placeholder="Time (e.g. 9:00 PM)">
+                    <select id="mc"><option value="bermuda">Bermuda</option><option value="cs">CS Ranked</option></select>
+                    <button class="btn adm-btn" onclick="admMatch()">PUBLISH MATCH</button>
+                </div>
+
+                <div class="match-card">
+                    <p style="font-size:11px; color:#888;">Live Stats</p>
+                    <div id="adm-stats" style="font-size:11px; color:#ccc; line-height:1.6;"></div>
+                </div>
             </div>
         </div>
     </div>
+
     <script>
         const firebaseConfig = { apiKey: "AIzaSyAFvaJjgrPghBwx5FPFeLPc0XCi6GFNA1k", authDomain: "ff-legend-tournament.firebaseapp.com", projectId: "ff-legend-tournament", storageBucket: "ff-legend-tournament.firebasestorage.app", messagingSenderId: "648355009637", appId: "1:648355009637:web:2a7b87b72566a129ae228c" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
+
         auth.onAuthStateChanged(async u => {
             document.getElementById('loader').style.display='none';
             if(u){
-                const d=await db.collection("users").doc(u.uid).get();
-                if(d.data().isBanned){alert("BANNED!");auth.signOut();return;}
+                const d = await db.collection("users").doc(u.uid).get();
+                if(d.data().isBanned){ alert("YOUR ACCOUNT IS BANNED BY ADMIN!"); auth.signOut(); return; }
+                
                 document.getElementById('auth-screen').style.display='none';
                 document.getElementById('main-app').style.display='block';
-                if(d.data().isAdmin){document.getElementById('adm-nav').style.display='block';loadAdmStats();}
-                sync(u.uid); loadMatches(); loadChat();
-            } else { document.getElementById('auth-screen').style.display='flex'; document.getElementById('main-app').style.display='none'; }
+                
+                // ADMIN UNLOCK LOGIC
+                if(d.data().isAdmin === true){
+                    document.getElementById('adm-nav').style.setProperty('display', 'block', 'important');
+                    document.getElementById('admin-pan').style.setProperty('display', 'none'); // Still hidden until clicked
+                    loadAdmData();
+                }
+
+                sync(u.uid); loadM(); loadC();
+            } else { 
+                document.getElementById('auth-screen').style.display='flex'; 
+                document.getElementById('main-app').style.display='none'; 
+            }
         });
+
         async function register(){
-            const n=document.getElementById('name-r').value, e=document.getElementById('email-r').value, p=document.getElementById('pass-r').value, sid="FFL-"+Math.floor(1000+Math.random()*8999);
+            const n=document.getElementById('nr').value, e=document.getElementById('er').value, p=document.getElementById('pr').value, sid="FFL-"+Math.floor(1000+Math.random()*8999);
+            if(!n || !e || p.length < 6) return alert("Fill correctly!");
             try{ const r=await auth.createUserWithEmailAndPassword(e,p); await db.collection("users").doc(r.user.uid).set({name:n,email:e,siteID:sid,wallet:0,isAdmin:false,isBanned:false,joined:[]}); }catch(err){alert(err.message);}
         }
-        async function login(){ try{await auth.signInWithEmailAndPassword(document.getElementById('email-l').value,document.getElementById('pass-l').value);}catch(e){alert("Fail!");}}
-        async function admAddMoney(){
+
+        async function login(){ try{await auth.signInWithEmailAndPassword(document.getElementById('el').value,document.getElementById('pl').value);}catch(e){alert("Access Denied!");}}
+
+        // ADMIN FUNCTIONS
+        async function admCash(){
             const s=document.getElementById('asid').value, a=parseInt(document.getElementById('aamt').value), q=await db.collection("users").where("siteID","==",s).get();
-            if(!q.empty){await db.collection("users").doc(q.docs[0].id).update({wallet:firebase.firestore.FieldValue.increment(a)});alert("Done!");}
+            if(!q.empty){ await db.collection("users").doc(q.docs[0].id).update({wallet:firebase.firestore.FieldValue.increment(a)}); alert("Cash Sent!"); }
         }
-        async function admBan(v){ const s=document.getElementById('bsid').value, q=await db.collection("users").where("siteID","==",s).get(); if(!q.empty){await db.collection("users").doc(q.docs[0].id).update({isBanned:v});alert("Done!");}}
-        async function admMatch(){ await db.collection("matches").add({title:document.getElementById('mt').value,fee:parseInt(document.getElementById('mf').value),time:document.getElementById('mti').value,cat:document.getElementById('mc').value,players:[]});alert("Live!");}
-        function loadAdmStats(){ db.collection("matches").onSnapshot(s=>{let h="";s.forEach(d=>{h+=`<b>${d.data().title}</b> (${d.data().players.length})<br>`;d.data().players.forEach(p=>h+=`-${p.name}[${p.uid}]<br>`);h+="<hr>";});document.getElementById('adm-data').innerHTML=h;});}
-        function loadMatches(){ db.collection("matches").onSnapshot(s=>{const l=document.getElementById('match-list-ui');l.innerHTML="";s.forEach(d=>{l.innerHTML+=`<div class="match-card"><h4>${d.data().title}</h4><p>Fee: ₹${d.data().fee} | ${d.data().time}</p><button class="btn" onclick="joinM('${d.id}',${d.data().fee})">JOIN</button></div>`;});});}
+        async function admBan(v){ const s=document.getElementById('bsid').value, q=await db.collection("users").where("siteID","==",s).get(); if(!q.empty){ await db.collection("users").doc(q.docs[0].id).update({isBanned:v}); alert("Status Updated!"); }}
+        async function admMatch(){ await db.collection("matches").add({title:document.getElementById('mt').value,fee:parseInt(document.getElementById('mf').value),time:document.getElementById('mti').value,cat:document.getElementById('mc').value,players:[]}); alert("Match Live!"); }
+        function loadAdmData(){ db.collection("matches").onSnapshot(s=>{let h="";s.forEach(d=>{h+=`<b>${d.data().title}</b>: ${d.data().players.length} Players<br>`;d.data().players.forEach(p=>h+=`- ${p.name} [FFID:${p.uid}]<br>`);h+="<hr style='border:0;border-top:1px solid #333;'>";});document.getElementById('adm-stats').innerHTML=h;});}
+
+        // PLAYER FUNCTIONS
+        function loadM(){ db.collection("matches").onSnapshot(s=>{const l=document.getElementById('match-ui');l.innerHTML="";s.forEach(d=>{l.innerHTML+=`<div class="match-card"><h4>${d.data().title}</h4><p style="font-size:12px;color:#888;">Category: ${d.data().cat.toUpperCase()}<br>Entry: ₹${d.data().fee} | Time: ${d.data().time}</p><button class="btn" onclick="joinM('${d.id}',${d.data().fee})">JOIN TOURNAMENT</button></div>`;});});}
         async function joinM(id,f){
             const u=auth.currentUser, d=await db.collection("users").doc(u.uid).get();
-            if(d.data().wallet<f)return alert("No Money!");
-            const fid=prompt("FF UID:"); if(!fid)return;
+            if(d.data().wallet<f)return alert("Insufficient Wallet Balance!");
+            const fid=prompt("Enter Your Free Fire UID:"); if(!fid)return;
             await db.collection("users").doc(u.uid).update({wallet:firebase.firestore.FieldValue.increment(-f),joined:firebase.firestore.FieldValue.arrayUnion({matchId:id,time:new Date().toLocaleTimeString()})});
-            await db.collection("matches").doc(id).update({players:firebase.firestore.FieldValue.arrayUnion({name:d.data().name,uid:fid})});alert("Joined!");
+            await db.collection("matches").doc(id).update({players:firebase.firestore.FieldValue.arrayUnion({name:d.data().name,uid:fid})}); alert("Registration Successful!");
         }
-        async function sendMsg(){ const t=document.getElementById('chat-inp').value, u=await db.collection("users").doc(auth.currentUser.uid).get(); if(!t)return; await db.collection("chats").add({name:u.data().name,text:t,ts:Date.now(),isAdmin:u.data().isAdmin}); document.getElementById('chat-inp').value="";}
-        function loadChat(){ db.collection("chats").orderBy("ts","asc").onSnapshot(s=>{const b=document.getElementById('chat-box');b.innerHTML="";s.forEach(d=>{b.innerHTML+=`<div class="m-msg ${d.data().isAdmin?'m-admin':''}"><b>${d.data().name}:</b> ${d.data().text}</div>`;});b.scrollTop=b.scrollHeight;});}
-        function sync(uid){ db.collection("users").doc(uid).onSnapshot(d=>{document.getElementById('wallet-val').innerText="₹"+d.data().wallet;const e=document.getElementById('enrolled-ui');e.innerHTML="";d.data().joined.forEach(m=>e.innerHTML+=`<div class="match-card" style="border-color:var(--blue)">Match ID: ${m.matchId}</div>`);});}
-        function switchNav(id,el){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');}
-        function toggleAuth(r){document.getElementById('login-form').style.display=r?'none':'block';document.getElementById('reg-form').style.display=r?'block':'none';}
+
+        async function sendM(){ const t=document.getElementById('msg-in').value, u=await db.collection("users").doc(auth.currentUser.uid).get(); if(!t)return; await db.collection("chats").add({name:u.data().name,text:t,ts:Date.now(),isAdmin:u.data().isAdmin}); document.getElementById('msg-in').value="";}
+        function loadC(){ db.collection("chats").orderBy("ts","asc").onSnapshot(s=>{const b=document.getElementById('chat-box');b.innerHTML="";s.forEach(d=>{b.innerHTML+=`<div class="msg ${d.data().isAdmin?'admin':''}"><b>${d.data().name}:</b> ${d.data().text}</div>`;});b.scrollTop=b.scrollHeight;});}
+        function sync(uid){ db.collection("users").doc(uid).onSnapshot(d=>{document.getElementById('w-val').innerText="₹"+d.data().wallet;const e=document.getElementById('joined-ui');e.innerHTML="";d.data().joined.forEach(m=>e.innerHTML+=`<div class="match-card" style="border-left-color:var(--neon-blue);padding:10px;">Enrolled Match ID: ${m.matchId}<br><span style="font-size:10px;color:#666;">Joined: ${m.time}</span></div>`);});}
+        
+        function switchN(id,el){
+            document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+            const target = document.getElementById(id);
+            target.classList.add('active');
+            // Special case for admin panel display
+            if(id === 'admin-pan') target.style.setProperty('display', 'block', 'important');
+            el.classList.add('active');
+        }
+        function toggleA(r){document.getElementById('login-form').style.display=r?'none':'block';document.getElementById('reg-form').style.display=r?'block':'none';}
     </script>
 </body>
 </html>
