@@ -12,489 +12,637 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
+        /* --- CSS VARIABLES & RESET --- */
         :root { 
-            --gold: #ffcc00; --blue: #00d4ff; --dark: #050508; --card: #101018; 
-            --red: #ff3131; --green: #00ff88; --gray: #888; --bg-gradient: linear-gradient(180deg, #050508 0%, #101015 100%);
+            --gold: #ffcc00; 
+            --blue: #00d4ff; 
+            --dark-bg: #050508; 
+            --card-bg: #101018; 
+            --danger: #ff3131; 
+            --success: #00ff88; 
+            --text-gray: #888;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--dark); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-
-        /* 🚨 Custom Alert Pop-up */
-        #alert-box { 
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-            background: var(--red); color: white; padding: 15px 30px; border-radius: 12px; 
-            z-index: 999999; font-weight: 900; display: none; box-shadow: 0 0 30px rgba(255,49,49,0.6); 
-            font-family: 'Orbitron'; text-align: center; border: 2px solid white; 
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            outline: none; 
         }
 
-        /* 👑 Branding Header */
+        body { 
+            background: var(--dark-bg); 
+            color: #fff; 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+        }
+
+        /* --- HEADER STYLES --- */
         header { 
-            background: #000; padding: 25px 20px; border-bottom: 4px solid var(--gold); 
-            text-align: center; position: sticky; top: 0; z-index: 5000; box-shadow: 0 5px 20px rgba(0,0,0,0.8); 
+            background: #000; 
+            padding: 25px 15px; 
+            border-bottom: 4px solid var(--gold); 
+            text-align: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 5000; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
-        header h1 { font-family: 'Orbitron'; font-size: 26px; color: var(--gold); margin: 0; text-shadow: 0 0 15px var(--gold); letter-spacing: 2px; }
-        .owner-tag { font-size: 10px; color: var(--blue); font-weight: 900; letter-spacing: 5px; display: block; margin-top: 8px; text-transform: uppercase; }
 
-        .marquee-box { background: #300; color: #fff; padding: 10px; font-size: 11px; font-weight: bold; border-bottom: 1px solid var(--red); }
+        header h1 { 
+            font-family: 'Orbitron'; 
+            font-size: 24px; 
+            color: var(--gold); 
+            margin: 0; 
+            text-shadow: 0 0 15px var(--gold); 
+            letter-spacing: 2px;
+        }
 
-        /* 📱 Navigation Bar */
+        .sub-tag { 
+            font-size: 10px; 
+            color: var(--blue); 
+            font-weight: 900; 
+            letter-spacing: 4px; 
+            display: block; 
+            margin-top: 5px; 
+            text-transform: uppercase;
+        }
+
+        /* --- NAVIGATION --- */
         nav { 
-            background: #000; padding: 15px 0; display: flex; justify-content: space-around; 
-            position: sticky; top: 105px; z-index: 4000; border-bottom: 1px solid #1a1a1a; 
+            background: #000; 
+            padding: 15px 0; 
+            display: flex; 
+            justify-content: space-around; 
+            position: sticky; 
+            top: 104px; 
+            z-index: 4000; 
+            border-bottom: 1px solid #1a1a1a; 
         }
-        .nav-btn { color: #555; cursor: pointer; font-size: 11px; font-weight: bold; font-family: 'Orbitron'; transition: 0.4s; }
-        .nav-btn.active { color: var(--gold); transform: scale(1.2); text-shadow: 0 0 10px var(--gold); }
 
-        .container { padding: 15px; max-width: 500px; margin: auto; padding-bottom: 120px; }
-        .section { display: none; }
-        .section.active { display: block; animation: slideUp 0.4s ease-out; }
-        
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-link { 
+            color: #555; 
+            cursor: pointer; 
+            font-size: 11px; 
+            font-weight: bold; 
+            font-family: 'Orbitron'; 
+            transition: 0.4s; 
+            text-transform: uppercase;
+        }
 
-        /* 🃏 UI Cards */
-        .card { 
-            background: var(--card); border-radius: 25px; padding: 22px; margin-bottom: 18px; 
-            border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+        .nav-link.active { 
+            color: var(--gold); 
+            transform: scale(1.1); 
+            text-shadow: 0 0 10px var(--gold); 
         }
-        .btn { 
-            width: 100%; padding: 18px; border-radius: 15px; border: none; font-weight: 900; 
-            cursor: pointer; font-family: 'Orbitron'; text-transform: uppercase; transition: 0.3s; font-size: 14px; 
+
+        /* --- LAYOUT CONTAINERS --- */
+        .main-container { 
+            padding: 20px 15px; 
+            max-width: 500px; 
+            margin: auto; 
+            padding-bottom: 120px; 
         }
-        .btn-gold { background: linear-gradient(135deg, var(--gold), #ff9900); color: #000; box-shadow: 0 5px 15px rgba(255,204,0,0.3); }
-        .btn-red { background: var(--red); color: #fff; }
-        .btn-blue { background: var(--blue); color: #000; }
-        .btn-locked { background: #222 !important; color: #555 !important; cursor: not-allowed; }
-        
+
+        .page-section { 
+            display: none; 
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .page-section.active { 
+            display: block; 
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- UI COMPONENTS (CARDS, BUTTONS) --- */
+        .game-card { 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .btn-action { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 12px; 
+            border: none; 
+            font-weight: 900; 
+            cursor: pointer; 
+            font-family: 'Orbitron'; 
+            text-transform: uppercase; 
+            transition: 0.3s; 
+            margin-top: 10px;
+        }
+
+        .btn-prime { background: linear-gradient(135deg, var(--gold), #ff9900); color: #000; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+        .btn-mini { padding: 6px 12px; font-size: 10px; width: auto; margin-right: 5px; }
+
         input, select { 
-            width: 100%; padding: 18px; margin: 12px 0; border-radius: 15px; border: 1px solid #222; 
-            background: #000; color: #fff; font-size: 15px; 
+            width: 100%; 
+            padding: 16px; 
+            margin: 10px 0; 
+            border-radius: 12px; 
+            border: 1px solid #222; 
+            background: #000; 
+            color: #fff; 
+            font-size: 14px;
         }
 
-        /* 🔗 Social Grid */
-        .social-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .social-card { background: #111; padding: 12px; border-radius: 15px; text-align: center; text-decoration: none; border: 1px solid #222; transition: 0.3s; }
-        .social-card:active { transform: scale(0.9); }
-        .social-card span { display: block; font-size: 8px; color: var(--gray); margin-bottom: 4px; }
-        .social-card b { font-size: 11px; color: var(--gold); font-family: 'Orbitron'; }
+        /* --- MATCH SPECIFIC STYLES --- */
+        .timer-display { 
+            font-family: 'Orbitron'; 
+            color: var(--blue); 
+            font-size: 12px; 
+            margin-bottom: 10px; 
+            display: block;
+        }
 
-        /* 💬 Support Chat Hub */
-        #chat-win { height: 400px; background: #050505; border-radius: 20px; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; border: 1px solid #1a1a1a; }
-        .bubble { max-width: 80%; padding: 14px; border-radius: 18px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; position: relative; }
-        .bubble.me { align-self: flex-end; background: var(--gold); color: #000; border-bottom-right-radius: 2px; }
-        .bubble.adm { align-self: flex-start; background: #1a1a25; color: #fff; border: 1px solid var(--blue); border-bottom-left-radius: 2px; }
-        .badge { font-size: 8px; color: var(--blue); font-weight: 900; display: block; margin-bottom: 4px; font-family: 'Orbitron'; }
+        .live-pulse { 
+            color: var(--success); 
+            animation: pulse 1s infinite;
+        }
 
-        /* 🔐 Auth Security Layer */
-        #auth-page { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 25px; }
-        .auth-box { background: var(--card); padding: 35px; border-radius: 30px; border: 2px solid var(--gold); width: 100%; max-width: 380px; text-align: center; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
 
-        .m-timer { font-size: 11px; color: var(--blue); font-family: 'Orbitron'; margin-bottom: 8px; display: block; }
-        .room-info { background: rgba(0, 212, 255, 0.1); border: 1px dashed var(--blue); padding: 12px; border-radius: 12px; margin-top: 10px; text-align: center; }
+        /* --- CHAT SYSTEM --- */
+        #chat-window { 
+            height: 400px; 
+            background: #000; 
+            border-radius: 20px; 
+            padding: 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #1a1a1a; 
+        }
+
+        .msg { 
+            max-width: 85%; 
+            padding: 12px 16px; 
+            border-radius: 18px; 
+            margin-bottom: 12px; 
+            font-size: 13px; 
+            line-height: 1.4;
+        }
+
+        .msg.sent { align-self: flex-end; background: var(--gold); color: #000; border-bottom-right-radius: 2px; }
+        .msg.received { align-self: flex-start; background: #1a1a25; color: #fff; border: 1px solid var(--blue); border-bottom-left-radius: 2px; }
+        
+        .admin-label { font-size: 8px; font-weight: 900; color: var(--blue); display: block; margin-bottom: 4px; font-family: 'Orbitron'; }
+
+        /* --- ADMIN PLAYER LIST --- */
+        .player-row {
+            background: #000;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- AUTH PAGE --- */
+        #auth-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: #000; 
+            z-index: 10000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+
+        .auth-card { 
+            background: var(--card-bg); 
+            padding: 40px 30px; 
+            border-radius: 30px; 
+            border: 2px solid var(--gold); 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <div id="alert-box">ERROR MESSAGE</div>
-
-    <div id="auth-page">
-        <div class="auth-box">
+    <div id="auth-screen">
+        <div class="auth-card">
             <h1 style="font-family:Orbitron; color:var(--gold); margin:0;">FF LEGEND</h1>
-            <span class="owner-tag">BY PRIME MIKU</span>
-            <div id="login-ui">
-                <input type="email" id="l-email" placeholder="Email Address">
-                <input type="password" id="l-pass" placeholder="Password">
-                <button class="btn btn-gold" onclick="login()">ENTER ARENA</button>
-                <p onclick="toggleAuth(true)" style="font-size:12px; color:var(--gray); margin-top:20px; cursor:pointer;">NEW PLAYER? <span style="color:var(--gold)">REGISTER</span></p>
+            <span class="sub-tag">TOURNAMENT HUB</span>
+            
+            <div id="login-form" style="margin-top:30px;">
+                <input type="email" id="email-in" placeholder="Registered Email">
+                <input type="password" id="pass-in" placeholder="Password">
+                <button class="btn-action btn-prime" onclick="handleLogin()">LOGIN ARENA</button>
+                <p onclick="toggleForms(true)" style="font-size:12px; color:var(--text-gray); margin-top:20px; cursor:pointer;">
+                    NOT A MEMBER? <span style="color:var(--gold)">JOIN NOW</span>
+                </p>
             </div>
-            <div id="reg-ui" style="display:none;">
-                <input type="text" id="r-name" placeholder="Full Player Name">
-                <input type="email" id="r-email" placeholder="Email Address">
-                <input type="password" id="r-pass" placeholder="Create Password (6+)">
-                <button class="btn btn-gold" onclick="register()">CREATE ACCOUNT</button>
-                <p onclick="toggleAuth(false)" style="font-size:12px; color:var(--gray); margin-top:20px; cursor:pointer;">ALREADY HAVE ID? <span style="color:var(--gold)">LOGIN</span></p>
+
+            <div id="register-form" style="display:none; margin-top:30px;">
+                <input type="text" id="reg-name" placeholder="Full Gamer Name">
+                <input type="email" id="reg-email" placeholder="Email Address">
+                <input type="password" id="reg-pass" placeholder="Create Password (6+ Chars)">
+                <button class="btn-action btn-prime" onclick="handleRegister()">CREATE ACCOUNT</button>
+                <p onclick="toggleForms(false)" style="font-size:12px; color:var(--text-gray); margin-top:20px; cursor:pointer;">
+                    ALREADY REGISTERED? <span style="color:var(--gold)">SIGN IN</span>
+                </p>
             </div>
         </div>
     </div>
 
-    <div id="app" style="display:none;">
+    <div id="app-content" style="display:none;">
         <header>
             <h1>FF LEGEND</h1>
-            <span class="owner-tag">PRIME MIKU OFFICIAL</span>
+            <span class="sub-tag">PRIME MIKU OFFICIAL</span>
         </header>
-        
-        <div class="marquee-box">
-            <marquee scrollamount="5">⚠️ Respect Admin & Owner or Account BAN 🚫 • Kill Screenshot = Insta Payment • No Hacks allowed 💞</marquee>
-        </div>
 
         <nav>
-            <div class="nav-btn active" id="btn-nav-home" onclick="navTo('home')">MATCHES</div>
-            <div class="nav-btn" id="btn-nav-chat" onclick="navTo('chat')">SUPPORT</div>
-            <div class="nav-btn" id="btn-nav-wallet" onclick="navTo('wallet')">WALLET</div>
-            <div id="adm-nav" class="nav-btn" style="display:none; color:var(--red);" onclick="navTo('admin')">OWNER 👑</div>
+            <div class="nav-link active" id="tab-matches" onclick="switchPage('home')">Matches</div>
+            <div class="nav-link" id="tab-chat" onclick="switchPage('chat')">Support</div>
+            <div class="nav-link" id="tab-wallet" onclick="switchPage('wallet')">Wallet</div>
+            <div id="owner-link" class="nav-link" style="display:none; color:var(--danger);" onclick="switchPage('admin')">Admin 👑</div>
         </nav>
 
-        <div id="home" class="section active">
-            <div class="container">
-                <div class="social-grid">
-                    <a href="https://chat.whatsapp.com/Fa8SIiyHMTwHCToVFjkjc8?mode=gi_t" class="social-card"><span>WHATSAPP</span><b>GROUP</b></a>
-                    <a href="https://www.instagram.com/_prime_miku_?igsh=Y296bXdpZGl5dzFs" class="social-card"><span>INSTA</span><b>OWNER</b></a>
-                    <a href="https://youtube.com/@prime_miku?si=hA25uYJF8q0BfmOd" class="social-card"><span>YT</span><b>VLOGS</b></a>
-                </div>
-
-                <div class="card" style="display:flex; justify-content:space-between; align-items:center; border-left: 5px solid var(--gold);">
-                    <div><span style="font-size:10px; color:var(--gray);">MY BALANCE</span><br><span id="u-bal" style="color:var(--green); font-size:26px; font-weight:900;">₹0</span></div>
-                    <div style="text-align:right;"><span style="font-size:10px; color:var(--gray);">SITE ID</span><br><span id="u-sid" style="color:var(--blue); font-family:Orbitron;">FFL-0000</span></div>
-                </div>
-
-                <div style="display:flex; gap:10px; margin-bottom:20px;">
-                    <button class="btn btn-gold" id="mode-classic" onclick="setMatchMode('Classic')" style="font-size:11px;">CLASSIC</button>
-                    <button class="btn" id="mode-cs" onclick="setMatchMode('CS')" style="font-size:11px; background:#111; color:#555;">CLASH SQUAD</button>
-                </div>
-
-                <div id="match-container">
-                    </div>
-            </div>
-        </div>
-
-        <div id="chat" class="section">
-            <div class="container">
-                <div id="chat-win"></div>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <input type="text" id="chat-input" placeholder="Ask Admin..." style="margin:0;">
-                    <button class="btn btn-gold" style="width:90px; margin:0;" onclick="sendMessage()">SEND</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="wallet" class="section">
-            <div class="container">
-                <div class="card" style="text-align:center;">
-                    <h3 style="color:var(--gold); margin:0;" id="display-name">PLAYER</h3>
+        <div id="home" class="page-section active">
+            <div class="main-container">
+                <div class="game-card" style="display:flex; justify-content:space-between; border-left: 4px solid var(--gold);">
+                    <div><span style="font-size:10px; color:var(--text-gray);">MY WALLET</span><br><b id="display-bal" style="color:var(--success); font-size:24px;">₹0</b></div>
+                    <div style="text-align:right;"><span style="font-size:10px; color:var(--text-gray);">SITE ID</span><br><b id="display-sid" style="color:var(--blue); font-family:Orbitron;">...</b></div>
                 </div>
                 
-                <div class="card">
-                    <h4 style="margin-top:0; color:var(--gold);">DEPOSIT CASH</h4>
-                    <p style="font-size:11px; color:var(--gray);">1. Scan QR and Pay (Min ₹20)<br>2. Submit 12 Digit UTR Number below.</p>
-                    <center><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="background:#fff; border-radius:15px; padding:12px; border:3px solid var(--gold);"></center>
-                    <input type="text" id="utr-input" placeholder="Enter Transaction UTR">
-                    <button class="btn btn-gold" onclick="submitDeposit()">SUBMIT PAYMENT</button>
-                </div>
-
-                <div class="card" style="border: 2px solid var(--blue);">
-                    <h4 style="color:var(--blue); margin-top:0;">WITHDRAWAL RULE</h4>
-                    <p style="font-size:13px; line-height:1.6; color:#eee;">Payment direct account me jayega. Match khatam hone ke baad apni FF kill ki screenshot Instagram par bheje. No Scam Faire Payment 💞</p>
-                    <button class="btn btn-blue" onclick="window.location.href='https://www.instagram.com/_prime_miku_?igsh=Y296bXdpZGl5dzFs'">SEND SCREENSHOT</button>
-                </div>
-
-                <button class="btn btn-red" onclick="auth.signOut()">EXIT GAME</button>
+                <div id="match-feed">
+                    </div>
             </div>
         </div>
 
-        <div id="admin" class="section">
-            <div class="container">
-                <div class="card">
-                    <h4 style="color:var(--gold);">PLAYER MANAGEMENT</h4>
-                    <input type="text" id="adm-user-sid" placeholder="Player Site ID (FFL-XXXX)">
-                    <div style="display:flex; gap:10px;">
-                        <input type="number" id="adm-amount" placeholder="Amount" style="flex:1;">
-                        <button class="btn btn-gold" style="width:100px;" onclick="adminUpdateWallet(true)">ADD</button>
-                    </div>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button class="btn btn-red" style="flex:1;" onclick="adminBanPlayer(true)">BAN</button>
-                        <button class="btn btn-gold" style="flex:1; background:var(--green);" onclick="adminBanPlayer(false)">UNBAN</button>
-                    </div>
+        <div id="chat" class="page-section">
+            <div class="main-container">
+                <div id="chat-window"></div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <input type="text" id="chat-input" placeholder="Type message..." style="margin:0;">
+                    <button class="btn-action btn-prime" style="width:100px; margin:0;" onclick="sendChatMessage()">SEND</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="wallet" class="page-section">
+            <div class="main-container">
+                <div class="game-card" style="text-align:center;">
+                    <h3 style="color:var(--gold); margin:0;">RECHARGE WALLET</h3>
+                    <p style="font-size:11px; color:var(--text-gray); margin-bottom:20px;">Scan QR & Submit 12 Digit UTR</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mrbituyr-1@okicici&pn=PrimeMiku&am=20" style="border:5px solid var(--gold); border-radius:15px; padding:5px; background:#fff;">
+                    <input type="text" id="utr-number" placeholder="Enter UTR Number">
+                    <button class="btn-action btn-prime" onclick="submitUTR()">SUBMIT PAYMENT</button>
+                </div>
+                
+                <div class="game-card" style="border: 1px solid var(--blue);">
+                    <h4 style="color:var(--blue); margin-top:0;">WITHDRAWAL INFO</h4>
+                    <p style="font-size:12px; line-height:1.5;">Match khatam hone ke baad apne kills ka screenshot Instagram par bheje. Payment direct mil jayega. 💞</p>
+                    <button class="btn-action btn-outline" style="border-color:var(--blue); color:var(--blue);" onclick="window.location.href='https://www.instagram.com/_prime_miku_'">CONTACT OWNER</button>
                 </div>
 
-                <div id="adm-pending-utr" class="card"><h4>PENDING APPROVALS</h4></div>
+                <button class="btn-action btn-danger" onclick="firebase.auth().signOut()">LOGOUT SESSION</button>
+            </div>
+        </div>
 
-                <div class="card">
-                    <h4>CREATE NEW MATCH</h4>
-                    <input type="text" id="new-m-title" placeholder="Match Title">
-                    <select id="new-m-type"><option value="Classic">Classic</option><option value="CS">CS</option></select>
-                    <input type="number" id="new-m-fee" placeholder="Entry Fee (₹)">
-                    <input type="datetime-local" id="new-m-time">
-                    <button class="btn btn-gold" onclick="adminPostMatch()">POST MATCH</button>
+        <div id="admin" class="page-section">
+            <div class="main-container">
+                <div class="game-card">
+                    <h3 style="color:var(--gold); margin-top:0;">CREATE NEW MATCH</h3>
+                    <input type="text" id="adm-m-title" placeholder="Match Title">
+                    <input type="number" id="adm-m-fee" placeholder="Entry Fee (₹)">
+                    <input type="datetime-local" id="adm-m-time">
+                    <button class="btn-action btn-prime" onclick="adminCreateMatch()">POST MATCH</button>
                 </div>
 
-                <div id="adm-match-manager"></div>
+                <div id="admin-match-list">
+                    </div>
+
+                <div class="game-card" id="admin-utr-requests">
+                    <h3 style="color:var(--gold);">PENDING UTR APPROVALS</h3>
+                    <div id="utr-list"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="join-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:20000; display:none; align-items:center; justify-content:center; padding:20px;">
-        <div class="card" style="width:100%; max-width:400px; border:2px solid var(--gold);">
-            <h2 style="text-align:center; font-family:Orbitron; color:var(--gold);">JOIN ARENA</h2>
-            <input type="text" id="join-ff-name" placeholder="Your FF Name">
-            <input type="number" id="join-ff-uid" placeholder="Your FF UID">
-            <button class="btn btn-gold" id="join-confirm-btn">CONFIRM JOIN</button>
-            <button class="btn" style="background:none; color:var(--gray);" onclick="closeJoinModal()">CANCEL</button>
+    <div id="join-popup" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9000; display:none; align-items:center; justify-content:center; padding:20px;">
+        <div class="game-card" style="width:100%; max-width:400px; border:2px solid var(--gold);">
+            <h2 style="text-align:center; font-family:Orbitron; color:var(--gold);">CONFIRM JOIN</h2>
+            <input type="text" id="ff-username" placeholder="Free Fire Name">
+            <button class="btn-action btn-prime" id="confirm-join-btn">PAY & JOIN</button>
+            <button class="btn-action" style="background:transparent; color:#555;" onclick="closeJoinPopup()">CANCEL</button>
         </div>
     </div>
 
     <script>
-        // --- ⚙️ CONFIGURATION ---
-        const firebaseConfig = { apiKey: "AIzaSyAFvaJjgrPghBwx5FPFeLPc0XCi6GFNA1k", authDomain: "ff-legend-tournament.firebaseapp.com", projectId: "ff-legend-tournament", storageBucket: "ff-legend-tournament.firebasestorage.app", messagingSenderId: "648355009637", appId: "1:648355009637:web:2a7b87b72566a129ae228c" };
+        /* --- 🛠️ FIREBASE CONFIGURATION --- */
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAFvaJjgrPghBwx5FPFeLPc0XCi6GFNA1k", 
+            authDomain: "ff-legend-tournament.firebaseapp.com", 
+            projectId: "ff-legend-tournament", 
+            storageBucket: "ff-legend-tournament.firebasestorage.app", 
+            messagingSenderId: "648355009637", 
+            appId: "1:648355009637:web:2a7b87b72566a129ae228c" 
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let currentMatchMode = "Classic";
-
-        // --- 📢 UTILS ---
-        function showAlert(msg) {
-            const box = document.getElementById('alert-box');
-            box.innerText = msg; box.style.display = 'block';
-            setTimeout(() => box.style.display = 'none', 3000);
-        }
-
-        // --- 🔐 AUTH LOGIC ---
-        auth.onAuthStateChanged(async user => {
-            if(user){
+        /* --- 🔐 AUTH LOGIC --- */
+        auth.onAuthStateChanged(async (user) => {
+            if(user) {
                 const userDoc = await db.collection("users").doc(user.uid).get();
-                const userData = userDoc.data();
-                if(userData.isBanned) { alert("YOU ARE BANNED!"); auth.signOut(); return; }
+                const data = userDoc.data();
                 
-                document.getElementById('auth-page').style.display='none';
-                document.getElementById('app').style.display='block';
-                document.getElementById('display-name').innerText = userData.name;
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
                 
-                if(userData.isAdmin) { document.getElementById('adm-nav').style.display='block'; initAdminSuite(); }
+                if(data.isAdmin) {
+                    document.getElementById('owner-link').style.display = 'block';
+                    initAdminPanel();
+                }
                 
-                syncUserProfile(user.uid);
-                loadMatches();
-                loadChatMessages();
+                setupRealtimeSync(user.uid);
+                fetchMatches();
+                listenToChat();
             } else {
-                document.getElementById('auth-page').style.display='flex';
-                document.getElementById('app').style.display='none';
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('app-content').style.display = 'none';
             }
         });
 
-        async function login() {
-            const e = document.getElementById('l-email').value;
-            const p = document.getElementById('l-pass').value;
-            try { await auth.signInWithEmailAndPassword(e, p); }
-            catch(err) { showAlert("WRONG PASSWORD OR EMAIL!"); }
+        async function handleLogin() {
+            const email = document.getElementById('email-in').value;
+            const pass = document.getElementById('pass-in').value;
+            try { await auth.signInWithEmailAndPassword(email, pass); }
+            catch(e) { alert("Wrong Credentials!"); }
         }
 
-        async function register() {
-            const n = document.getElementById('r-name').value;
-            const e = document.getElementById('r-email').value;
-            const p = document.getElementById('r-pass').value;
-            if(!n || !e || p.length < 6) return alert("Fill all details! Pass must be 6 chars.");
+        async function handleRegister() {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            if(!name || pass.length < 6) return alert("Fill properly!");
+            
             try {
-                const cred = await auth.createUserWithEmailAndPassword(e, p);
-                await db.collection("users").doc(cred.user.uid).set({
-                    name: n, email: e, wallet: 0, isAdmin: false, isBanned: false,
-                    siteID: "FFL-" + Math.floor(1000 + Math.random() * 9000)
+                const res = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.collection("users").doc(res.user.uid).set({
+                    name: name,
+                    wallet: 0,
+                    siteID: "FFL-" + Math.floor(1000 + Math.random() * 9000),
+                    isAdmin: false,
+                    isBanned: false
                 });
-            } catch(err) { alert(err.message); }
+            } catch(e) { alert(e.message); }
         }
 
-        function toggleAuth(isReg) {
-            document.getElementById('login-ui').style.display = isReg ? 'none' : 'block';
-            document.getElementById('reg-ui').style.display = isReg ? 'block' : 'none';
+        /* --- 🏠 APP CORE LOGIC --- */
+        function setupRealtimeSync(uid) {
+            db.collection("users").doc(uid).onSnapshot(doc => {
+                const d = doc.data();
+                document.getElementById('display-bal').innerText = "₹" + d.wallet;
+                document.getElementById('display-sid').innerText = d.siteID;
+            });
         }
 
-        // --- 🏠 MATCH SYSTEM ---
-        function setMatchMode(m) {
-            currentMatchMode = m;
-            document.getElementById('mode-classic').style.background = m === 'Classic' ? 'var(--gold)' : '#111';
-            document.getElementById('mode-cs').style.background = m === 'CS' ? 'var(--gold)' : '#111';
-            loadMatches();
-        }
-
-        function loadMatches() {
-            db.collection("matches").where("type", "==", currentMatchMode).onSnapshot(snap => {
-                const container = document.getElementById('match-container');
+        function fetchMatches() {
+            db.collection("matches").onSnapshot(snap => {
+                const container = document.getElementById('match-feed');
                 container.innerHTML = "";
                 snap.forEach(doc => {
-                    const match = doc.data();
+                    const m = doc.data();
                     const mid = doc.id;
-                    const isJoined = match.players.some(p => p.uid === auth.currentUser.uid);
-                    const matchTime = new Date(match.time).getTime();
+                    const isJoined = m.players.some(p => p.uid === auth.currentUser.uid);
+                    const matchTime = new Date(m.time).getTime();
 
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <span class="m-timer" id="timer-${mid}">CALCULATING...</span>
-                        <h3 style="margin:5px 0; font-family:Orbitron;">${match.title}</h3>
-                        <div style="font-size:12px; color:var(--gray);">FEE: ₹${match.fee} | MODE: ${match.type}</div>
-                        <div id="action-${mid}" style="margin-top:15px;"></div>
+                    const el = document.createElement('div');
+                    el.className = 'game-card';
+                    el.innerHTML = `
+                        <span class="timer-display" id="timer-${mid}">Loading...</span>
+                        <h3 style="margin:5px 0; font-family:Orbitron;">${m.title}</h3>
+                        <p style="font-size:12px; color:var(--text-gray);">ENTRY FEE: ₹${m.fee} | JOINED: ${m.players.length}</p>
+                        <div id="btn-box-${mid}"></div>
                     `;
-                    container.appendChild(card);
+                    container.appendChild(el);
 
-                    // Live Timer Logic
-                    const timerIdx = setInterval(() => {
+                    // LIVE TIMER ENGINE
+                    const countdown = setInterval(() => {
                         const now = Date.now();
                         const diff = matchTime - now;
-                        const tEl = document.getElementById(`timer-${mid}`);
-                        const bEl = document.getElementById(`action-${mid}`);
-                        if(!tEl) { clearInterval(timerIdx); return; }
+                        const tText = document.getElementById(`timer-${mid}`);
+                        const bBox = document.getElementById(`btn-box-${mid}`);
+                        if(!tText) { clearInterval(countdown); return; }
 
                         if(diff <= 0) {
-                            clearInterval(timerIdx);
-                            tEl.innerText = "MATCH IS LIVE 🟢"; tEl.style.color = "var(--green)";
-                            bEl.innerHTML = isJoined ? `
-                                <div class="room-info">
-                                    <b style="color:var(--blue); font-family:Orbitron;">ID: ${match.rId || 'WAIT'} | PASS: ${match.rPs || 'WAIT'}</b>
-                                </div>` : `<button class="btn btn-locked">CLOSED</button>`;
+                            clearInterval(countdown);
+                            tText.innerText = "MATCH IS LIVE 🟢";
+                            tText.classList.add('live-pulse');
+                            bBox.innerHTML = isJoined ? `
+                                <div style="background:rgba(0,212,255,0.1); border:1px dashed var(--blue); padding:10px; margin-top:10px; text-align:center;">
+                                    <b style="color:var(--blue); font-family:Orbitron;">ID: ${m.rId || 'Wait'} | PASS: ${m.rPs || 'Wait'}</b>
+                                </div>
+                            ` : `<button class="btn-action" style="background:#222; color:#555;" disabled>MATCH CLOSED</button>`;
                         } else {
-                            const h = Math.floor(diff/36e5), m = Math.floor((diff%36e5)/6e4), s = Math.floor((diff%6e4)/1000);
-                            tEl.innerText = `STARTS IN: ${h}h ${m}m ${s}s`;
-                            bEl.innerHTML = isJoined ? `<button class="btn btn-locked">ALREADY JOINED ✅</button>` : `<button class="btn btn-gold" onclick="openJoinModal('${mid}', ${match.fee})">JOIN NOW</button>`;
+                            const h = Math.floor(diff/36e5), mi = Math.floor((diff%36e5)/6e4), s = Math.floor((diff%6e4)/1000);
+                            tText.innerText = `STARTS IN: ${h}h ${mi}m ${s}s`;
+                            bBox.innerHTML = isJoined ? 
+                                `<button class="btn-action" style="background:#1a1a1a; color:var(--success);" disabled>JOINED ✅</button>` : 
+                                `<button class="btn-action btn-prime" onclick="openJoinPopup('${mid}', ${m.fee})">JOIN NOW</button>`;
                         }
                     }, 1000);
                 });
             });
         }
 
-        // --- 💰 WALLET & DEPOSIT ---
-        function syncUserProfile(uid) {
-            db.collection("users").doc(uid).onSnapshot(doc => {
-                document.getElementById('u-bal').innerText = "₹" + doc.data().wallet;
-                document.getElementById('u-sid').innerText = doc.data().siteID;
-            });
-        }
-
-        async function submitDeposit() {
-            const utr = document.getElementById('utr-input').value;
-            if(utr.length < 10) return alert("Invalid UTR!");
-            await db.collection("deposits").add({
-                uid: auth.currentUser.uid, sid: document.getElementById('u-sid').innerText,
-                utr: utr, status: "pending", timestamp: Date.now()
-            });
-            alert("Deposit Submitted! Wait for Approval.");
-        }
-
-        // --- 💬 CHAT SYSTEM ---
-        async function sendMessage() {
-            const text = document.getElementById('chat-input').value;
-            if(!text) return;
+        /* --- 💬 CHAT HUB --- */
+        async function sendChatMessage() {
+            const txt = document.getElementById('chat-input').value;
+            if(!txt) return;
             const u = (await db.collection("users").doc(auth.currentUser.uid).get()).data();
             await db.collection("chats").add({
-                name: u.name, text: text, ts: Date.now(), isAdm: u.isAdmin
+                name: u.name,
+                text: txt,
+                ts: Date.now(),
+                isAdm: u.isAdmin
             });
             document.getElementById('chat-input').value = "";
         }
 
-        function loadChatMessages() {
-            db.collection("chats").orderBy("ts", "asc").limitToLast(30).onSnapshot(snap => {
-                const win = document.getElementById('chat-win');
+        function listenToChat() {
+            db.collection("chats").orderBy("ts", "asc").limitToLast(25).onSnapshot(snap => {
+                const win = document.getElementById('chat-window');
                 win.innerHTML = "";
                 snap.forEach(d => {
                     const m = d.data();
-                    win.innerHTML += `<div class="bubble ${m.isAdm ? 'adm' : 'me'}">
-                        ${m.isAdm ? '<span class="badge">OWNER PRIME MIKU 👑</span>' : ''}
-                        <b>${m.name}</b><br>${m.text}
-                    </div>`;
+                    const isMe = m.name === (document.getElementById('reg-name').value || "Me");
+                    win.innerHTML += `
+                        <div class="msg ${m.isAdm ? 'received' : (isMe ? 'sent' : 'received')}">
+                            ${m.isAdm ? '<span class="admin-label">OWNER PRIME MIKU 👑</span>' : ''}
+                            <b>${m.name}:</b><br>${m.text}
+                        </div>`;
                 });
                 win.scrollTop = win.scrollHeight;
             });
         }
 
-        // --- 👑 ADMIN ACTIONS ---
-        function initAdminSuite() {
-            // Pending UTRs
-            db.collection("deposits").where("status", "==", "pending").onSnapshot(snap => {
-                const box = document.getElementById('adm-pending-utr');
-                box.innerHTML = "<h4>PENDING APPROVALS</h4>";
-                snap.forEach(d => {
-                    box.innerHTML += `<div class="card" style="padding:10px; font-size:12px;">
-                        ${d.data().sid} | UTR: ${d.data().utr}
-                        <button class="btn btn-gold" style="padding:5px; margin-top:5px;" onclick="approveDeposit('${d.id}', '${d.data().uid}')">APPROVE ₹20</button>
-                    </div>`;
-                });
+        /* --- 💸 WALLET ACTIONS --- */
+        async function submitUTR() {
+            const utr = document.getElementById('utr-number').value;
+            if(utr.length < 10) return alert("Invalid UTR");
+            await db.collection("deposits").add({
+                uid: auth.currentUser.uid,
+                sid: document.getElementById('display-sid').innerText,
+                utr: utr,
+                status: "pending",
+                ts: Date.now()
             });
+            alert("UTR Submitted! Admin will verify soon.");
+        }
 
-            // Match Manager
+        /* --- 👑 ADMIN POWER (THE "A TO Z" PART) --- */
+        function initAdminPanel() {
+            // Admin match manager
             db.collection("matches").onSnapshot(snap => {
-                const box = document.getElementById('adm-match-manager');
-                box.innerHTML = "<h4>MANAGE ACTIVE ROOMS</h4>";
+                const box = document.getElementById('admin-match-list');
+                box.innerHTML = "<h3 style='color:var(--gold);'>MANAGE MATCHES</h3>";
+                snap.forEach(doc => {
+                    const m = doc.data();
+                    const mid = doc.id;
+                    let pRows = "";
+                    m.players.forEach((p, index) => {
+                        pRows += `
+                            <div class="player-row">
+                                <span>${p.name} (Kills: ${p.kills})</span>
+                                <div>
+                                    <button class="btn-action btn-prime btn-mini" onclick="updateKill('${mid}', ${index})">+ KILL</button>
+                                    <button class="btn-action btn-danger btn-mini" onclick="kickPlayer('${mid}', '${p.uid}')">KICK</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    box.innerHTML += `
+                        <div class="game-card">
+                            <b>${m.title}</b>
+                            <input id="ri-${mid}" placeholder="Room ID" value="${m.rId}">
+                            <input id="rp-${mid}" placeholder="Room Pass" value="${m.rPs}">
+                            <button class="btn-action btn-prime btn-mini" onclick="saveRoom('${mid}')">UPDATE ROOM</button>
+                            <button class="btn-action btn-danger btn-mini" onclick="deleteMatch('${mid}')">REMOVE MATCH</button>
+                            <div style="margin-top:15px;">${pRows}</div>
+                        </div>
+                    `;
+                });
+            });
+
+            // Pending UTR approvals
+            db.collection("deposits").where("status", "==", "pending").onSnapshot(snap => {
+                const uBox = document.getElementById('utr-list');
+                uBox.innerHTML = "";
                 snap.forEach(d => {
-                    box.innerHTML += `<div class="card">
-                        <b>${d.data().title}</b>
-                        <input id="rid-${d.id}" placeholder="Room ID" value="${d.data().rId}">
-                        <input id="rps-${d.id}" placeholder="Room Pass" value="${d.data().rPs}">
-                        <button class="btn btn-gold" onclick="updateRoomInfo('${d.id}')">UPDATE</button>
-                    </div>`;
+                    uBox.innerHTML += `
+                        <div class="player-row">
+                            <span>ID: ${d.data().sid} | UTR: ${d.data().utr}</span>
+                            <button class="btn-action btn-prime btn-mini" onclick="approvePayment('${d.id}', '${d.data().uid}')">APPROVE ₹20</button>
+                        </div>
+                    `;
                 });
             });
         }
 
-        async function approveDeposit(did, uid) {
-            await db.collection("users").doc(uid).update({ wallet: firebase.firestore.FieldValue.increment(20) });
-            await db.collection("deposits").doc(did).update({ status: "approved" });
-            alert("Approved!");
+        async function updateKill(mid, pIdx) {
+            const m = (await db.collection("matches").doc(mid).get()).data();
+            m.players[pIdx].kills += 1;
+            await db.collection("matches").doc(mid).update({ players: m.players });
         }
 
-        async function adminUpdateWallet(isAdd) {
-            const sid = document.getElementById('adm-user-sid').value;
-            const amt = parseInt(document.getElementById('adm-amount').value);
-            const s = await db.collection("users").where("siteID", "==", sid).get();
-            if(s.empty) return alert("User not found!");
-            await db.collection("users").doc(s.docs[0].id).update({ wallet: firebase.firestore.FieldValue.increment(isAdd ? amt : -amt) });
-            alert("Wallet Updated!");
+        async function kickPlayer(mid, pUid) {
+            if(!confirm("Are you sure?")) return;
+            const m = (await db.collection("matches").doc(mid).get()).data();
+            const filtered = m.players.filter(p => p.uid !== pUid);
+            await db.collection("matches").doc(mid).update({ players: filtered });
         }
 
-        async function adminBanPlayer(status) {
-            const sid = document.getElementById('adm-user-sid').value;
-            const s = await db.collection("users").where("siteID", "==", sid).get();
-            if(s.empty) return alert("User not found!");
-            await db.collection("users").doc(s.docs[0].id).update({ isBanned: status });
-            alert(status ? "Player Banned!" : "Player Unbanned!");
+        async function deleteMatch(mid) {
+            if(confirm("Permanently delete match?")) await db.collection("matches").doc(mid).delete();
         }
 
-        async function adminPostMatch() {
-            const t = document.getElementById('new-m-title').value;
-            const ty = document.getElementById('new-m-type').value;
-            const f = parseInt(document.getElementById('new-m-fee').value);
-            const tm = document.getElementById('new-m-time').value;
+        async function saveRoom(mid) {
+            await db.collection("matches").doc(mid).update({
+                rId: document.getElementById('ri-'+mid).value,
+                rPs: document.getElementById('rp-'+mid).value
+            });
+            alert("Room Saved!");
+        }
+
+        async function approvePayment(docId, userUid) {
+            await db.collection("users").doc(userUid).update({ wallet: firebase.firestore.FieldValue.increment(20) });
+            await db.collection("deposits").doc(docId).update({ status: "approved" });
+            alert("Payment Approved!");
+        }
+
+        async function adminCreateMatch() {
+            const t = document.getElementById('adm-m-title').value;
+            const f = parseInt(document.getElementById('adm-m-fee').value);
+            const tm = document.getElementById('adm-m-time').value;
+            if(!t || !f || !tm) return alert("Fill all fields!");
             await db.collection("matches").add({
-                title: t, type: ty, fee: f, time: tm, players: [], rId: "", rPs: ""
+                title: t, fee: f, time: tm, players: [], rId: "", rPs: ""
             });
             alert("Match Posted!");
         }
 
-        async function updateRoomInfo(id) {
-            await db.collection("matches").doc(id).update({
-                rId: document.getElementById('rid-' + id).value,
-                rPs: document.getElementById('rps-' + id).value
-            });
-            alert("Room Details Saved!");
+        /* --- 🧭 UI HELPERS --- */
+        function switchPage(pId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(pId).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('tab-'+pId).classList.add('active');
         }
 
-        // --- 🛠️ JOIN LOGIC ---
-        function openJoinModal(id, fee) {
-            document.getElementById('join-modal').style.display = 'flex';
-            document.getElementById('join-confirm-btn').onclick = () => confirmJoin(id, fee);
+        function toggleForms(isReg) {
+            document.getElementById('login-form').style.display = isReg ? 'none' : 'block';
+            document.getElementById('register-form').style.display = isReg ? 'block' : 'none';
         }
-        function closeJoinModal() { document.getElementById('join-modal').style.display = 'none'; }
+
+        function openJoinPopup(mid, fee) {
+            document.getElementById('join-popup').style.display = 'flex';
+            document.getElementById('confirm-join-btn').onclick = () => confirmJoin(mid, fee);
+        }
+
+        function closeJoinPopup() { document.getElementById('join-popup').style.display = 'none'; }
 
         async function confirmJoin(mid, fee) {
-            const name = document.getElementById('join-ff-name').value;
-            const uid = document.getElementById('join-ff-uid').value;
-            if(!name || !uid) return alert("Enter FF Details!");
-            
+            const name = document.getElementById('ff-username').value;
+            if(!name) return alert("Enter FF Name!");
             const uRef = db.collection("users").doc(auth.currentUser.uid);
             const uData = (await uRef.get()).data();
-            
-            if(uData.wallet < fee) return alert("Insufficient Balance!");
-            
+            if(uData.wallet < fee) return alert("Low Balance!");
+
             await uRef.update({ wallet: firebase.firestore.FieldValue.increment(-fee) });
             await db.collection("matches").doc(mid).update({
-                players: firebase.firestore.FieldValue.arrayUnion({ uid: auth.currentUser.uid, ign: name, fuid: uid })
+                players: firebase.firestore.FieldValue.arrayUnion({ uid: auth.currentUser.uid, name: name, kills: 0 })
             });
-            closeJoinModal();
-            alert("Successfully Joined!");
-        }
-
-        // --- 🧭 NAV ---
-        function navTo(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-            document.getElementById('btn-nav-' + id).classList.add('active');
+            closeJoinPopup();
+            alert("Joined Successfully!");
         }
     </script>
 </body>
