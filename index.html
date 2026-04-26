@@ -3,111 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FF LEGEND TOURNAMENT | Prime Miku</title>
+    <title>FF LEGEND | Pro Edition</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --gold: #f59e0b; --dark: #0a0a0c; --card: #16161e; }
-        body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; user-select: none; }
+        :root { --gold: #f59e0b; --dark: #050505; --card: #121212; --red: #ff0000; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* Auth Screen */
-        #auth-screen { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .login-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 350px; text-align: center; }
-        
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #000; color: white; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--gold); color: black; margin-top: 10px; transition: 0.3s; }
+        /* Animations */
+        @keyframes glow { 0% { box-shadow: 0 0 5px var(--gold); } 50% { box-shadow: 0 0 20px var(--gold); } 100% { box-shadow: 0 0 5px var(--gold); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Main UI */
-        header { text-align: center; padding: 20px; background: linear-gradient(to bottom, #1e1b4b, var(--dark)); border-bottom: 2px solid var(--gold); }
-        nav { background: rgba(0,0,0,0.9); padding: 12px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        /* Auth Screen */
+        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); width: 320px; text-align: center; animation: slideIn 0.5s ease; }
         
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        .match-card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border-left: 5px solid var(--gold); }
-        .wallet-box { color: #22c55e; font-weight: bold; background: rgba(34, 197, 94, 0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid #22c55e; cursor: pointer; }
+        /* Navigation & Tabs */
+        nav { background: #000; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-around; position: sticky; top: 0; z-index: 100; }
+        .nav-btn { color: #94a3b8; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .nav-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+        .container { padding: 20px; max-width: 600px; margin: auto; animation: slideIn 0.5s ease; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* Match Cards */
+        .match-card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; position: relative; overflow: hidden; }
+        .match-card:hover { border-color: var(--gold); animation: glow 2s infinite; }
         
-        .section-title { font-size: 1.1rem; margin: 25px 0 10px; border-left: 3px solid var(--gold); padding-left: 10px; color: var(--gold); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .m-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid var(--gold); text-align: center; }
+        /* My Matches Section */
+        .my-match-item { background: #1a1a1a; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-left: 4px solid var(--blue); }
+        .timer { font-family: 'Courier New', monospace; color: var(--gold); font-size: 1.2rem; font-weight: bold; margin: 10px 0; }
+
+        /* RED WARNING PANEL */
+        .warning-panel { 
+            background: rgba(255, 0, 0, 0.1); 
+            border: 2px solid var(--red); 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-top: 30px; 
+            box-shadow: 0 0 15px var(--red);
+            animation: blink 2s infinite;
+        }
+        .warning-title { color: var(--red); font-weight: bold; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .warning-text { font-size: 13px; line-height: 1.6; color: #ffcccc; }
+
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
+        .btn { background: var(--gold); color: black; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div id="auth-screen">
         <div class="login-box">
-            <h2 style="color:var(--gold); margin-bottom:5px;">FF LEGEND</h2>
-            <p style="font-size: 10px; color: #64748b; margin-bottom: 20px;">OWNER: PRIME MIKU</p>
-            
+            <h2 style="color:var(--gold)">FF LEGEND</h2>
             <div id="login-form">
-                <input type="email" id="email" placeholder="Email Address">
+                <input type="email" id="email" placeholder="Email">
                 <input type="password" id="pass" placeholder="Password">
                 <button class="btn" onclick="login()">LOGIN</button>
-                <p style="font-size: 12px; margin-top:15px;">New Player? <span onclick="showReg(true)" style="color:var(--gold); cursor:pointer;">Register</span></p>
+                <p onclick="showReg(true)" style="font-size:12px; cursor:pointer; margin-top:15px;">Register Account</p>
             </div>
-
             <div id="reg-form" style="display:none">
                 <input type="text" id="reg-name" placeholder="Full Name">
-                <input type="email" id="reg-email" placeholder="Email Address">
-                <input type="password" id="reg-pass" placeholder="Create Password">
+                <input type="email" id="reg-email" placeholder="Email">
+                <input type="password" id="reg-pass" placeholder="Password">
                 <button class="btn" onclick="register()">CREATE ACCOUNT</button>
-                <p style="font-size: 12px; margin-top:15px;">Back to <span onclick="showReg(false)" style="color:var(--gold); cursor:pointer;">Login</span></p>
+                <p onclick="showReg(false)" style="font-size:12px; cursor:pointer; margin-top:15px;">Back to Login</p>
             </div>
         </div>
     </div>
 
-    <header>
-        <h1 style="margin:0; font-size:1.5rem; color:var(--gold);">FF LEGEND TOURNAMENT</h1>
-    </header>
-
     <nav>
-        <div id="user-id" style="font-size: 12px; color: #94a3b8;">ID: Loading...</div>
-        <div class="wallet-box" id="wallet-val" onclick="openDeposit()">Wallet: ₹0</div>
+        <div class="nav-btn active" onclick="switchTab('home', this)">MATCHES</div>
+        <div class="nav-btn" onclick="switchTab('my-matches', this)">MY MATCHES</div>
+        <div class="nav-btn" id="wallet-top">₹0</div>
     </nav>
 
     <div class="container">
-        <div class="section-title">BERMUDA WINNERS</div>
-        <div class="match-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h4 style="margin:0;">Bermuda Solo Match</h4>
-                    <p style="font-size:12px; color:#94a3b8; margin:5px 0;">Entry: ₹10 | Kill: ₹5</p>
+        <div id="home" class="section active">
+            <h3 style="color:var(--gold)">Upcoming Tournaments</h3>
+            <div id="match-list">
+                <div class="match-card">
+                    <h4>Bermuda Solo King</h4>
+                    <p style="font-size:12px; color:#999">Fee: ₹10 | Win: ₹50</p>
+                    <button class="btn" onclick="joinMatch('B-101', 10)">JOIN NOW</button>
                 </div>
-                <button class="btn" style="width:auto; padding:8px 20px;" onclick="joinMatch('B-101', 10)">JOIN</button>
             </div>
         </div>
 
-        <div class="section-title">CLASH SQUAD</div>
-        <div class="match-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h4 style="margin:0;">CS 4v4 Ranked</h4>
-                    <p style="font-size:12px; color:#94a3b8; margin:5px 0;">Entry: ₹10 | Win: ₹40</p>
-                </div>
-                <button class="btn" style="width:auto; padding:8px 20px;" onclick="joinMatch('CS-101', 10)">JOIN</button>
+        <div id="my-matches" class="section">
+            <h3 style="color:var(--gold)">Enrolled Matches</h3>
+            <div id="my-match-list">
+                <p style="color:#666">No matches joined yet.</p>
             </div>
-        </div>
-        
-        <button onclick="logout()" style="width:100%; background:none; border:1px solid #334155; color:#64748b; margin-top:30px; padding:10px; border-radius:10px;">Logout</button>
-    </div>
 
-    <div id="deposit-modal" class="modal">
-        <div class="m-content">
-            <h3 style="color:var(--gold)">Recharge Wallet</h3>
-            <p style="font-size:12px; color:#94a3b8">Pay to UPI and send screenshot on WhatsApp.</p>
-            <div style="background:#000; padding:10px; border-radius:10px; border:1px dashed var(--gold); margin:15px 0; color:var(--gold);">
-                <strong>miku@upi</strong>
+            <div class="warning-panel">
+                <div class="warning-title">
+                    <i class="fas fa-exclamation-triangle"></i> ANTI-HACK WARNING
+                </div>
+                <div class="warning-text">
+                    1. <b>No Hacks:</b> Use of any third-party tools will lead to a permanent ban.<br>
+                    2. <b>No Teaming:</b> Teaming up with enemies will result in 0 prize money.<br>
+                    3. <b>No Grenades:</b> Grenades are strictly prohibited in CS matches.<br>
+                    4. <b>Fair Play:</b> Respect all players. No toxic behavior.<br>
+                    5. <b>Room ID:</b> Shared 15 mins before the start.
+                </div>
             </div>
-            <button class="btn" onclick="window.location.href='https://wa.me/91XXXXXXXXXX'">SEND SCREENSHOT</button>
-            <button onclick="closeDeposit()" style="background:none; border:none; color:#64748b; margin-top:10px; cursor:pointer;">Close</button>
         </div>
     </div>
 
     <script>
-        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAFvaJjgrPghBwx5FPFeLPc0XCi6GFNA1k",
             authDomain: "ff-legend-tournament.firebaseapp.com",
@@ -122,7 +132,13 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // AUTH FUNCTIONS
+        function switchTab(id, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        }
+
         function showReg(isReg) {
             document.getElementById('login-form').style.display = isReg ? 'none' : 'block';
             document.getElementById('reg-form').style.display = isReg ? 'block' : 'none';
@@ -132,66 +148,82 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
             const name = document.getElementById('reg-name').value;
-            const sID = "FFL-" + Math.floor(1000 + Math.random() * 9000);
-
-            if(!email || !pass || !name) return alert("Fill all fields!");
             try {
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
-                await db.collection("users").doc(cred.user.uid).set({
-                    name: name, siteID: sID, wallet: 0, isAdmin: false
-                });
-                alert("Account Created! ID: " + sID);
-            } catch (e) { alert(e.message); }
+                await db.collection("users").doc(cred.user.uid).set({ name, wallet: 0, matches: [] });
+                location.reload();
+            } catch(e) { alert(e.message); }
         }
 
         async function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(email, pass); } 
-            catch (e) { alert("Invalid Login!"); }
+            try { await auth.signInWithEmailAndPassword(email, pass); } catch(e) { alert("Fail!"); }
         }
 
         auth.onAuthStateChanged(user => {
             if(user) {
                 document.getElementById('auth-screen').style.display = 'none';
-                updateUI(user.uid);
-            } else {
-                document.getElementById('auth-screen').style.display = 'flex';
+                loadUserData(user.uid);
             }
         });
 
-        async function updateUI(uid) {
+        async function loadUserData(uid) {
             const doc = await db.collection("users").doc(uid).get();
-            if(doc.exists) {
-                document.getElementById('user-id').innerText = "ID: " + doc.data().siteID;
-                document.getElementById('wallet-val').innerText = "Wallet: ₹" + doc.data().wallet;
+            const data = doc.data();
+            document.getElementById('wallet-top').innerText = "₹" + data.wallet;
+            
+            // Load Joined Matches
+            const myList = document.getElementById('my-match-list');
+            if(data.matches && data.matches.length > 0) {
+                myList.innerHTML = "";
+                data.matches.forEach(m => {
+                    myList.innerHTML += `
+                        <div class="my-match-item">
+                            <strong>Match ID: ${m.id}</strong>
+                            <div class="timer" id="timer-${m.id}">Starting Soon...</div>
+                            <p style="font-size:11px; color:var(--gold)">Room ID & Pass will be sent here.</p>
+                        </div>
+                    `;
+                    startTimer(m.id, m.time);
+                });
             }
         }
 
-        async function joinMatch(code, fee) {
-            const uid = prompt("Enter Game UID:");
-            const lvl = prompt("Enter Level (50+):");
-            if(lvl < 50) return alert("Level 50+ Required!");
-
-            const user = auth.currentUser;
-            const docRef = db.collection("users").doc(user.uid);
-            const doc = await docRef.get();
-            if(doc.data().wallet >= fee) {
-                await docRef.update({ wallet: firebase.firestore.FieldValue.increment(-fee) });
-                await db.collection("registrations").add({
-                    user: user.email, gameUID: uid, match: code, time: new Date()
-                });
-                alert("Joined Successfully!");
-                location.reload();
-            } else { alert("Low Balance!"); openDeposit(); }
+        function startTimer(id, targetTime) {
+            // targetTime format: Date string from Admin
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = new Date(targetTime) - now;
+                const h = Math.floor(distance / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById('timer-'+id).innerText = distance < 0 ? "MATCH STARTED" : `${h}h ${m}m ${s}s`;
+            }, 1000);
         }
 
-        function openDeposit() { document.getElementById('deposit-modal').style.display = 'flex'; }
-        function closeDeposit() { document.getElementById('deposit-modal').style.display = 'none'; }
-        function logout() { auth.signOut(); }
+        async function joinMatch(id, fee) {
+            const user = auth.currentUser;
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            const wallet = userDoc.data().wallet;
 
-        // SECURITY
-        document.onkeydown = function(e) { if(e.keyCode == 123) return false; }
+            if(wallet < fee) return alert("Paisa nahi hai!");
+
+            const gUid = prompt("Enter Game UID:");
+            if(!gUid) return;
+
+            // Update Wallet & Matches list (Example Time: 2 hours from now)
+            const startTime = new Date(new Date().getTime() + 120*60000).toString();
+            
+            await db.collection("users").doc(user.uid).update({
+                wallet: wallet - fee,
+                matches: firebase.firestore.FieldValue.arrayUnion({ id: id, time: startTime })
+            });
+
+            alert("Joined Successfully!");
+            location.reload();
+        }
     </script>
 </body>
 </html>
